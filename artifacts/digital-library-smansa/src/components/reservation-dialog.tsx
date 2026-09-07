@@ -1,0 +1,20 @@
+import { CheckCircle2, X } from 'lucide-react';
+import { useState } from 'react';
+import type { Book } from '@workspace/api-client-react';
+import { useCreateReservation } from '@workspace/api-client-react';
+
+export function ReservationDialog({ book, onClose }: { book: Book; onClose: () => void }) {
+  const mutation = useCreateReservation();
+  const [form, setForm] = useState({ name: '', nis: '', className: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    mutation.mutate({ data: { bookId: book.id, ...form } }, { onSuccess: () => setSubmitted(true) });
+  };
+  return <div className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/35 p-0 backdrop-blur-sm sm:items-center sm:p-5" role="dialog" aria-modal="true">
+    <div className="w-full max-w-lg rounded-t-3xl border border-border bg-card p-6 shadow-2xl sm:rounded-3xl sm:p-8">
+      <div className="flex items-start justify-between gap-4"><div><p className="font-mono-display text-[10px] font-bold uppercase tracking-[.16em] text-primary">Form reservasi</p><h2 className="mt-2 font-display text-2xl font-bold">{book.title}</h2></div><button type="button" onClick={onClose} aria-label="Tutup dialog" data-testid="button-close-reservation" className="rounded-full bg-secondary p-2 text-muted-foreground hover:text-foreground"><X size={18} /></button></div>
+      {submitted ? <div className="py-10 text-center"><span className="mx-auto grid size-14 place-items-center rounded-full bg-primary/10 text-primary"><CheckCircle2 size={28} /></span><h3 className="mt-5 font-display text-2xl font-bold">Reservasi terkirim</h3><p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-muted-foreground">Permintaanmu sudah dicatat. Silakan konfirmasi ke pustakawan saat mengambil buku.</p><button type="button" onClick={onClose} data-testid="button-finish-reservation" className="mt-6 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground">Selesai</button></div> : <form onSubmit={submit} className="mt-7 space-y-4"><label className="block text-sm font-semibold">Nama lengkap<input required minLength={2} value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} className="mt-2 w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15" placeholder="Nama sesuai kartu pelajar" data-testid="input-reservation-name" /></label><div className="grid gap-4 sm:grid-cols-2"><label className="block text-sm font-semibold">NIS<input required minLength={3} value={form.nis} onChange={(event) => setForm({ ...form, nis: event.target.value })} className="mt-2 w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15" placeholder="Nomor induk siswa" data-testid="input-reservation-nis" /></label><label className="block text-sm font-semibold">Kelas<input required value={form.className} onChange={(event) => setForm({ ...form, className: event.target.value })} className="mt-2 w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15" placeholder="Contoh: XI IPA 2" data-testid="input-reservation-class" /></label></div>{mutation.isError && <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive" data-testid="status-reservation-error">Reservasi belum berhasil dikirim. Periksa data dan coba lagi.</p>}<button disabled={mutation.isPending} type="submit" data-testid="button-submit-reservation" className="mt-2 flex w-full items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-bold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60">{mutation.isPending ? 'Mengirim reservasi…' : 'Kirim reservasi'}</button><p className="text-center text-xs text-muted-foreground">Data digunakan hanya untuk proses peminjaman di perpustakaan.</p></form>}
+    </div>
+  </div>;
+}

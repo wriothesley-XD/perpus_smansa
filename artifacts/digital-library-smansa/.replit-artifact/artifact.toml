@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Digital Library SMAN 1 Bukittinggi"
+description = "A polished digital library experience for SMAN 1 Bukittinggi, centered on discovering the school collection, exploring book details, and submitting reservations with a welcoming, editorial feel."
+version = "1.0.0"
+id = "artifacts/digital-library-smansa"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21280
+
+[services.development]
+run = "pnpm --filter @workspace/digital-library-smansa run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/digital-library-smansa", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/digital-library-smansa/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21280"
+BASE_PATH = "/"

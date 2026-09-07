@@ -1,6 +1,6 @@
-# [Project name]
+# Digital Library SMAN 1 Bukittinggi
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Website perpustakaan sekolah untuk menemukan koleksi buku, membaca terbitan digital, dan mengajukan reservasi.
 
 ## Run & Operate
 
@@ -22,23 +22,34 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/digital-library-smansa` — React + Vite public library experience.
+- `artifacts/api-server/src/routes/library.ts` — catalog, stats, magazine, and reservation handlers.
+- `lib/api-spec/openapi.yaml` — source of truth for public API contracts.
+- `lib/db/src/schema` — Drizzle tables for books, magazines, and reservations.
+- `artifacts/digital-library-smansa/src/index.css` — visual tokens and global styling.
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The catalog is the primary experience; public browsing does not require authentication.
+- API contracts are defined in OpenAPI first, then generated client hooks are used by the frontend.
+- Reservation submissions are persisted in PostgreSQL and return a user-visible success state.
+- The UI uses a warm editorial library direction rather than an admin dashboard pattern.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Homepage discovery with search, library counts, popular books, and digital magazine highlights.
+- Searchable and filterable catalog with availability status and book detail pages.
+- Reservation dialog with name, NIS, and class fields.
+- Magazine archive, library information, and contact pages.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Keep the experience authored and human-feeling; avoid generic or visibly AI-generated UI patterns.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Regenerate the API client after changing `lib/api-spec/openapi.yaml`.
+- Artifact workflows provide `PORT` and `BASE_PATH`; do not run the Vite app with a hand-written root command.
 
 ## Pointers
 
