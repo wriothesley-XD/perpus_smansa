@@ -1,11 +1,11 @@
-import { BookOpen, Clock3, Instagram, Menu, MapPin, X } from 'lucide-react';
+import { BookOpen, Instagram, MapPin, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 
 const navItems = [
   { href: '/', label: 'Beranda' },
-  { href: '/catalog', label: 'Katalog' },
-  { href: '/magazines', label: 'Majalah digital' },
+  { href: '/catalog', label: 'E-Katalog' },
+  { href: '/magazines', label: 'E-Magazine' },
   { href: '/information', label: 'Tentang perpustakaan' },
   { href: '/contact', label: 'Kontak' },
 ];
@@ -16,40 +16,33 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-[100dvh] bg-background">
-      <header className="sticky top-0 z-40 border-b border-border/80 bg-background/95 backdrop-blur-md">
-        <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
+      <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-md">
+        <div className="mx-auto flex h-[88px] max-w-[1440px] items-center justify-between px-5 sm:px-8 lg:px-16">
           <Link href="/" className="group flex items-center gap-3" data-testid="link-logo">
-            <span className="grid size-11 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:-rotate-3">
-              <BookOpen size={22} strokeWidth={1.8} />
+            <span className="grid size-10 place-items-center rounded-[10px] bg-primary text-primary-foreground shadow-sm transition-transform group-hover:-rotate-3">
+              <BookOpen size={21} strokeWidth={1.8} />
             </span>
             <span className="leading-none">
-              <span className="block font-display text-[17px] font-bold tracking-tight text-foreground">Perpustakaan</span>
-              <span className="mt-1 block font-mono-display text-[10px] font-bold uppercase tracking-[.16em] text-primary">SMAN 1 Bukittinggi</span>
+              <span className="block font-display text-[17px] font-bold tracking-tight text-[#0f172a]">Perpustakaan</span>
+              <span className="mt-1 block font-mono-display text-[9px] font-bold uppercase tracking-[.16em] text-primary">SMAN 1 Bukittinggi</span>
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-7 lg:flex" aria-label="Navigasi utama">
+          <nav className="hidden items-center gap-8 lg:flex" aria-label="Navigasi utama">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 data-testid={`link-nav-${item.href === '/' ? 'home' : item.href.slice(1)}`}
-                className={`relative py-2 text-[13px] font-semibold transition-colors hover:text-primary ${location === item.href ? 'text-primary' : 'text-muted-foreground'}`}
+                className={`relative py-2 text-[13px] font-medium transition-colors hover:text-primary ${location === item.href ? 'text-primary' : 'text-[#0f172a]'}`}
               >
                 {item.label}
-                {location === item.href && <span className="absolute -bottom-[13px] left-0 right-0 mx-auto h-0.5 w-5 rounded-full bg-accent" />}
+                {location === item.href && <span className="absolute -bottom-[26px] left-0 right-0 mx-auto h-0.5 w-5 rounded-full bg-primary" />}
               </Link>
             ))}
           </nav>
 
-          <div className="hidden items-center gap-4 lg:flex">
-            <span className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-              <Clock3 size={14} className="text-primary" /> Senin–Jumat · 07.00–15.30
-            </span>
-            <Link href="/catalog" data-testid="link-header-search" className="rounded-full bg-secondary px-4 py-2 text-xs font-bold text-secondary-foreground transition-colors hover:bg-primary hover:text-primary-foreground">
-              Cari buku
-            </Link>
-          </div>
+          <div className="hidden w-[180px] lg:block" aria-hidden="true" />
 
           <button type="button" onClick={() => setMenuOpen((open) => !open)} className="rounded-lg p-2 text-foreground lg:hidden" aria-label="Buka menu" data-testid="button-menu">
             {menuOpen ? <X size={23} /> : <Menu size={23} />}

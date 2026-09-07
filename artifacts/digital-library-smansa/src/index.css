@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
@@ -32,49 +32,49 @@
 }
 
 :root {
-  --background: 42 44% 96%;
-  --foreground: 215 41% 16%;
-  --border: 215 22% 84%;
-  --input: 215 22% 84%;
-  --ring: 196 94% 42%;
-  --card: 42 44% 98%;
-  --card-foreground: 215 41% 16%;
-  --card-border: 215 22% 86%;
-  --primary: 196 94% 33%;
-  --primary-foreground: 42 44% 98%;
-  --secondary: 209 53% 90%;
-  --secondary-foreground: 215 51% 24%;
-  --muted: 40 23% 91%;
-  --muted-foreground: 215 19% 42%;
-  --accent: 39 89% 56%;
-  --accent-foreground: 215 41% 16%;
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 197 74% 45%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --card-border: 214 32% 91%;
+  --primary: 197 74% 45%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 214 32% 96%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 214 32% 96%;
+  --muted-foreground: 215 25% 35%;
+  --accent: 48 96% 53%;
+  --accent-foreground: 222 47% 11%;
   --destructive: 2 72% 48%;
   --destructive-foreground: 42 44% 98%;
-  --app-font-sans: 'DM Sans', sans-serif;
-  --app-font-serif: 'Playfair Display', Georgia, serif;
-  --app-font-mono: 'Space Mono', monospace;
-  --radius: 0.8rem;
-  --shadow-sm: 0 5px 18px rgba(16, 44, 68, 0.06);
-  --shadow-md: 0 12px 34px rgba(16, 44, 68, 0.1);
+  --app-font-sans: 'Roboto', sans-serif;
+  --app-font-serif: 'Roboto', sans-serif;
+  --app-font-mono: 'Roboto', sans-serif;
+  --radius: 0.75rem;
+  --shadow-sm: 0 10px 25px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 20px 50px rgba(15, 23, 42, 0.12);
 }
 
 .dark {
-  --background: 215 43% 10%;
-  --foreground: 42 44% 96%;
+  --background: 222 47% 11%;
+  --foreground: 0 0% 100%;
   --border: 215 25% 26%;
   --input: 215 25% 26%;
-  --ring: 196 94% 50%;
-  --card: 215 39% 14%;
-  --card-foreground: 42 44% 96%;
+  --ring: 197 74% 55%;
+  --card: 222 47% 14%;
+  --card-foreground: 0 0% 100%;
   --card-border: 215 25% 26%;
-  --primary: 196 94% 49%;
-  --primary-foreground: 215 43% 10%;
+  --primary: 197 74% 55%;
+  --primary-foreground: 222 47% 11%;
   --secondary: 215 30% 22%;
-  --secondary-foreground: 42 44% 96%;
+  --secondary-foreground: 0 0% 100%;
   --muted: 215 30% 19%;
   --muted-foreground: 215 18% 70%;
-  --accent: 39 89% 56%;
-  --accent-foreground: 215 43% 10%;
+  --accent: 48 96% 53%;
+  --accent-foreground: 222 47% 11%;
   --destructive: 2 72% 58%;
   --destructive-foreground: 42 44% 96%;
 }
@@ -91,17 +91,23 @@
   .font-display { font-family: var(--app-font-serif); }
   .font-mono-display { font-family: var(--app-font-mono); }
   .paper-grid {
-    background-image: linear-gradient(rgba(21, 87, 119, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(21, 87, 119, .055) 1px, transparent 1px);
-    background-size: 32px 32px;
+    background-image: linear-gradient(rgba(15, 23, 42, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, .045) 1px, transparent 1px);
+    background-size: 28px 28px;
   }
   .ink-rule { position: relative; }
-  .ink-rule::after { content: ""; position: absolute; left: 0; bottom: -10px; width: 56px; height: 3px; background: hsl(var(--accent)); }
+  .ink-rule::after { content: ""; position: absolute; left: 0; bottom: -10px; width: 56px; height: 3px; background: hsl(var(--primary)); }
   .hover-lift { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
   .hover-lift:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: hsl(var(--primary) / .35); }
   .fade-up { animation: fade-up .6s both cubic-bezier(.22,1,.36,1); }
   .fade-up-delay { animation: fade-up .6s .12s both cubic-bezier(.22,1,.36,1); }
   .fade-up-delay-2 { animation: fade-up .6s .22s both cubic-bezier(.22,1,.36,1); }
   .skeleton { background: linear-gradient(100deg, hsl(var(--muted)) 30%, hsl(var(--card)) 50%, hsl(var(--muted)) 70%); background-size: 200% 100%; animation: shimmer 1.6s infinite; }
+  .figma-blob { border-radius: 58% 42% 65% 35% / 42% 55% 45% 58%; }
+  .figma-dots {
+    background-image: radial-gradient(rgba(30, 143, 201, .34) 1.5px, transparent 1.5px);
+    background-size: 14px 14px;
+  }
+  .soft-shadow { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .16), 0 0 15px rgba(0, 0, 0, .07); }
 }
 
 @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
