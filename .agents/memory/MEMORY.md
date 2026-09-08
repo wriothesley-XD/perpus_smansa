@@ -1,1 +1,0 @@
-- [Figma frame lookup](figma-frame-lookup.md) — root page links may need metadata lookup before design context can target the actual frame.
