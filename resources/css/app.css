@@ -45,3 +45,65 @@
   transform: translateY(-4px);
   box-shadow: 0 20px 35px -8px rgba(11, 78, 162, 0.12), 0 8px 10px -4px rgba(0, 0, 0, 0.04);
 }
+
+/* Figma-aligned visual utilities */
+.figma-blob {
+  border-radius: 58% 42% 65% 35% / 42% 55% 45% 58%;
+}
+
+.figma-blob-alt {
+  border-radius: 48% 52% 38% 62% / 56% 44% 56% 44%;
+}
+
+.figma-dots {
+  background-image: radial-gradient(rgba(11, 78, 162, 0.28) 1.5px, transparent 1.5px);
+  background-size: 14px 14px;
+}
+
+.figma-dots-warm {
+  background-image: radial-gradient(rgba(249, 115, 22, 0.25) 1.5px, transparent 1.5px);
+  background-size: 14px 14px;
+}
+
+.brush-highlight {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.brush-highlight::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: 2px;
+  height: 12px;
+  background-color: #fb923c;
+  opacity: 0.45;
+  border-radius: 4px;
+  transform: rotate(-1.2deg);
+  z-index: 0;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.6s both cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fade-up-delay {
+  animation: fade-up 0.6s 0.12s both cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fade-up-delay-2 {
+  animation: fade-up 0.6s 0.22s both cubic-bezier(0.22, 1, 0.36, 1);
+}
