@@ -33,6 +33,11 @@ interface DashboardProps {
 export default function Dashboard({ activeLoans, loanHistory, reservations, passport, recommendations }: DashboardProps) {
     const { auth } = usePage().props;
     const user = auth?.user;
+    const stamps = [
+        { label: 'First Borrow', unlocked: passport.total_reads >= 1 },
+        { label: 'Genre Hopper', unlocked: passport.total_reads >= 5 },
+        { label: 'Steady Reader', unlocked: passport.streak >= 3 },
+    ];
 
     return (
         <SiteShell>
@@ -80,7 +85,7 @@ export default function Dashboard({ activeLoans, loanHistory, reservations, pass
                             <div className="flex items-center gap-2 text-blue-200"><Sparkles size={16} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em]">Reading Passport</span></div>
                             <h2 className="mt-3 font-display text-3xl font-bold">Perjalanan bacamu punya cerita.</h2>
                             <p className="mt-2 max-w-xl text-sm leading-relaxed text-blue-100">Simpan jejak bacaan, temukan rekomendasi berikutnya, dan bawa identitas literasimu ke mana pun di lingkungan SMANSA.</p>
-                            <div className="mt-6 flex flex-wrap gap-2"><span className="rounded-full bg-[#F8D77E] px-3 py-1.5 text-[10px] font-bold text-[#123B5D]">First Chapter</span><span className="rounded-full border border-white/20 px-3 py-1.5 text-[10px] font-bold text-blue-100">{passport.total_reads >= 5 ? 'Book Explorer' : 'Book Explorer • terkunci'}</span><span className="rounded-full border border-white/20 px-3 py-1.5 text-[10px] font-bold text-blue-100">Pembaca SMANSA</span></div>
+                            <div className="mt-6 flex flex-wrap gap-2">{stamps.map((stamp) => <span key={stamp.label} className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-bold ${stamp.unlocked ? 'bg-[#F8D77E] text-[#123B5D]' : 'border border-white/20 text-blue-100/55'}`}><span className={`size-1.5 rounded-full ${stamp.unlocked ? 'bg-[#E37C5B]' : 'bg-white/25'}`} />{stamp.label}{!stamp.unlocked && ' · terkunci'}</span>)}</div>
                         </div>
                         <div className="relative rotate-[2deg] rounded-sm bg-[#fffdf7] p-5 text-[#0F172A] shadow-xl">
                             <div className="flex items-start justify-between"><div><span className="font-mono-display text-[9px] font-bold uppercase tracking-widest text-[#123B5D]">Digital Library Card</span><h3 className="mt-2 font-display text-lg font-bold">{user?.name}</h3><p className="text-[10px] text-slate-500">{user?.class_name || 'Warga SMANSA'} • {passport.member_since || '2026'}</p></div><Barcode size={28} className="text-[#123B5D]" /></div>

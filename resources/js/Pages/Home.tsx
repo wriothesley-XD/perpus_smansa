@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { ArrowUpRight, BookOpen, CalendarDays, Headphones, Search, ShieldCheck, Sprout, Trophy, Users } from 'lucide-react';
+import { ArrowUpRight, BookOpen, Bookmark, CalendarDays, Headphones, Search, ShieldCheck, Sparkles, Sprout, Trophy, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import { BookCard } from '../Components/Common/BookCard';
 import {
@@ -148,7 +148,23 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
                 </div>
             </section>
 
-            {/* 2. BUKU TERPOPULER SECTION */}
+            {/* 2. DAILY DISCOVERY / MOOD SHELF */}
+            <section className="px-6 py-10 sm:px-10">
+                <div className="mx-auto max-w-7xl">
+                    <div className="grid gap-4 lg:grid-cols-[1.05fr_.95fr]">
+                        <div className="relative overflow-hidden rounded-[20px] bg-[#123b5d] p-6 text-white shadow-[0_20px_35px_-22px_rgba(18,59,93,.65)] sm:p-7">
+                            <div className="absolute -right-12 -top-12 size-40 rounded-full border border-white/15" /><div className="absolute -bottom-16 right-16 size-32 rounded-full border border-[#f8d77e]/30" />
+                            <div className="relative flex items-center gap-2 text-[#f8d77e]"><Sparkles size={16} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em]">Daily discovery · 13 Sep</span></div>
+                            <h2 className="relative mt-5 max-w-md font-display text-3xl leading-tight sm:text-4xl">Satu halaman untuk menemani hari ini.</h2>
+                            <p className="relative mt-3 max-w-md text-sm leading-6 text-blue-100">Mulai dari buku yang sedang banyak dipinjam, atau temukan rak berdasarkan suasana bacamu.</p>
+                            <div className="relative mt-6 flex items-center gap-3"><Link href={popularBooks[0] ? `/books/${popularBooks[0].slug}` : '/catalog'} className="inline-flex items-center gap-2 rounded-full bg-[#f8d77e] px-4 py-2.5 text-xs font-bold text-[#123b5d]">Pilihan hari ini <ArrowUpRight size={14} /></Link><span className="font-handwriting text-sm text-blue-100">slow down & read</span></div>
+                        </div>
+                        <div className="editorial-surface rounded-[20px] p-5 sm:p-6"><div className="flex items-center justify-between"><div><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#e37c5b]">Mood shelf</span><h2 className="mt-1 font-display text-2xl font-bold text-[#19283a] dark:text-white">Pilih suasanamu.</h2></div><Bookmark size={20} className="text-[#123b5d]" /></div><div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3">{[{ label: 'Fokus & tenang', query: 'sains', color: 'bg-[#e8f1f5]' }, { label: 'Imajinasi', query: 'fiksi', color: 'bg-[#f8e6df]' }, { label: 'Persiapan ujian', query: 'pelajaran', color: 'bg-[#f8f0d5]' }, { label: 'Budaya lokal', query: 'budaya', color: 'bg-[#e6eee3]' }, { label: 'Baca santai', query: 'novel', color: 'bg-[#eee6f1]' }, { label: 'Coba hal baru', query: '', color: 'bg-[#e9e7df]' }].map((mood) => <Link key={mood.label} href={mood.query ? `/catalog?q=${mood.query}` : '/catalog'} className={`group rounded-xl ${mood.color} p-3 transition hover:-translate-y-1 hover:shadow-sm`}><span className="block size-2 rounded-full bg-[#e37c5b] transition group-hover:scale-150" /><span className="mt-7 block text-[11px] font-bold leading-tight text-[#253544]">{mood.label}</span><ArrowUpRight size={13} className="mt-2 text-[#70808a] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /></Link>)}</div></div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 3. BUKU TERPOPULER SECTION */}
             <section className="px-6 py-10 sm:px-10">
                 <div className="mx-auto max-w-7xl">
                     {/* Header bar */}
@@ -218,14 +234,14 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
                     <div className="grid gap-4 lg:grid-cols-[1.1fr_.9fr_.9fr]">
                         <div className="editorial-surface relative overflow-hidden rounded-2xl bg-[#123B5D] p-6 text-white lg:row-span-2">
                             <div className="absolute -right-8 -top-8 size-32 rounded-full border border-white/20" />
-                            <div className="relative flex items-center gap-2 text-blue-200"><Trophy size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.16em]">Readers Wall of Fame</span></div>
-                            <h3 className="relative mt-8 max-w-xs font-display text-3xl font-bold leading-tight">Siapa yang sedang menyalakan rasa ingin tahu?</h3>
+                            <div className="relative flex items-center gap-2 text-blue-200"><Trophy size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.16em]">Reading wall · minggu ini</span></div>
+                            <h3 className="relative mt-8 max-w-xs font-display text-3xl font-bold leading-tight">Cerita bacaan warga SMANSA.</h3>
                             <div className="relative mt-8 space-y-3">
                                 {topReaders.length > 0 ? topReaders.map((reader, index) => (
                                     <div key={reader.id} className="flex items-center gap-3 rounded-xl bg-white/10 p-3">
                                         <span className="grid size-8 place-items-center rounded-full bg-[#F8D77E] font-display text-sm font-bold text-[#123B5D]">{index + 1}</span>
                                         <div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{reader.name}</p><p className="text-[10px] text-blue-200">{reader.class || 'Pembaca aktif'}</p></div>
-                                        <strong className="font-mono-display text-xs text-[#F8D77E]">{reader.loans_count} pinjam</strong>
+                                        <strong className="font-mono-display text-xs text-[#F8D77E]">{reader.loans_count} buku</strong>
                                     </div>
                                 )) : <p className="text-sm text-blue-100">Papan pembaca akan muncul setelah transaksi peminjaman tercatat.</p>}
                             </div>

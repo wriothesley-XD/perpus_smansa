@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import { ArrowUpRight, FileText } from 'lucide-react';
 import React from 'react';
 import {
     BotanicalLeaf,
@@ -159,14 +160,13 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
                                         <h3 className="line-clamp-1 font-display text-xs font-bold text-[#0F172A]">
                                             {ed.edition_title}
                                         </h3>
-                                        <p className="text-[10px] text-slate-500 mt-0.5">
-                                            {ed.edition_number} • {ed.year}
-                                        </p>
+                                        <p className="text-[10px] text-slate-500 mt-0.5">{ed.edition_number} · {ed.year} {ed.page_count ? `· ${ed.page_count} halaman` : ''}</p>
+                                        <p className="mt-2 line-clamp-2 min-h-8 text-[10px] leading-4 text-slate-500">{ed.description || 'Edisi pilihan dari ruang baca SMANSA.'}</p>
                                         <Link
                                             href={`/magazines/${ed.id}`}
-                                            className="mt-2.5 inline-block rounded-full bg-[#123B5D] px-3 py-1 text-[10px] font-bold text-white hover:bg-[#0C2D47]"
+                                            className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#123B5D] px-3 py-2 text-[10px] font-bold text-white hover:bg-[#0C2D47]"
                                         >
-                                            Baca
+                                            <FileText size={12} /> Baca edisi <ArrowUpRight size={12} />
                                         </Link>
                                     </div>
                                 </div>
