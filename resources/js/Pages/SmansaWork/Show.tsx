@@ -19,7 +19,7 @@ export default function SmansaWorkShow({ work, related }: SmansaWorkShowProps) {
             <Head title={`${work.title} - Karya Smansa`} />
             <div className="min-h-screen bg-white dark:bg-slate-900">
                 <div className="mx-auto max-w-3xl px-6 py-10 sm:px-8">
-                    <Link href="/karya-smansa" className="inline-flex items-center gap-2 text-sm font-semibold text-[#0B4EA2] dark:text-blue-400 hover:gap-3 transition-all">
+                    <Link href="/karya-smansa" className="inline-flex items-center gap-2 text-sm font-semibold text-[#123B5D] dark:text-blue-400 hover:gap-3 transition-all">
                         <ArrowLeft size={16} /> Semua Karya
                     </Link>
 

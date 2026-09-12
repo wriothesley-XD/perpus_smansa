@@ -55,7 +55,7 @@ export default function Login({ status, canResetPassword }) {
                             autoFocus
                             onChange={(e) => setData('email', e.target.value)}
                             placeholder="nama@email.com"
-                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#0B4EA2] focus:ring-2 focus:ring-[#0B4EA2]/20"
+                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#123B5D] focus:ring-2 focus:ring-[#123B5D]/20"
                         />
                     </div>
                     <InputError message={errors.email} className="mt-1.5" />
@@ -68,7 +68,7 @@ export default function Login({ status, canResetPassword }) {
                             Kata Sandi
                         </label>
                         {canResetPassword && (
-                            <Link href={route('password.request')} className="text-xs font-semibold text-[#0B4EA2] dark:text-blue-400 hover:underline">
+                            <Link href={route('password.request')} className="text-xs font-semibold text-[#123B5D] dark:text-blue-400 hover:underline">
                                 Lupa kata sandi?
                             </Link>
                         )}
@@ -85,7 +85,7 @@ export default function Login({ status, canResetPassword }) {
                             autoComplete="current-password"
                             onChange={(e) => setData('password', e.target.value)}
                             placeholder="••••••••"
-                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-11 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#0B4EA2] focus:ring-2 focus:ring-[#0B4EA2]/20"
+                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-11 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#123B5D] focus:ring-2 focus:ring-[#123B5D]/20"
                         />
                         <button type="button" onClick={() => setShowPass(v => !v)}
                             className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600">
@@ -102,7 +102,7 @@ export default function Login({ status, canResetPassword }) {
                         name="remember"
                         checked={data.remember}
                         onChange={(e) => setData('remember', e.target.checked)}
-                        className="size-4 rounded border-slate-300 text-[#0B4EA2] focus:ring-[#0B4EA2]"
+                        className="size-4 rounded border-slate-300 text-[#123B5D] focus:ring-[#123B5D]"
                     />
                     <span className="text-sm text-slate-600 dark:text-slate-400">Ingat saya di perangkat ini</span>
                 </label>
@@ -111,7 +111,7 @@ export default function Login({ status, canResetPassword }) {
                 <button
                     type="submit"
                     disabled={processing}
-                    className="mt-2 flex w-full items-center justify-center rounded-xl bg-[#0B4EA2] px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#083c7d] disabled:opacity-60"
+                    className="mt-2 flex w-full items-center justify-center rounded-xl bg-[#123B5D] px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#0C2D47] disabled:opacity-60"
                 >
                     {processing ? 'Memproses...' : 'Masuk ke Akun'}
                 </button>
@@ -119,7 +119,7 @@ export default function Login({ status, canResetPassword }) {
 
             <p className="mt-8 text-center text-sm text-slate-500 dark:text-slate-400">
                 Belum punya akun?{' '}
-                <Link href={route('register')} className="font-semibold text-[#0B4EA2] dark:text-blue-400 hover:underline">
+                <Link href={route('register')} className="font-semibold text-[#123B5D] dark:text-blue-400 hover:underline">
                     Daftar sekarang
                 </Link>
             </p>

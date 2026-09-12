@@ -52,7 +52,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-8">
                     <Link
                         href="/catalog"
-                        className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#0B4EA2] transition-colors"
+                        className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#123B5D] transition-colors"
                     >
                         <ArrowLeft size={16} />
                         <span>Kembali ke Katalog</span>
@@ -87,7 +87,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                 />
                                 <div className="mt-3 text-center font-handwriting text-sm font-bold">{book.title}</div>
                             </div>
-                            <div className="mt-3 text-center font-handwriting text-xs text-[#0B4EA2] font-bold">
+                            <div className="mt-3 text-center font-handwriting text-xs text-[#123B5D] font-bold">
                                 Koleksi Perpustakaan SMAN 1 Bukittinggi ·
                             </div>
                         </div>
@@ -111,14 +111,14 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                             <div className="mt-4 space-y-2.5 border-t border-slate-100 pt-4 text-xs text-slate-600">
                                 <div className="flex items-center justify-between">
                                     <span className="flex items-center gap-1.5">
-                                        <MapPin size={13} className="text-[#0B4EA2]" />
+                                        <MapPin size={13} className="text-[#123B5D]" />
                                         <span>Lokasi Rak Fisik:</span>
                                     </span>
                                     <strong className="font-mono text-[#0F172A]">{book.shelf_location}</strong>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="flex items-center gap-1.5">
-                                        <BookOpen size={13} className="text-[#0B4EA2]" />
+                                        <BookOpen size={13} className="text-[#123B5D]" />
                                         <span>Total Eksemplar:</span>
                                     </span>
                                     <strong className="text-[#0F172A]">{book.copies?.length ?? 0} Eksemplar</strong>
@@ -135,7 +135,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                             <button
                                 type="button"
                                 onClick={() => setReservationOpen(true)}
-                                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B4EA2] py-3.5 text-sm font-bold text-white shadow-md transition-all hover:bg-[#083c7d]"
+                                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#123B5D] py-3.5 text-sm font-bold text-white shadow-md transition-all hover:bg-[#0C2D47]"
                             >
                                 <BookMarked size={16} />
                                 <span>{isAvailable ? 'Reservasi Buku' : 'Ingatkan Saya Saat Tersedia'}</span>
@@ -146,7 +146,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                     {/* Right Column: Title, Metadata, Synopsis */}
                     <div>
                         <div className="flex items-center gap-2">
-                            <span className="font-mono-display text-xs font-bold uppercase tracking-[0.16em] text-[#0B4EA2]">
+                            <span className="font-mono-display text-xs font-bold uppercase tracking-[0.16em] text-[#123B5D]">
                                 {book.category?.name}
                             </span>
                             <span className="text-slate-300">•</span>
@@ -166,7 +166,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                         {/* Metadata Grid */}
                         <div className="index-card relative mt-8 grid grid-cols-2 gap-3 rounded-sm p-5 sm:grid-cols-4">
                             <div className="absolute -top-3 right-6">
-                                <span className="rounded bg-[#EAF4FF] border border-blue-200 px-2 py-0.5 font-mono-display text-[9px] font-bold uppercase tracking-wider text-[#0B4EA2]">
+                                <span className="rounded bg-[#E8F1F5] border border-blue-200 px-2 py-0.5 font-mono-display text-[9px] font-bold uppercase tracking-wider text-[#123B5D]">
                                     LIBRARY CARD
                                 </span>
                             </div>
@@ -264,7 +264,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                     <div className="mt-20 border-t border-slate-200/80 pt-12">
                         <div className="flex items-center justify-between">
                             <div>
-                                <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#0B4EA2]">
+                                <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#123B5D]">
                                     Koleksi Terkait
                                 </span>
                                 <h2 className="mt-1 font-display text-2xl font-bold text-[#0F172A]">
@@ -273,7 +273,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                             </div>
                             <Link
                                 href="/catalog"
-                                className="text-xs font-bold text-[#0B4EA2] hover:underline"
+                                className="text-xs font-bold text-[#123B5D] hover:underline"
                             >
                                 Lihat Semua Koleksi ?
                             </Link>

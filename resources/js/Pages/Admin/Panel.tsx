@@ -56,7 +56,7 @@ export default function AdminPanel({ stats }: AdminPanelProps) {
     const { auth } = usePage().props as { auth?: { user?: { name: string; role: string } } };
 
     const statCards = [
-        { label: 'Judul Buku', value: stats?.totalBooks ?? 0, icon: BookOpen, color: 'text-[#0B4EA2] dark:text-blue-400', bg: 'bg-[#EAF4FF] dark:bg-blue-900/20' },
+        { label: 'Judul Buku', value: stats?.totalBooks ?? 0, icon: BookOpen, color: 'text-[#123B5D] dark:text-blue-400', bg: 'bg-[#E8F1F5] dark:bg-blue-900/20' },
         { label: 'Eksemplar', value: stats?.totalCopies ?? 0, icon: BookCopy, color: 'text-indigo-600 dark:text-indigo-400', bg: 'bg-indigo-50 dark:bg-indigo-900/20' },
         { label: 'Dipinjam', value: stats?.activeLoans ?? 0, icon: Package, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
         { label: 'Reservasi Masuk', value: stats?.pendingReservations ?? 0, icon: CalendarCheck, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
@@ -74,7 +74,7 @@ export default function AdminPanel({ stats }: AdminPanelProps) {
                     <div className="mx-auto max-w-7xl">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-xs font-bold uppercase tracking-widest text-[#0B4EA2] dark:text-blue-400">
+                                <p className="text-xs font-bold uppercase tracking-widest text-[#123B5D] dark:text-blue-400">
                                     Panel Pengelola
                                 </p>
                                 <h1 className="mt-1 font-display text-2xl font-extrabold text-[#0F172A] dark:text-white">
@@ -118,7 +118,7 @@ export default function AdminPanel({ stats }: AdminPanelProps) {
                                     <a
                                         key={item.href}
                                         href={item.href}
-                                        className="flex items-center gap-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 hover:border-[#0B4EA2] dark:hover:border-blue-500 hover:shadow-md transition-all"
+                                        className="flex items-center gap-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 hover:border-[#123B5D] dark:hover:border-blue-500 hover:shadow-md transition-all"
                                     >
                                         <span className={`grid size-11 shrink-0 place-items-center rounded-xl ${item.color}`}>
                                             <item.icon size={20} />
@@ -136,7 +136,7 @@ export default function AdminPanel({ stats }: AdminPanelProps) {
 
                     {/* Quick nav back */}
                     <div className="flex items-center gap-3 pt-2">
-                        <Link href="/" className="text-sm font-semibold text-[#0B4EA2] dark:text-blue-400 hover:underline">
+                        <Link href="/" className="text-sm font-semibold text-[#123B5D] dark:text-blue-400 hover:underline">
                             ← Kembali ke Portal Perpustakaan
                         </Link>
                     </div>

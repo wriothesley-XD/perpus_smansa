@@ -43,11 +43,11 @@ export default function Dashboard({ activeLoans, loanHistory, reservations, pass
                 <div className="mx-auto max-w-7xl px-6 sm:px-8">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex items-center gap-4">
-                            <div className="grid size-16 place-items-center rounded-2xl bg-[#0B4EA2] text-xl font-bold text-white shadow-md">
+                            <div className="grid size-16 place-items-center rounded-2xl bg-[#123B5D] text-xl font-bold text-white shadow-md">
                                 {user?.name.charAt(0)}
                             </div>
                             <div>
-                                <span className="rounded-md bg-[#EAF4FF] px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-[#0B4EA2]">
+                                <span className="rounded-md bg-[#E8F1F5] px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-[#123B5D]">
                                     {user?.role === 'student' ? 'Siswa' : user?.role === 'teacher' ? 'Guru' : 'Anggota'}
                                 </span>
                                     <h1 className="mt-1 font-display text-2xl font-bold text-[#0F172A] dark:text-white">
@@ -62,7 +62,7 @@ export default function Dashboard({ activeLoans, loanHistory, reservations, pass
                         <div className="flex items-center gap-3">
                             <Link
                                 href="/catalog"
-                                className="rounded-xl bg-[#0B4EA2] px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#083c7d] transition-colors"
+                                className="rounded-xl bg-[#123B5D] px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#0C2D47] transition-colors"
                             >
                                 Cari Buku Lagi
                             </Link>
@@ -73,29 +73,29 @@ export default function Dashboard({ activeLoans, loanHistory, reservations, pass
 
             <div className="mx-auto max-w-7xl px-6 py-12 sm:px-8 space-y-12">
                 {/* READING PASSPORT */}
-                <section className="relative overflow-hidden rounded-2xl bg-[#0B3866] p-6 text-white shadow-xl sm:p-8">
+                <section className="relative overflow-hidden rounded-2xl bg-[#123B5D] p-6 text-white shadow-xl sm:p-8">
                     <div className="absolute -right-12 -top-12 size-40 rounded-full border border-white/20" />
                     <div className="relative grid gap-8 lg:grid-cols-[1.2fr_.8fr] lg:items-center">
                         <div>
                             <div className="flex items-center gap-2 text-blue-200"><Sparkles size={16} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em]">Reading Passport</span></div>
                             <h2 className="mt-3 font-display text-3xl font-bold">Perjalanan bacamu punya cerita.</h2>
                             <p className="mt-2 max-w-xl text-sm leading-relaxed text-blue-100">Simpan jejak bacaan, temukan rekomendasi berikutnya, dan bawa identitas literasimu ke mana pun di lingkungan SMANSA.</p>
-                            <div className="mt-6 flex flex-wrap gap-2"><span className="rounded-full bg-[#FACC15] px-3 py-1.5 text-[10px] font-bold text-[#0B3866]">First Chapter</span><span className="rounded-full border border-white/20 px-3 py-1.5 text-[10px] font-bold text-blue-100">{passport.total_reads >= 5 ? 'Book Explorer' : 'Book Explorer • terkunci'}</span><span className="rounded-full border border-white/20 px-3 py-1.5 text-[10px] font-bold text-blue-100">Pembaca SMANSA</span></div>
+                            <div className="mt-6 flex flex-wrap gap-2"><span className="rounded-full bg-[#F8D77E] px-3 py-1.5 text-[10px] font-bold text-[#123B5D]">First Chapter</span><span className="rounded-full border border-white/20 px-3 py-1.5 text-[10px] font-bold text-blue-100">{passport.total_reads >= 5 ? 'Book Explorer' : 'Book Explorer • terkunci'}</span><span className="rounded-full border border-white/20 px-3 py-1.5 text-[10px] font-bold text-blue-100">Pembaca SMANSA</span></div>
                         </div>
                         <div className="relative rotate-[2deg] rounded-sm bg-[#fffdf7] p-5 text-[#0F172A] shadow-xl">
-                            <div className="flex items-start justify-between"><div><span className="font-mono-display text-[9px] font-bold uppercase tracking-widest text-[#0B3866]">Digital Library Card</span><h3 className="mt-2 font-display text-lg font-bold">{user?.name}</h3><p className="text-[10px] text-slate-500">{user?.class_name || 'Warga SMANSA'} • {passport.member_since || '2026'}</p></div><Barcode size={28} className="text-[#0B3866]" /></div>
+                            <div className="flex items-start justify-between"><div><span className="font-mono-display text-[9px] font-bold uppercase tracking-widest text-[#123B5D]">Digital Library Card</span><h3 className="mt-2 font-display text-lg font-bold">{user?.name}</h3><p className="text-[10px] text-slate-500">{user?.class_name || 'Warga SMANSA'} • {passport.member_since || '2026'}</p></div><Barcode size={28} className="text-[#123B5D]" /></div>
                             <div className="mt-6 flex items-end justify-between border-t border-dashed border-slate-300 pt-3"><span className="font-mono text-[10px] font-bold tracking-wider">{passport.member_code}</span><span className="font-handwriting text-sm font-bold text-[#2C3E50]">read. grow. share.</span></div>
                         </div>
                     </div>
-                    <div className="relative mt-8 grid grid-cols-3 gap-3 border-t border-white/15 pt-5"><div><strong className="block font-display text-2xl">{passport.total_reads}</strong><span className="text-[10px] text-blue-200">Buku selesai</span></div><div><strong className="block font-display text-2xl">{passport.active_reads}</strong><span className="text-[10px] text-blue-200">Sedang dibaca</span></div><div><strong className="flex items-center gap-1 font-display text-2xl"><Flame size={18} className="text-[#FACC15]" />{passport.streak}</strong><span className="text-[10px] text-blue-200">Hari streak</span></div></div>
+                    <div className="relative mt-8 grid grid-cols-3 gap-3 border-t border-white/15 pt-5"><div><strong className="block font-display text-2xl">{passport.total_reads}</strong><span className="text-[10px] text-blue-200">Buku selesai</span></div><div><strong className="block font-display text-2xl">{passport.active_reads}</strong><span className="text-[10px] text-blue-200">Sedang dibaca</span></div><div><strong className="flex items-center gap-1 font-display text-2xl"><Flame size={18} className="text-[#F8D77E]" />{passport.streak}</strong><span className="text-[10px] text-blue-200">Hari streak</span></div></div>
                 </section>
 
-                {recommendations.length > 0 && <section><div className="flex items-end justify-between"><div><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#0B3866]">Untuk perjalananmu</span><h2 className="mt-2 font-display text-xl font-bold text-[#0F172A] dark:text-white">Bacaan berikutnya</h2></div><Link href="/catalog" className="font-handwriting text-sm font-bold">Jelajahi semua →</Link></div><div className="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3">{recommendations.map((book) => <BookCard key={book.id} book={book} hasClip={false} />)}</div></section>}
+                {recommendations.length > 0 && <section><div className="flex items-end justify-between"><div><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#123B5D]">Untuk perjalananmu</span><h2 className="mt-2 font-display text-xl font-bold text-[#0F172A] dark:text-white">Bacaan berikutnya</h2></div><Link href="/catalog" className="font-handwriting text-sm font-bold">Jelajahi semua →</Link></div><div className="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3">{recommendations.map((book) => <BookCard key={book.id} book={book} hasClip={false} />)}</div></section>}
 
                 {/* ACTIVE LOANS */}
                 <div>
                     <div className="flex items-center gap-2">
-                        <BookOpen size={18} className="text-[#0B4EA2]" />
+                        <BookOpen size={18} className="text-[#123B5D]" />
                         <h2 className="font-display text-xl font-bold text-[#0F172A]">
                             Peminjaman Aktif ({activeLoans.length})
                         </h2>
@@ -149,7 +149,7 @@ export default function Dashboard({ activeLoans, loanHistory, reservations, pass
                 {/* RESERVATIONS */}
                 <div>
                     <div className="flex items-center gap-2">
-                        <BookMarked size={18} className="text-[#0B4EA2]" />
+                        <BookMarked size={18} className="text-[#123B5D]" />
                         <h2 className="font-display text-xl font-bold text-[#0F172A]">
                             Riwayat Reservasi ({reservations.length})
                         </h2>
@@ -170,7 +170,7 @@ export default function Dashboard({ activeLoans, loanHistory, reservations, pass
                                     <tbody className="divide-y divide-slate-100 text-slate-700">
                                         {reservations.map((res) => (
                                             <tr key={res.id}>
-                                                <td className="px-5 py-3.5 font-mono font-bold text-[#0B4EA2]">
+                                                <td className="px-5 py-3.5 font-mono font-bold text-[#123B5D]">
                                                     {res.reservation_code}
                                                 </td>
                                                 <td className="px-5 py-3.5 font-semibold text-[#0F172A]">

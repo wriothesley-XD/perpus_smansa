@@ -32,7 +32,7 @@ export default function RankingIndex({ topBooks, topMembers, totalLoans, period 
 
             <div className="bg-white dark:bg-slate-900 min-h-screen">
                 {/* Header */}
-                <div className="border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-[#0B4EA2] to-[#1d6fd6] px-6 py-16 text-white sm:px-8">
+                <div className="border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-[#123B5D] to-[#1d6fd6] px-6 py-16 text-white sm:px-8">
                     <div className="mx-auto max-w-7xl">
                         <div className="flex items-center gap-3">
                             <Trophy size={32} className="text-[#facc15]" />
@@ -46,7 +46,7 @@ export default function RankingIndex({ topBooks, topMembers, totalLoans, period 
                             <span className="font-bold">{totalLoans.toLocaleString('id-ID')} total peminjaman tercatat</span>
                         </div>
                         <div className="mt-5 flex flex-wrap gap-2">
-                            {periods.map((item) => <button key={item.key} type="button" onClick={() => router.get('/ranking', { period: item.key }, { preserveScroll: true })} className={`rounded-full px-3 py-1.5 text-xs font-bold transition ${period === item.key ? 'bg-[#FACC15] text-[#0B3866]' : 'bg-white/10 text-white hover:bg-white/20'}`}>{item.label}</button>)}
+                            {periods.map((item) => <button key={item.key} type="button" onClick={() => router.get('/ranking', { period: item.key }, { preserveScroll: true })} className={`rounded-full px-3 py-1.5 text-xs font-bold transition ${period === item.key ? 'bg-[#F8D77E] text-[#123B5D]' : 'bg-white/10 text-white hover:bg-white/20'}`}>{item.label}</button>)}
                         </div>
                     </div>
                 </div>
@@ -56,8 +56,8 @@ export default function RankingIndex({ topBooks, topMembers, totalLoans, period 
                         {/* Top Books */}
                         <div>
                             <div className="mb-6 flex items-center gap-3">
-                                <span className="grid size-10 place-items-center rounded-xl bg-[#EAF4FF] dark:bg-slate-800">
-                                    <BookOpen size={20} className="text-[#0B4EA2] dark:text-blue-400" />
+                                <span className="grid size-10 place-items-center rounded-xl bg-[#E8F1F5] dark:bg-slate-800">
+                                    <BookOpen size={20} className="text-[#123B5D] dark:text-blue-400" />
                                 </span>
                                 <div>
                                     <h2 className="font-display text-xl font-bold text-[#0F172A] dark:text-white">Buku Terbanyak Dipinjam</h2>
@@ -74,7 +74,7 @@ export default function RankingIndex({ topBooks, topMembers, totalLoans, period 
                                     <Link
                                         key={book.id}
                                         href={`/books/${book.slug}`}
-                                        className="flex items-center gap-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:border-[#0B4EA2] dark:hover:border-blue-500 transition-all hover:-translate-y-0.5 hover:shadow-md"
+                                        className="flex items-center gap-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:border-[#123B5D] dark:hover:border-blue-500 transition-all hover:-translate-y-0.5 hover:shadow-md"
                                     >
                                         <div className="flex w-8 items-center justify-center shrink-0">
                                             {medal(idx + 1)}
@@ -93,7 +93,7 @@ export default function RankingIndex({ topBooks, topMembers, totalLoans, period 
                                             </p>
                                         </div>
                                         <div className="shrink-0 text-right">
-                                            <p className="text-lg font-extrabold text-[#0B4EA2] dark:text-blue-400">{book.loan_count ?? 0}</p>
+                                            <p className="text-lg font-extrabold text-[#123B5D] dark:text-blue-400">{book.loan_count ?? 0}</p>
                                             <p className="text-[10px] uppercase tracking-wider text-slate-400">pinjaman</p>
                                         </div>
                                     </Link>
@@ -126,7 +126,7 @@ export default function RankingIndex({ topBooks, topMembers, totalLoans, period 
                                         <div className="flex w-8 items-center justify-center shrink-0">
                                             {medal(idx + 1)}
                                         </div>
-                                        <div className="grid size-10 shrink-0 place-items-center rounded-full bg-[#0B4EA2] text-white font-bold text-sm">
+                                        <div className="grid size-10 shrink-0 place-items-center rounded-full bg-[#123B5D] text-white font-bold text-sm">
                                             {member.initial_name}
                                         </div>
                                         <div className="flex-1 min-w-0">

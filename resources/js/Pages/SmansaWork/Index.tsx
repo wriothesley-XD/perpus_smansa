@@ -43,7 +43,7 @@ export default function SmansaWorkIndex({ works, categories, filters }: SmansaWo
                                     Cerpen, puisi, esai, dan karya ilmiah dari guru & siswa SMAN 1 Bukittinggi
                                 </p>
                             </div>
-                            <Link href="/contact?subject=Kirim%20Karya%20SMANSA" className="mt-5 inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#0B4EA2] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#083c7d] sm:mt-0">Kirim Karya <span>↗</span></Link>
+                            <Link href="/contact?subject=Kirim%20Karya%20SMANSA" className="mt-5 inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#123B5D] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#0C2D47] sm:mt-0">Kirim Karya <span>↗</span></Link>
                         </div>
                     </div>
                 </div>
@@ -53,12 +53,12 @@ export default function SmansaWorkIndex({ works, categories, filters }: SmansaWo
                     <div className="mx-auto flex max-w-7xl flex-wrap gap-2 py-4">
                         {/* Category filter */}
                         <button onClick={() => setFilter('category', null)}
-                            className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${!filters.category ? 'bg-[#0B4EA2] text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+                            className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${!filters.category ? 'bg-[#123B5D] text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
                             Semua Kategori
                         </button>
                         {categories.map(cat => (
                             <button key={cat} onClick={() => setFilter('category', cat)}
-                                className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${filters.category === cat ? 'bg-[#0B4EA2] text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+                                className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${filters.category === cat ? 'bg-[#123B5D] text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
                                 {categoryLabel[cat] ?? cat}
                             </button>
                         ))}

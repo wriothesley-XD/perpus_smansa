@@ -87,7 +87,7 @@ export function BotanicalLeaf({ className = "", size = 64, color = "#2E5A44", ro
 }
 
 /** Hand-drawn Star Doodle */
-export function HandDrawnStar({ size = 20, color = "#2E8BE6", className = "" }: { size?: number; color?: string; className?: string }) {
+export function HandDrawnStar({ size = 20, color = "#E37C5B", className = "" }: { size?: number; color?: string; className?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
       <path

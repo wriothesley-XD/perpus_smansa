@@ -73,7 +73,7 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
             <div className="w-full max-w-lg rounded-t-3xl border border-slate-200 bg-white p-6 shadow-2xl transition-all sm:rounded-3xl sm:p-8">
                 <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
                     <div>
-                            <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.16em] text-[#0B4EA2]">
+                            <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.16em] text-[#123B5D]">
                                 {isAvailable ? 'Reservasi Koleksi' : 'Daftar Tunggu'}
                         </span>
                         <h2 className="mt-1 font-display text-xl font-bold text-[#0F172A]">
@@ -109,7 +109,7 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                         <button
                             type="button"
                             onClick={handleClose}
-                            className="mt-6 w-full rounded-xl bg-[#0B4EA2] py-3 text-sm font-bold text-white shadow-md hover:bg-[#083c7d] transition-all"
+                            className="mt-6 w-full rounded-xl bg-[#123B5D] py-3 text-sm font-bold text-white shadow-md hover:bg-[#0C2D47] transition-all"
                         >
                             Selesai
                         </button>
@@ -132,7 +132,7 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                                 value={data.name}
                                 onChange={(e) => setData('name', e.target.value)}
                                 placeholder="Masukkan nama sesuai kartu identitas"
-                                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#0B4EA2] focus:bg-white focus:ring-2 focus:ring-[#0B4EA2]/15"
+                                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#123B5D] focus:bg-white focus:ring-2 focus:ring-[#123B5D]/15"
                             />
                             {errors.name && <p className="mt-1 text-xs text-rose-600">{errors.name}</p>}
                         </div>
@@ -148,7 +148,7 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                                     value={data.nis}
                                     onChange={(e) => setData('nis', e.target.value)}
                                     placeholder="Contoh: 23101"
-                                    className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#0B4EA2] focus:bg-white focus:ring-2 focus:ring-[#0B4EA2]/15"
+                                    className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#123B5D] focus:bg-white focus:ring-2 focus:ring-[#123B5D]/15"
                                 />
                                 {errors.nis && <p className="mt-1 text-xs text-rose-600">{errors.nis}</p>}
                             </div>
@@ -163,7 +163,7 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                                     value={data.class_name}
                                     onChange={(e) => setData('class_name', e.target.value)}
                                     placeholder="Contoh: XI MIPA 1"
-                                    className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#0B4EA2] focus:bg-white focus:ring-2 focus:ring-[#0B4EA2]/15"
+                                    className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#123B5D] focus:bg-white focus:ring-2 focus:ring-[#123B5D]/15"
                                 />
                                 {errors.class_name && (
                                     <p className="mt-1 text-xs text-rose-600">{errors.class_name}</p>
@@ -180,7 +180,7 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                                 value={data.phone_number}
                                 onChange={(e) => setData('phone_number', e.target.value)}
                                 placeholder="Untuk notifikasi konfirmasi status buku"
-                                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#0B4EA2] focus:bg-white focus:ring-2 focus:ring-[#0B4EA2]/15"
+                                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#123B5D] focus:bg-white focus:ring-2 focus:ring-[#123B5D]/15"
                             />
                             {errors.phone_number && (
                                 <p className="mt-1 text-xs text-rose-600">{errors.phone_number}</p>
@@ -188,7 +188,7 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                         </div>
 
                         <div className="flex items-center gap-2 pt-2 text-[11px] text-slate-500">
-                            <ShieldCheck size={14} className="text-[#0B4EA2] shrink-0" />
+                            <ShieldCheck size={14} className="text-[#123B5D] shrink-0" />
                             <span>Data disimpan secara aman sesuai ketentuan sirkulasi SMAN 1 Bukittinggi.</span>
                         </div>
 
@@ -203,7 +203,7 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="flex-1 rounded-xl bg-[#0B4EA2] py-3 text-sm font-bold text-white shadow-md hover:bg-[#083c7d] transition-all disabled:opacity-50"
+                                className="flex-1 rounded-xl bg-[#123B5D] py-3 text-sm font-bold text-white shadow-md hover:bg-[#0C2D47] transition-all disabled:opacity-50"
                             >
                                 {processing ? 'Memproses...' : isAvailable ? 'Konfirmasi Reservasi' : 'Daftar & Ingatkan Saya'}
                             </button>

@@ -44,7 +44,7 @@ export default function EventIndex({ events, dutas, podcasts }: EventIndexProps)
 
             <div className="min-h-screen bg-white dark:bg-slate-900">
                 {/* Hero */}
-                <div className="border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-[#7c3aed] to-[#0B4EA2] px-6 py-16 text-white sm:px-8">
+                <div className="border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-[#7c3aed] to-[#123B5D] px-6 py-16 text-white sm:px-8">
                     <div className="mx-auto max-w-7xl">
                         <div className="flex items-center gap-3">
                             <Radio size={32} className="text-[#facc15]" />
@@ -65,7 +65,7 @@ export default function EventIndex({ events, dutas, podcasts }: EventIndexProps)
                                 onClick={() => setTab(key)}
                                 className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all ${
                                     tab === key
-                                        ? 'bg-[#0B4EA2] text-white shadow-sm'
+                                        ? 'bg-[#123B5D] text-white shadow-sm'
                                         : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                                 }`}
                             >
@@ -110,7 +110,7 @@ export default function EventIndex({ events, dutas, podcasts }: EventIndexProps)
                                     <span className={`inline-block rounded-lg px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${typeColor(item.type)}`}>
                                         {item.type === 'event' ? 'Event' : item.type === 'duta' ? 'Duta Perpustakaan' : 'Podcast'}
                                     </span>
-                                    <h3 className="mt-3 font-display text-base font-bold leading-snug text-[#0F172A] dark:text-white group-hover:text-[#0B4EA2] dark:group-hover:text-blue-400 transition-colors">
+                                    <h3 className="mt-3 font-display text-base font-bold leading-snug text-[#0F172A] dark:text-white group-hover:text-[#123B5D] dark:group-hover:text-blue-400 transition-colors">
                                         {item.title}
                                     </h3>
                                     {item.description && (

@@ -64,7 +64,7 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
                             {/* Main Title */}
                             <h1 className="font-display text-4xl sm:text-5xl lg:text-[56px] font-extrabold leading-[1.12] tracking-tight text-[#0F172A]">
                                 Temukan halaman <br />
-                                yang <span className="text-[#2E8BE6]">menunggumu.</span>
+                                yang <span className="text-[#E37C5B]">menunggumu.</span>
                             </h1>
 
                             <p className="mt-4 max-w-lg text-xs sm:text-sm leading-relaxed text-slate-600">
@@ -82,11 +82,11 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Cari buku, penulis, atau kategori..."
-                                    className="w-full bg-transparent px-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none"
+                                    className="w-full bg-transparent px-3 py-1 text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
                                 />
                                 <button
                                     type="submit"
-                                    className="rounded-full bg-[#0B3866] px-6 py-2 text-xs font-bold text-white hover:bg-[#082B4E] transition-colors"
+                                    className="rounded-full bg-[#123B5D] px-7 py-2.5 text-xs font-bold text-white hover:bg-[#0C2D47] transition-colors"
                                 >
                                     Cari
                                 </button>
@@ -157,11 +157,11 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
                             <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A]">
                                 Buku Terpopuler
                             </h2>
-                            <HandDrawnStar size={20} color="#2E8BE6" />
+                            <HandDrawnStar size={20} color="#E37C5B" />
                         </div>
                         <Link
                             href="/catalog"
-                            className="font-handwriting text-base font-bold text-[#2E8BE6] hover:underline"
+                            className="font-handwriting text-base font-bold text-[#E37C5B] hover:underline"
                         >
                             Lihat Semua →
                         </Link>
@@ -178,7 +178,7 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
 
                         {/* New! doodle on top right */}
                         <div className="absolute -top-7 right-6 z-20 hidden md:block">
-                            <span className="font-handwriting text-2xl font-bold text-[#2E8BE6] rotate-[8deg]">
+                            <span className="font-handwriting text-2xl font-bold text-[#E37C5B] rotate-[8deg]">
                                 New!
                             </span>
                         </div>
@@ -209,42 +209,42 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
                 <div className="mx-auto max-w-7xl">
                     <div className="mb-6 flex items-end justify-between gap-4">
                         <div>
-                            <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#0B3866]">THE READING ROOM</span>
+                            <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#123B5D]">THE READING ROOM</span>
                             <h2 className="mt-2 font-display text-2xl font-extrabold text-[#0F172A] sm:text-3xl">Perpustakaan yang terus bergerak.</h2>
                         </div>
                         <Link href="/events" className="hidden items-center gap-1 font-handwriting text-base font-bold md:flex">Jelajahi komunitas <ArrowUpRight size={16} /></Link>
                     </div>
 
                     <div className="grid gap-4 lg:grid-cols-[1.1fr_.9fr_.9fr]">
-                        <div className="editorial-surface relative overflow-hidden rounded-2xl bg-[#0B3866] p-6 text-white lg:row-span-2">
+                        <div className="editorial-surface relative overflow-hidden rounded-2xl bg-[#123B5D] p-6 text-white lg:row-span-2">
                             <div className="absolute -right-8 -top-8 size-32 rounded-full border border-white/20" />
                             <div className="relative flex items-center gap-2 text-blue-200"><Trophy size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.16em]">Readers Wall of Fame</span></div>
                             <h3 className="relative mt-8 max-w-xs font-display text-3xl font-bold leading-tight">Siapa yang sedang menyalakan rasa ingin tahu?</h3>
                             <div className="relative mt-8 space-y-3">
                                 {topReaders.length > 0 ? topReaders.map((reader, index) => (
                                     <div key={reader.id} className="flex items-center gap-3 rounded-xl bg-white/10 p-3">
-                                        <span className="grid size-8 place-items-center rounded-full bg-[#FACC15] font-display text-sm font-bold text-[#0B3866]">{index + 1}</span>
+                                        <span className="grid size-8 place-items-center rounded-full bg-[#F8D77E] font-display text-sm font-bold text-[#123B5D]">{index + 1}</span>
                                         <div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{reader.name}</p><p className="text-[10px] text-blue-200">{reader.class || 'Pembaca aktif'}</p></div>
-                                        <strong className="font-mono-display text-xs text-[#FACC15]">{reader.loans_count} pinjam</strong>
+                                        <strong className="font-mono-display text-xs text-[#F8D77E]">{reader.loans_count} pinjam</strong>
                                     </div>
                                 )) : <p className="text-sm text-blue-100">Papan pembaca akan muncul setelah transaksi peminjaman tercatat.</p>}
                             </div>
-                            <Link href="/ranking" className="relative mt-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-[#0B3866]">Lihat ranking lengkap <ArrowUpRight size={14} /></Link>
+                            <Link href="/ranking" className="relative mt-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-[#123B5D]">Lihat ranking lengkap <ArrowUpRight size={14} /></Link>
                         </div>
 
                         <div className="editorial-surface rounded-2xl bg-[#fffdf7] p-5">
-                            <div className="flex items-center justify-between"><span className="flex items-center gap-2 text-[#0B3866]"><CalendarDays size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider">Agenda & Duta</span></span><Link href="/events" className="font-handwriting text-sm font-bold">Semua →</Link></div>
+                            <div className="flex items-center justify-between"><span className="flex items-center gap-2 text-[#123B5D]"><CalendarDays size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider">Agenda & Duta</span></span><Link href="/events" className="font-handwriting text-sm font-bold">Semua →</Link></div>
                             <div className="mt-5 space-y-3">{upcomingEvents.length > 0 ? upcomingEvents.map((event) => <Link key={event.id} href={`/events/${event.slug}`} className="block rounded-xl bg-[#eaf5ff] p-3 transition hover:-translate-y-0.5"><p className="text-sm font-bold text-[#0F172A]">{event.title}</p><p className="mt-1 text-[10px] text-slate-500">{event.event_date || 'Agenda terbaru'} {event.location ? `• ${event.location}` : ''}</p></Link>) : <p className="text-xs text-slate-500">Agenda baru sedang disiapkan oleh tim perpustakaan.</p>}</div>
                         </div>
 
                         <div className="editorial-surface rounded-2xl bg-[#fffdf7] p-5">
-                            <div className="flex items-center gap-2 text-[#0B3866]"><Headphones size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider">Podcast Duta</span></div>
-                            <div className="mt-5 space-y-3">{latestPodcasts.length > 0 ? latestPodcasts.map((podcast) => <Link key={podcast.id} href={`/events/${podcast.slug}`} className="flex items-center gap-3 rounded-xl border border-[#eadbce] p-3 transition hover:-translate-y-0.5"><span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#FACC15] text-[#0B3866]">▶</span><span className="min-w-0"><strong className="block truncate text-sm text-[#0F172A]">{podcast.title}</strong><small className="text-[10px] text-slate-500">{podcast.host_name || 'Duta literasi SMANSA'}</small></span></Link>) : <p className="text-xs text-slate-500">Episode podcast perdana segera hadir.</p>}</div>
+                            <div className="flex items-center gap-2 text-[#123B5D]"><Headphones size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider">Podcast Duta</span></div>
+                            <div className="mt-5 space-y-3">{latestPodcasts.length > 0 ? latestPodcasts.map((podcast) => <Link key={podcast.id} href={`/events/${podcast.slug}`} className="flex items-center gap-3 rounded-xl border border-[#eadbce] p-3 transition hover:-translate-y-0.5"><span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#F8D77E] text-[#123B5D]">▶</span><span className="min-w-0"><strong className="block truncate text-sm text-[#0F172A]">{podcast.title}</strong><small className="text-[10px] text-slate-500">{podcast.host_name || 'Duta literasi SMANSA'}</small></span></Link>) : <p className="text-xs text-slate-500">Episode podcast perdana segera hadir.</p>}</div>
                         </div>
 
                         <div className="editorial-surface rounded-2xl bg-[#fffdf7] p-5 lg:col-span-2">
-                            <div className="flex items-center justify-between"><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider text-[#0B3866]">Karya SMANSA</span><Link href="/karya-smansa" className="font-handwriting text-sm font-bold">Buka galeri →</Link></div>
-                            <div className="mt-4 grid gap-3 sm:grid-cols-2">{featuredWorks.length > 0 ? featuredWorks.map((work) => <Link key={work.id} href={`/karya-smansa/${work.slug}`} className="rounded-xl bg-[#f4efeA] p-3 transition hover:-translate-y-0.5"><span className="font-mono-display text-[9px] font-bold uppercase tracking-wider text-[#2E8BE6]">{work.category_label || work.category}</span><h3 className="mt-1 font-display text-base font-bold text-[#0F172A]">{work.title}</h3><p className="mt-1 text-[10px] text-slate-500">{work.author_name} • {work.author_type === 'teacher' ? 'Guru' : 'Siswa'}</p></Link>) : <p className="text-xs text-slate-500">Karya pilihan guru dan siswa akan tampil di sini.</p>}</div>
+                            <div className="flex items-center justify-between"><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider text-[#123B5D]">Karya SMANSA</span><Link href="/karya-smansa" className="font-handwriting text-sm font-bold">Buka galeri →</Link></div>
+                            <div className="mt-4 grid gap-3 sm:grid-cols-2">{featuredWorks.length > 0 ? featuredWorks.map((work) => <Link key={work.id} href={`/karya-smansa/${work.slug}`} className="rounded-xl bg-[#f4efeA] p-3 transition hover:-translate-y-0.5"><span className="font-mono-display text-[9px] font-bold uppercase tracking-wider text-[#E37C5B]">{work.category_label || work.category}</span><h3 className="mt-1 font-display text-base font-bold text-[#0F172A]">{work.title}</h3><p className="mt-1 text-[10px] text-slate-500">{work.author_name} • {work.author_type === 'teacher' ? 'Guru' : 'Siswa'}</p></Link>) : <p className="text-xs text-slate-500">Karya pilihan guru dan siswa akan tampil di sini.</p>}</div>
                         </div>
                     </div>
                 </div>

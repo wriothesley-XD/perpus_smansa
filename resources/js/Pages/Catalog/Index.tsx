@@ -80,7 +80,7 @@ export default function CatalogIndex({
                                 </h1>
                                 {/* Annotation note beside title */}
                                 <div className="absolute top-1 -right-28 hidden sm:block">
-                                    <span className="font-handwriting text-sm text-[#2E8BE6] font-semibold rotate-[8deg] inline-block">
+                                    <span className="font-handwriting text-sm text-[#E37C5B] font-semibold rotate-[8deg] inline-block">
                                         koleksi untuk <br /> setiap cerita
                                     </span>
                                 </div>
@@ -89,7 +89,7 @@ export default function CatalogIndex({
                             {/* Search bar with blue round button */}
                             <form
                                 onSubmit={handleSearchSubmit}
-                                className="mt-8 flex max-w-xl items-center rounded-full bg-white px-4 py-1.5 shadow-[0_4px_18px_rgba(0,0,0,0.06)] border border-slate-200"
+                                className="editorial-surface mt-8 flex max-w-2xl items-center rounded-full bg-white/90 px-4 py-2 shadow-[0_12px_28px_-18px_rgba(18,59,93,.35)]"
                             >
                                 <Search size={16} className="text-slate-400 shrink-0" />
                                 <input
@@ -97,18 +97,18 @@ export default function CatalogIndex({
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     placeholder="Cari buku, penulis, atau kategori..."
-                                    className="w-full bg-transparent px-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none"
+                                    className="w-full bg-transparent px-3 py-1 text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
                                 />
                                 <button
                                     type="submit"
-                                    className="rounded-full bg-[#0B3866] px-6 py-2 text-xs font-bold text-white hover:bg-[#082B4E] transition-colors"
+                                    className="rounded-full bg-[#123B5D] px-7 py-2.5 text-xs font-bold text-white hover:bg-[#0C2D47] transition-colors"
                                 >
                                     Cari
                                 </button>
                             </form>
 
                             {/* Filter Dropdown Pills matching mockup: Kategori, Ketersediaan, Penulis */}
-                            <div className="mt-4 flex flex-wrap items-center gap-3">
+                            <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-[#e4d8ca] bg-white/35 p-2 dark:border-white/10">
                                 {/* Kategori Dropdown */}
                                 <select
                                     value={category}
@@ -116,7 +116,7 @@ export default function CatalogIndex({
                                         setCategory(e.target.value);
                                         applyFilters({ category: e.target.value });
                                     }}
-                                    className="rounded-lg border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow-xs focus:outline-none"
+                                    className="rounded-xl border border-transparent bg-white/75 px-3 py-2 text-[11px] font-semibold text-slate-700 shadow-xs focus:border-[#e37c5b] focus:outline-none dark:bg-white/10 dark:text-slate-200"
                                 >
                                     <option value="">Kategori ▾</option>
                                     {categories.map((cat) => (
@@ -131,7 +131,7 @@ export default function CatalogIndex({
                                         setStatus(e.target.value);
                                         applyFilters({ status: e.target.value });
                                     }}
-                                    className="rounded-lg border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow-xs focus:outline-none"
+                                    className="rounded-xl border border-transparent bg-white/75 px-3 py-2 text-[11px] font-semibold text-slate-700 shadow-xs focus:border-[#e37c5b] focus:outline-none dark:bg-white/10 dark:text-slate-200"
                                 >
                                     <option value="all">Ketersediaan ▾</option>
                                     <option value="available">Tersedia</option>
@@ -145,7 +145,7 @@ export default function CatalogIndex({
                                         setAuthor(e.target.value);
                                         applyFilters({ author: e.target.value });
                                     }}
-                                    className="rounded-lg border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow-xs focus:outline-none"
+                                    className="rounded-xl border border-transparent bg-white/75 px-3 py-2 text-[11px] font-semibold text-slate-700 shadow-xs focus:border-[#e37c5b] focus:outline-none dark:bg-white/10 dark:text-slate-200"
                                 >
                                     <option value="">Penulis ▾</option>
                                     {authors.map((name) => (
