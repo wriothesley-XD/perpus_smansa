@@ -1,4 +1,4 @@
-﻿import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
 import React, { useState } from 'react';
 import { BookCard } from '../Components/Common/BookCard';
@@ -60,7 +60,7 @@ export default function Home({ stats, popularBooks, latestMagazines }: HomeProps
                             {/* Main Title */}
                             <h1 className="font-display text-4xl sm:text-5xl lg:text-[56px] font-extrabold leading-[1.12] tracking-tight text-[#0F172A]">
                                 Temukan halaman <br />
-                                yang <span className="text-[#0B4EA2]">menunggumu.</span>
+                                yang <span className="text-[#2E8BE6]">menunggumu.</span>
                             </h1>
 
                             <p className="mt-4 max-w-lg text-xs sm:text-sm leading-relaxed text-slate-600">
@@ -82,7 +82,7 @@ export default function Home({ stats, popularBooks, latestMagazines }: HomeProps
                                 />
                                 <button
                                     type="submit"
-                                    className="rounded-full bg-[#0B4EA2] px-6 py-2 text-xs font-bold text-white hover:bg-[#083c7d] transition-colors"
+                                    className="rounded-full bg-[#0B3866] px-6 py-2 text-xs font-bold text-white hover:bg-[#082B4E] transition-colors"
                                 >
                                     Cari
                                 </button>
@@ -153,11 +153,11 @@ export default function Home({ stats, popularBooks, latestMagazines }: HomeProps
                             <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A]">
                                 Buku Terpopuler
                             </h2>
-                            <HandDrawnStar size={20} color="#0B4EA2" />
+                            <HandDrawnStar size={20} color="#2E8BE6" />
                         </div>
                         <Link
                             href="/catalog"
-                            className="font-handwriting text-base font-bold text-[#0B4EA2] hover:underline"
+                            className="font-handwriting text-base font-bold text-[#2E8BE6] hover:underline"
                         >
                             Lihat Semua ➔
                         </Link>
@@ -174,7 +174,7 @@ export default function Home({ stats, popularBooks, latestMagazines }: HomeProps
 
                         {/* New! doodle on top right */}
                         <div className="absolute -top-7 right-6 z-20 hidden md:block">
-                            <span className="font-handwriting text-2xl font-bold text-[#0B4EA2] rotate-[8deg]">
+                            <span className="font-handwriting text-2xl font-bold text-[#2E8BE6] rotate-[8deg]">
                                 New!
                             </span>
                         </div>

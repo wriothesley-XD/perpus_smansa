@@ -1,4 +1,4 @@
-﻿import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {
     BookOpen,
     Search,
@@ -26,17 +26,17 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <div className="flex min-h-screen flex-col bg-[#F4EFEA] text-[#0F172A] selection:bg-[#0B4EA2] selection:text-white">
+        <div className="flex min-h-screen flex-col bg-[#F4EFEA] text-[#0F172A] selection:bg-[#0B3866] selection:text-white">
             {/* Header: Transparent warm cream background matching mockup */}
             <header className="sticky top-0 z-40 bg-[#F4EFEA]/90 backdrop-blur-md transition-all">
                 <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-10">
                     {/* Brand Logo: Clean icon + Uppercase text */}
                     <Link href="/" className="flex items-center gap-3">
-                        <span className="grid size-9 place-items-center rounded-lg bg-[#0B4EA2] text-white shadow-sm">
+                        <span className="grid size-9 place-items-center rounded-lg bg-[#0B3866] text-white shadow-sm">
                             <BookOpen size={18} strokeWidth={2.2} />
                         </span>
                         <div className="leading-tight">
-                            <span className="block font-display text-sm font-extrabold uppercase tracking-wide text-[#0B4EA2]">
+                            <span className="block font-display text-sm font-extrabold uppercase tracking-wide text-[#0B3866]">
                                 Perpustakaan
                             </span>
                             <span className="block font-mono-display text-[9px] font-bold uppercase tracking-[0.16em] text-slate-700">
@@ -53,8 +53,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className={`text-xs font-semibold tracking-wide transition-colors hover:text-[#0B4EA2] ${
-                                        active ? 'font-bold text-[#0B4EA2]' : 'text-slate-600'
+                                    className={`text-xs font-semibold tracking-wide transition-colors hover:text-[#2E8BE6] ${
+                                        active ? 'font-bold text-[#2E8BE6]' : 'text-slate-600'
                                     }`}
                                 >
                                     {item.label}
@@ -67,7 +67,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                     <div className="hidden items-center gap-4 md:flex">
                         <Link
                             href="/catalog"
-                            className="p-1.5 text-slate-600 hover:text-[#0B4EA2] transition-colors"
+                            className="p-1.5 text-slate-600 hover:text-[#0B3866] transition-colors"
                             title="Pencarian"
                         >
                             <Search size={17} strokeWidth={2.2} />
@@ -76,14 +76,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                         {auth?.user ? (
                             <Link
                                 href="/dashboard"
-                                className="rounded-full bg-[#0B4EA2] px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#083c7d] transition-all"
+                                className="rounded-full bg-[#0B3866] px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-all"
                             >
                                 Dashboard
                             </Link>
                         ) : (
                             <Link
                                 href="/login"
-                                className="rounded-full bg-[#0B4EA2] px-6 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#083c7d] transition-all"
+                                className="rounded-full bg-[#0B3866] px-6 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-all"
                             >
                                 Login
                             </Link>
@@ -111,13 +111,13 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                                     key={item.href}
                                     href={item.href}
                                     onClick={() => setMobileOpen(false)}
-                                    className="py-2 text-sm font-semibold text-slate-700 hover:text-[#0B4EA2]"
+                                    className="py-2 text-sm font-semibold text-slate-700 hover:text-[#2E8BE6]"
                                 >
                                     {item.label}
                                 </Link>
                             ))}
                             <div className="mt-3 pt-3 border-t border-slate-200 flex justify-between items-center">
-                                <Link href="/login" className="rounded-full bg-[#0B4EA2] px-5 py-2 text-xs font-bold text-white">
+                                <Link href="/login" className="rounded-full bg-[#0B3866] px-5 py-2 text-xs font-bold text-white">
                                     Login
                                 </Link>
                             </div>
@@ -130,7 +130,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <main className="flex-1">{children}</main>
 
             {/* Footer: Deep Navy Bar with Center Slogan & Socials */}
-            <footer className="mt-16 bg-[#0B4EA2] text-white">
+            <footer className="mt-16 bg-[#0B3866] text-white">
                 <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-8 sm:flex-row sm:px-10">
                     {/* Left: Brand */}
                     <div className="flex items-center gap-3">

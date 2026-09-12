@@ -44,7 +44,8 @@ export default function Information({ librarians }: InformationProps) {
                             <h1 className="mt-2 font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F172A] leading-tight">
                                 Lebih dari <br />
                                 sekadar perpustakaan, <br />
-                                <span className="text-[#0B4EA2]">ini adalah ruang untuk tumbuh.</span>
+                                ini adalah ruang untuk <br />
+                                <span className="text-[#2E8BE6]">tumbuh.</span>
                             </h1>
 
                             <p className="mt-4 max-w-md text-xs sm:text-sm leading-relaxed text-slate-600">

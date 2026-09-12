@@ -1,4 +1,4 @@
-﻿import { Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import React from 'react';
 import { Book } from '../../types/library';
 import { BookCover } from './BookCover';
@@ -50,7 +50,7 @@ export function BookCard({ book, hasClip = true, sticker }: BookCardProps) {
 
                 {/* Book Details */}
                 <div className="mt-3 flex flex-col">
-                    <h3 className="line-clamp-1 font-display text-[13px] font-bold text-[#0F172A] group-hover:text-[#0B4EA2] transition-colors">
+                    <h3 className="line-clamp-1 font-display text-[13px] font-bold text-[#0F172A] group-hover:text-[#2E8BE6] transition-colors">
                         {book.title}
                     </h3>
                     <p className="line-clamp-1 text-[11px] text-slate-500 mt-0.5">
@@ -67,7 +67,7 @@ export function BookCard({ book, hasClip = true, sticker }: BookCardProps) {
                                 Tersedia
                             </span>
                         ) : (
-                            <span className="inline-block rounded-full bg-[#EBF2FC] px-2.5 py-0.5 text-[9px] font-bold text-[#0B4EA2]">
+                            <span className="inline-block rounded-full bg-[#EBF2FC] px-2.5 py-0.5 text-[9px] font-bold text-[#0B3866]">
                                 Dipinjam
                             </span>
                         )}

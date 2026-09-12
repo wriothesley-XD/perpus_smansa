@@ -13,7 +13,7 @@ export function BookCover({ src, title, className = '' }: BookCoverProps) {
     if (failed || !src) {
         return (
             <div
-                className={`relative flex flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#0B4EA2] to-[#092E61] p-4 text-center text-white shadow-md ${className}`}
+                className={`relative flex flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#0B3866] to-[#092E61] p-4 text-center text-white shadow-md ${className}`}
                 aria-label={`Sampul ${title}`}
             >
                 <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]" />

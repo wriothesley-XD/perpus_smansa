@@ -1,4 +1,4 @@
-﻿import { Head, Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import React from 'react';
 import {
     BotanicalLeaf,
@@ -35,7 +35,7 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
                             <h1 className="mt-3 font-display text-4xl sm:text-5xl lg:text-[54px] font-extrabold leading-[1.12] tracking-tight text-[#0F172A]">
                                 Majalah digital <br />
                                 untuk pikiran yang <br />
-                                <span className="text-[#0B4EA2]">lebih luas.</span>
+                                <span className="text-[#2E8BE6]">lebih luas.</span>
                             </h1>
 
                             <p className="mt-4 max-w-md text-xs sm:text-sm leading-relaxed text-slate-600">
@@ -45,7 +45,7 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
                             <div className="mt-7 flex items-center gap-6">
                                 <a
                                     href="#populer"
-                                    className="rounded-full bg-[#0B4EA2] px-7 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#083c7d] transition-all"
+                                    className="rounded-full bg-[#0B3866] px-7 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-all"
                                 >
                                     Jelajahi Semua ➔
                                 </a>
@@ -88,7 +88,7 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
                                             className="h-full w-full object-cover"
                                         />
                                     ) : (
-                                        <div className="h-full w-full bg-gradient-to-br from-[#0B4EA2] to-[#041D3F] p-4 text-white flex flex-col justify-between">
+                                        <div className="h-full w-full bg-gradient-to-br from-[#0B3866] to-[#041D3F] p-4 text-white flex flex-col justify-between">
                                             <span className="font-mono-display text-[9px] uppercase tracking-widest text-blue-200">
                                                 Genta Smansa
                                             </span>
@@ -122,9 +122,9 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
                         <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A]">
                             Majalah Populer
                         </h2>
-                        <span className="font-handwriting text-base font-bold text-[#0B4EA2]">
+                        <a href="#populer" className="font-handwriting text-base font-bold text-[#2E8BE6] hover:underline">
                             Lihat Semua ➔
-                        </span>
+                        </a>
                     </div>
 
                     <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
@@ -164,7 +164,7 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
                                         </p>
                                         <Link
                                             href={`/magazines/${ed.id}`}
-                                            className="mt-2.5 inline-block rounded-full bg-[#0B4EA2] px-3 py-1 text-[10px] font-bold text-white hover:bg-[#083c7d]"
+                                            className="mt-2.5 inline-block rounded-full bg-[#0B3866] px-3 py-1 text-[10px] font-bold text-white hover:bg-[#082B4E]"
                                         >
                                             Baca
                                         </Link>

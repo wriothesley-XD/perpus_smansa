@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 
 /** Realistic Paper Clip SVG */
 export function RealPaperClip({ className = "", color = "#788796", rotate = 15 }: { className?: string; color?: string; rotate?: number }) {
@@ -87,7 +87,7 @@ export function BotanicalLeaf({ className = "", size = 64, color = "#2E5A44", ro
 }
 
 /** Hand-drawn Star Doodle */
-export function HandDrawnStar({ size = 20, color = "#0B4EA2", className = "" }: { size?: number; color?: string; className?: string }) {
+export function HandDrawnStar({ size = 20, color = "#2E8BE6", className = "" }: { size?: number; color?: string; className?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
       <path

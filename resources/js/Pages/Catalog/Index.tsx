@@ -14,29 +14,34 @@ interface CatalogIndexProps {
     books: PaginatedResponse<Book>;
     categories: Category[];
     ddcClasses: DdcClass[];
+    authors: string[];
     filters: {
         q: string;
         category: string;
         ddc: string;
         status: string;
         sort: string;
+        author?: string;
     };
 }
 
 export default function CatalogIndex({
     books,
     categories,
+    authors,
     filters,
 }: CatalogIndexProps) {
     const [search, setSearch] = useState(filters.q || '');
     const [category, setCategory] = useState(filters.category || '');
     const [status, setStatus] = useState(filters.status || 'all');
+    const [author, setAuthor] = useState(filters.author || '');
 
     const applyFilters = (overrides = {}) => {
         const queryParams = {
             q: search.trim() || undefined,
             category: category || undefined,
             status: status !== 'all' ? status : undefined,
+            author: author || undefined,
             ...overrides,
         };
 
@@ -75,7 +80,7 @@ export default function CatalogIndex({
                                 </h1>
                                 {/* Annotation note beside title */}
                                 <div className="absolute top-1 -right-28 hidden sm:block">
-                                    <span className="font-handwriting text-sm text-[#0B4EA2] font-semibold rotate-[8deg] inline-block">
+                                    <span className="font-handwriting text-sm text-[#2E8BE6] font-semibold rotate-[8deg] inline-block">
                                         koleksi untuk <br /> setiap cerita
                                     </span>
                                 </div>
@@ -96,7 +101,7 @@ export default function CatalogIndex({
                                 />
                                 <button
                                     type="submit"
-                                    className="rounded-full bg-[#0B4EA2] px-6 py-2 text-xs font-bold text-white hover:bg-[#083c7d] transition-colors"
+                                    className="rounded-full bg-[#0B3866] px-6 py-2 text-xs font-bold text-white hover:bg-[#082B4E] transition-colors"
                                 >
                                     Cari
                                 </button>
@@ -131,6 +136,21 @@ export default function CatalogIndex({
                                     <option value="all">Ketersediaan ▾</option>
                                     <option value="available">Tersedia</option>
                                     <option value="borrowed">Sedang Dipinjam</option>
+                                </select>
+
+                                {/* Penulis Dropdown */}
+                                <select
+                                    value={author}
+                                    onChange={(e) => {
+                                        setAuthor(e.target.value);
+                                        applyFilters({ author: e.target.value });
+                                    }}
+                                    className="rounded-lg border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow-xs focus:outline-none"
+                                >
+                                    <option value="">Penulis ▾</option>
+                                    {authors.map((name) => (
+                                        <option key={name} value={name}>{name}</option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
