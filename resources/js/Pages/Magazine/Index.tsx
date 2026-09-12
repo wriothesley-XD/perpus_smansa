@@ -136,12 +136,12 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
                                     </div>
                                 )}
                                 <div className="bg-white rounded-lg p-3 shadow-[0_4px_16px_rgba(0,0,0,0.06)] border border-[#EDE7DF] transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-md">
-                                    <div className="aspect-[3/4.2] overflow-hidden rounded bg-slate-100">
+                                    <div className="aspect-[3/4] overflow-hidden rounded bg-slate-100">
                                         {ed.cover_image ? (
                                             <img
                                                 src={ed.cover_image}
                                                 alt={ed.edition_title}
-                                                className="h-full w-full object-cover"
+                                                className="h-full w-full bg-[#f5efe6] object-contain"
                                             />
                                         ) : (
                                             <div className="h-full w-full bg-slate-800 p-3 text-white flex flex-col justify-between text-center">

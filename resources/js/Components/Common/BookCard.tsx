@@ -18,7 +18,7 @@ export function BookCard({ book, hasClip = true, sticker }: BookCardProps) {
         : 'Penulis';
 
     return (
-        <div className="relative group">
+        <div className="relative group rounded-lg bg-white p-3 shadow-[0_4px_16px_rgba(0,0,0,0.06)] border border-[#EDE7DF] transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_12px_24px_rgba(11,78,162,0.12)]">
             {/* Scrapbook Paperclip on top-left or top-right */}
             {hasClip && (
                 <div className="absolute -top-3.5 left-4 z-20">
@@ -37,14 +37,14 @@ export function BookCard({ book, hasClip = true, sticker }: BookCardProps) {
 
             <Link
                 href={`/books/${book.slug}`}
-                className="block bg-white rounded-lg p-3 shadow-[0_4px_16px_rgba(0,0,0,0.06)] border border-[#EDE7DF] transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_12px_24px_rgba(11,78,162,0.12)]"
+                className="block"
             >
                 {/* Book Cover Frame */}
-                <div className="relative overflow-hidden rounded bg-slate-100 shadow-sm">
+                <div className="relative aspect-[3/4] overflow-hidden rounded bg-slate-100 shadow-sm">
                     <BookCover
                         src={book.cover_image}
                         title={book.title}
-                        className="aspect-[3/4.2] w-full object-cover"
+                        className="h-full w-full object-cover"
                     />
                 </div>
 
@@ -73,6 +73,12 @@ export function BookCard({ book, hasClip = true, sticker }: BookCardProps) {
                         )}
                     </div>
                 </div>
+            </Link>
+            <Link
+                        href={`/books/${book.slug}`}
+                        className={`mt-2.5 inline-flex w-full items-center justify-center rounded-full px-2 py-1.5 text-[9px] font-bold transition-colors ${isAvailable ? 'bg-[#0B3866] text-white hover:bg-[#082B4E]' : 'border border-[#d8c88e] bg-[#fff8d9] text-[#6b5a23] hover:bg-[#f8edb8]'}`}
+                    >
+                        {isAvailable ? 'Pinjam / Detail Rak' : 'Ingatkan Saya'}
             </Link>
         </div>
     );

@@ -35,7 +35,7 @@ export function BookCover({ src, title, className = '' }: BookCoverProps) {
                 alt={`Sampul buku ${title}`}
                 loading="lazy"
                 onError={() => setFailed(true)}
-                className="h-full w-full object-cover transition-transform duration-500 will-change-transform group-hover:scale-105"
+                className="h-full w-full bg-[#f5efe6] object-contain transition-transform duration-500 will-change-transform group-hover:scale-105"
             />
         </div>
     );

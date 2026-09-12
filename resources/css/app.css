@@ -38,6 +38,7 @@
 
 .font-handwriting {
   font-family: var(--font-handwriting);
+  color: #2C3E50 !important;
 }
 
 /* Paper and scrapbook subtle textures & shadows */

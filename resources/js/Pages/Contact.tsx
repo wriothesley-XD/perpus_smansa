@@ -84,8 +84,9 @@ export default function Contact({ settings }: ContactProps) {
 
                     {/* Contact Details & Form Grid */}
                     <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-2">
-                        {/* LEFT: Info list */}
-                        <div className="space-y-6">
+                        {/* LEFT: Info list + map side by side */}
+                        <div className="grid gap-8 md:grid-cols-[.85fr_1.15fr] md:items-start">
+                            <div className="space-y-6">
                             {/* Alamat */}
                             <div className="flex items-start gap-4">
                                 <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#0B3866] text-white text-xs">
@@ -138,15 +139,20 @@ export default function Contact({ settings }: ContactProps) {
                                 </div>
                             </div>
 
-                            {/* Peta Lokasi with Scrapbook memo */}
-                            <div className="relative pt-4">
-                                <div className="rounded-xl overflow-hidden border border-[#EDE7DF] bg-white p-2 shadow-xs aspect-[16/7] relative">
+                            </div>
+
+                            {/* Peta Lokasi with clear navigation affordance */}
+                            <a href="https://www.google.com/maps/search/?api=1&query=SMA+Negeri+1+Bukittinggi" target="_blank" rel="noreferrer" className="group relative block pt-4" aria-label="Buka lokasi perpustakaan di Google Maps">
+                                <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[#EDE7DF] bg-white p-2 shadow-xs transition group-hover:-translate-y-1 group-hover:shadow-md">
                                     <iframe
                                         title="Lokasi SMAN 1 Bukittinggi"
                                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.674996459345!2d100.36675277496464!3d-0.3017779996952671!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2fd5389657b9bb6d%3A0xe1fcab8bb757bf02!2sSMA%20Negeri%201%20Bukittinggi!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
-                                        className="w-full h-full border-0 rounded"
+                                        className="pointer-events-none h-full w-full rounded border-0"
                                         loading="lazy"
                                     />
+                                    <div className="absolute inset-2 flex items-center justify-center rounded bg-[#0B3866]/0 transition group-hover:bg-[#0B3866]/15">
+                                        <span className="rounded-full bg-white px-3 py-2 text-[10px] font-bold text-[#0B3866] opacity-0 shadow-md transition group-hover:opacity-100">Buka navigasi ↗</span>
+                                    </div>
                                 </div>
                                 {/* Sticky note location */}
                                 <div className="absolute -bottom-3 right-4 z-20">
@@ -154,7 +160,7 @@ export default function Contact({ settings }: ContactProps) {
                                         Lokasi Kami: Di Jantung SMAN 1 Bukittinggi ♡
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
 
                         {/* RIGHT: Kirim Pesan Form */}
