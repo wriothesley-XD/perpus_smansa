@@ -4,6 +4,8 @@ import {
     Search,
     Menu,
     X,
+    Moon,
+    Sun,
 } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -11,6 +13,9 @@ const NAV_ITEMS = [
     { label: 'Beranda', href: '/' },
     { label: 'Katalog', href: '/catalog' },
     { label: 'E-Magazine', href: '/magazines' },
+    { label: 'Komunitas', href: '/events' },
+    { label: 'Karya', href: '/karya-smansa' },
+    { label: 'Bahasa', href: '/translations' },
     { label: 'Tentang', href: '/information' },
     { label: 'Kontak', href: '/contact' },
 ];
@@ -19,6 +24,22 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     const { url } = usePage();
     const { auth } = usePage().props as { auth?: { user?: { name: string; role: string } } };
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [darkMode, setDarkMode] = useState(false);
+
+    React.useEffect(() => {
+        const stored = window.localStorage.getItem('smansa-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const enabled = stored ? stored === 'dark' : prefersDark;
+        setDarkMode(enabled);
+        document.documentElement.classList.toggle('dark', enabled);
+    }, []);
+
+    const toggleTheme = () => {
+        const next = !darkMode;
+        setDarkMode(next);
+        document.documentElement.classList.toggle('dark', next);
+        window.localStorage.setItem('smansa-theme', next ? 'dark' : 'light');
+    };
 
     const isActive = (path: string) => {
         if (path === '/') return url === '/';
@@ -26,9 +47,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <div className="paper-grain flex min-h-screen flex-col bg-[#F4EFEA] text-[#0F172A] selection:bg-[#0B3866] selection:text-white">
+        <div className="paper-grain flex min-h-screen flex-col bg-[#F4EFEA] text-[#0F172A] selection:bg-[#0B3866] selection:text-white transition-colors">
             {/* Header: Transparent warm cream background matching mockup */}
-            <header className="sticky top-0 z-40 bg-[#F4EFEA]/90 backdrop-blur-md transition-all">
+            <header className="sticky top-0 z-40 bg-[#F4EFEA]/90 backdrop-blur-md transition-all dark:bg-[#0b1728]/90">
                 <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-10">
                     {/* Brand Logo: Clean icon + Uppercase text */}
                     <Link href="/" className="group relative flex items-center gap-3">
@@ -47,7 +68,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                     </Link>
 
                     {/* Navigation items in center */}
-                    <nav className="hidden items-center gap-7 md:flex">
+                    <nav className="hidden items-center gap-4 lg:gap-6 md:flex">
                         {NAV_ITEMS.map((item) => {
                             const active = isActive(item.href);
                             return (
@@ -65,7 +86,10 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                     </nav>
 
                     {/* Right side: Search Icon & Login Button */}
-                    <div className="hidden items-center gap-4 md:flex">
+                    <div className="hidden items-center gap-3 md:flex">
+                        <button type="button" onClick={toggleTheme} aria-label={darkMode ? 'Gunakan mode terang' : 'Gunakan mode gelap'} className="touch-target grid place-items-center rounded-full text-slate-600 transition hover:bg-slate-200/60 dark:text-blue-100 dark:hover:bg-white/10">
+                            {darkMode ? <Sun size={16} /> : <Moon size={16} />}
+                        </button>
                         <Link
                             href="/catalog"
                             className="p-1.5 text-slate-600 hover:text-[#0B3866] transition-colors"
@@ -105,7 +129,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
                 {/* Mobile menu */}
                 {mobileOpen && (
-                    <div className="border-b border-slate-200 bg-[#F4EFEA] px-6 py-4 md:hidden">
+                    <div className="border-b border-slate-200 bg-[#F4EFEA] px-6 py-4 dark:border-slate-700 dark:bg-[#0b1728] md:hidden">
                         <nav className="flex flex-col gap-2">
                             {NAV_ITEMS.map((item) => (
                                 <Link
@@ -117,7 +141,10 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                                     {item.label}
                                 </Link>
                             ))}
-                            <div className="mt-3 pt-3 border-t border-slate-200 flex justify-between items-center">
+                            <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3 dark:border-slate-700">
+                                <button type="button" onClick={toggleTheme} className="touch-target inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 dark:border-slate-700 dark:text-blue-100">
+                                    {darkMode ? <Sun size={14} /> : <Moon size={14} />} {darkMode ? 'Mode Terang' : 'Mode Gelap'}
+                                </button>
                                 <Link href="/login" className="rounded-full bg-[#0B3866] px-5 py-2 text-xs font-bold text-white">
                                     Login
                                 </Link>

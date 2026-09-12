@@ -26,6 +26,8 @@
   --font-handwriting: "Caveat", cursive;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   body {
     background-color: #F4EFEA;
@@ -40,6 +42,17 @@
   font-family: var(--font-handwriting);
   color: #2C3E50 !important;
 }
+
+html.dark body { background: #0b1728; color: #f8f1e7; }
+html.dark .paper-grain { background-color: #0b1728 !important; background-image: radial-gradient(rgba(255,255,255,.045) .7px, transparent .7px), linear-gradient(rgba(10,24,42,.6), rgba(10,24,42,.6)); }
+html.dark .editorial-surface, html.dark .index-card, html.dark .memo-note, html.dark .card-polaroid { background-color: #14253b !important; border-color: #29415c !important; color: #f8f1e7; }
+html.dark [class~="text-[#0F172A]"], html.dark [class~="text-slate-700"], html.dark [class~="text-slate-600"] { color: #e7edf4 !important; }
+html.dark [class~="text-slate-500"], html.dark [class~="text-slate-400"] { color: #a8b8c9 !important; }
+html.dark [class~="bg-white"], html.dark [class~="bg-white/75"] { background-color: #14253b !important; }
+html.dark [class~="bg-[#F4EFEA]"], html.dark [class~="bg-[#fffdf7]"], html.dark [class~="bg-[#eaf5ff]"] { background-color: #102136 !important; }
+html.dark header[class*="bg-[#F4EFEA]"] { background-color: rgba(11, 23, 40, .92) !important; }
+html.dark header [class*="text-[#0B3866]"] { color: #d7e8f7 !important; }
+html.dark input, html.dark textarea, html.dark select { background-color: #102136 !important; color: #f8f1e7 !important; border-color: #34506d !important; }
 
 /* Paper and scrapbook subtle textures & shadows */
 .scrapbook-shadow {
