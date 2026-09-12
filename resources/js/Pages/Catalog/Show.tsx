@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+ï»¿import { Head, Link } from '@inertiajs/react';
 import {
     ArrowLeft,
     Barcode,
@@ -19,6 +19,7 @@ import { BookCover } from '../../Components/Common/BookCover';
 import { ReservationModal } from '../../Components/Common/ReservationModal';
 import { SiteShell } from '../../Components/Common/SiteShell';
 import { Book } from '../../types/library';
+import { RealPaperClip, WashiTapeStrip } from '../../Components/Common/Ornaments';
 
 interface BookDetailProps {
     book: Book;
@@ -44,7 +45,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
 
     return (
         <SiteShell>
-            <Head title={`${book.title} — Katalog Perpustakaan SMAN 1 Bukittinggi`} />
+            <Head title={`${book.title} ï¿½ Katalog Perpustakaan SMAN 1 Bukittinggi`} />
 
             {/* Breadcrumb Navigation */}
             <div className="border-b border-slate-200/80 bg-white">
@@ -73,12 +74,19 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                 <div className="grid gap-10 lg:grid-cols-[340px_1fr] lg:gap-14">
                     {/* Left Column: Book Cover & Quick Status */}
                     <div className="flex flex-col items-center">
-                        <div className="w-full max-w-[280px] sm:max-w-[320px]">
+                        <div className="relative w-full max-w-[280px] sm:max-w-[320px]">
+                            <WashiTapeStrip width="70px" height="18px" color="rgba(11,78,162,0.7)" rotate={-2} className="-top-2 left-1/2 -translate-x-1/2 z-20" />
+                            <div className="absolute -top-3.5 right-3 z-20">
+                                <RealPaperClip rotate={25} color="#788796" />
+                            </div>
                             <BookCover
                                 src={book.cover_image}
                                 title={book.title}
                                 className="aspect-[3/4] w-full rounded-2xl shadow-xl"
                             />
+                            <div className="mt-3 text-center font-handwriting text-xs text-[#0B4EA2] font-bold">
+                                Koleksi Perpustakaan SMAN 1 Bukittinggi â™¡
+                            </div>
                         </div>
 
                         <div className="mt-6 w-full max-w-[320px] rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -143,7 +151,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                             <span className="font-mono-display text-xs font-bold uppercase tracking-[0.16em] text-[#0B4EA2]">
                                 {book.category?.name}
                             </span>
-                            <span className="text-slate-300">•</span>
+                            <span className="text-slate-300">ï¿½</span>
                             <span className="font-mono-display text-xs text-slate-500 font-semibold">
                                 DDC {book.ddc_class?.code}
                             </span>
@@ -158,13 +166,18 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                         </p>
 
                         {/* Metadata Grid */}
-                        <div className="mt-8 grid grid-cols-2 gap-3 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-4">
+                        <div className="relative mt-8 grid grid-cols-2 gap-3 rounded-2xl border border-blue-100 bg-[#FAF8F5] p-5 sm:grid-cols-4 shadow-sm">
+                            <div className="absolute -top-3 right-6">
+                                <span className="rounded bg-[#EAF4FF] border border-blue-200 px-2 py-0.5 font-mono-display text-[9px] font-bold uppercase tracking-wider text-[#0B4EA2]">
+                                    LIBRARY CARD
+                                </span>
+                            </div>
                             <div>
                                 <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
                                     Penerbit
                                 </span>
                                 <strong className="mt-1 block text-xs text-[#0F172A]">
-                                    {book.publisher?.name ?? '—'}
+                                    {book.publisher?.name ?? 'ï¿½'}
                                 </strong>
                             </div>
                             <div>
@@ -180,7 +193,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                     ISBN
                                 </span>
                                 <strong className="mt-1 block font-mono text-xs text-[#0F172A]">
-                                    {book.isbn || '—'}
+                                    {book.isbn || 'ï¿½'}
                                 </strong>
                             </div>
                             <div>
@@ -226,7 +239,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                                             {copy.barcode_identifier}
                                                         </span>
                                                         <span className="block text-[10px] text-slate-500">
-                                                            Eksemplar #{index + 1} • {copy.shelf_location || book.shelf_location}
+                                                            Eksemplar #{index + 1} ï¿½ {copy.shelf_location || book.shelf_location}
                                                         </span>
                                                     </div>
                                                 </div>
