@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Perpustakaan SMAN 1 Bukittinggi') }}</title>
+        <title inertia>{{ config('app.name') === 'Laravel' ? 'Perpustakaan SMAN 1 Bukittinggi' : config('app.name', 'Perpustakaan SMAN 1 Bukittinggi') }}</title>
 
         <!-- Typography: Inter, Lora (serif display), JetBrains Mono, Caveat -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
