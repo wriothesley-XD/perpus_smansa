@@ -1,4 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
+import { animate, motion, useInView } from 'framer-motion';
 import {
     ArrowRight,
     BookMarked,
@@ -10,10 +11,83 @@ import {
     Sparkles,
     Users,
 } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BookCard } from '../Components/Common/BookCard';
 import { SiteShell } from '../Components/Common/SiteShell';
 import { Book, LibraryStats, MagazineEdition } from '../types/library';
+
+const MotionLink = motion.create(Link);
+
+// Fade + slide-up saat section masuk viewport
+const sectionFade = {
+    hidden: { opacity: 0, y: 28 },
+    visible: { opacity: 1, y: 0 },
+};
+
+const sectionViewport = { once: true, amount: 0.2 };
+
+// Hover halus: scale 1.02 + shadow (transisi 250ms)
+const hoverGlow = {
+    scale: 1.02,
+    boxShadow: '0 20px 35px -8px rgba(11, 78, 162, 0.12), 0 8px 10px -4px rgba(0, 0, 0, 0.04)',
+};
+
+const hoverTransition = { duration: 0.25, ease: 'easeOut' as const };
+
+// Hover chip "Populer": scale halus saja (200ms)
+const chipHoverTransition = { duration: 0.2, ease: 'easeOut' as const };
+
+// Hover tombol "Cari Buku": scale 1.03 + shadow tipis (200ms)
+const ctaHover = {
+    scale: 1.03,
+    y: -4,
+    boxShadow: '0 12px 24px -8px rgba(11, 78, 162, 0.35)',
+};
+
+const ctaHoverTransition = { duration: 0.2, ease: 'easeOut' as const };
+
+// Hero kiri: fade + slide-up 20px berurutan saat load (stagger 0.1s antar elemen)
+const heroStagger = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1 } },
+};
+
+const heroItem = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' as const } },
+};
+
+// Hero kanan (kartu RUANG BACA + blob): fade + scale-in kecil saat load
+const heroVisual = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' as const, delay: 0.2 } },
+};
+
+// Angka statistik menghitung dari 0 saat terlihat di viewport
+function CountUp({ value, duration = 1.4 }: { value: number; duration?: number }) {
+    const numberRef = useRef<HTMLSpanElement>(null);
+    const isInView = useInView(numberRef, { once: true, amount: 0.5 });
+
+    useEffect(() => {
+        if (!isInView) {
+            return;
+        }
+
+        const controls = animate(0, value, {
+            duration,
+            ease: 'easeOut',
+            onUpdate: (latest) => {
+                if (numberRef.current) {
+                    numberRef.current.textContent = String(Math.round(latest));
+                }
+            },
+        });
+
+        return () => controls.stop();
+    }, [isInView, value, duration]);
+
+    return <span ref={numberRef}>0</span>;
+}
 
 interface HomeProps {
     stats: LibraryStats;
@@ -83,38 +157,57 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
 
             <div className="overflow-hidden bg-white">
                 {/* 1. HERO SECTION - ASYMMETRIC FIGMA SPLIT */}
-                <section className="relative border-b border-slate-100 bg-white">
+                <motion.section
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={sectionViewport}
+                    variants={sectionFade}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="relative border-b border-slate-100 bg-white"
+                >
                     {/* Subtle decorative dot accents */}
-                    <div className="absolute left-[38%] top-12 hidden size-3 rounded-full bg-[#facc15] lg:block" />
-                    <div className="absolute left-[42%] top-24 hidden size-2 rounded-full bg-[#fb923c] lg:block" />
+                    <motion.div
+                        className="absolute left-[38%] top-12 hidden size-3 rounded-full bg-[#facc15] lg:block"
+                        animate={{ y: [0, -6] }}
+                        transition={{ duration: 2, ease: 'easeInOut', repeat: Infinity, repeatType: 'reverse', delay: 0 }}
+                        style={{ willChange: 'transform' }}
+                    />
+                    <motion.div
+                        className="absolute left-[42%] top-24 hidden size-2 rounded-full bg-[#fb923c] lg:block"
+                        animate={{ y: [0, -7] }}
+                        transition={{ duration: 2.3, ease: 'easeInOut', repeat: Infinity, repeatType: 'reverse', delay: 0.6 }}
+                        style={{ willChange: 'transform' }}
+                    />
                     <div className="absolute right-[12%] top-16 hidden size-3.5 rounded-full bg-[#0B4EA2]/60 lg:block" />
 
                     <div className="relative mx-auto grid min-h-[660px] max-w-7xl items-center gap-12 px-6 py-14 sm:px-8 lg:grid-cols-[1fr_1fr] lg:gap-16 lg:py-20">
                         {/* Hero Left Content */}
-                        <div className="fade-up relative z-10">
-                            <div className="inline-flex items-center gap-2 rounded-full border border-[#0B4EA2]/20 bg-[#EAF4FF] px-4 py-1 text-xs font-bold text-[#0B4EA2]">
+                        <motion.div variants={heroStagger} initial="hidden" animate="visible" className="relative z-10">
+                            <motion.div variants={heroItem} className="inline-flex items-center gap-2 rounded-full border border-[#0B4EA2]/20 bg-[#EAF4FF] px-4 py-1 text-xs font-bold text-[#0B4EA2]">
                                 <Sparkles size={14} />
                                 <span>Perpustakaan Digital • SMAN 1 Bukittinggi</span>
-                            </div>
+                            </motion.div>
 
-                            <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.1] tracking-tight text-[#0F172A] sm:text-5xl lg:text-6xl">
+                            <motion.h1 variants={heroItem} className="mt-6 font-display text-4xl font-extrabold leading-[1.1] tracking-tight text-[#0F172A] sm:text-5xl lg:text-6xl">
                                 Temukan halaman yang{' '}
                                 <span className="brush-highlight">menunggumu.</span>
-                            </h1>
+                            </motion.h1>
 
-                            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
+                            <motion.p variants={heroItem} className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
                                 Akses koleksi buku fisik, majalah terbitan digital sekolah, dan khazanah literasi terkurasi untuk mendukung eksplorasi pengetahuan insan Smansa.
-                            </p>
+                            </motion.p>
 
                             {/* Search & CTA Row */}
-                            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-                                <Link
+                            <motion.div variants={heroItem} className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+                                <MotionLink
                                     href="/catalog"
-                                    className="inline-flex h-12 items-center justify-center rounded-xl bg-[#0B4EA2] px-8 text-sm font-bold text-white shadow-md hover:bg-[#083c7d] hover-lift transition-all shrink-0"
+                                    className="inline-flex h-12 items-center justify-center rounded-xl bg-[#0B4EA2] px-8 text-sm font-bold text-white shadow-md hover:bg-[#083c7d] transition-colors duration-300 shrink-0"
+                                    whileHover={ctaHover}
+                                    transition={ctaHoverTransition}
                                 >
                                     <span>Cari Buku</span>
                                     <ArrowRight size={16} className="ml-2" />
-                                </Link>
+                                </MotionLink>
 
                                 <form
                                     onSubmit={handleSearch}
@@ -128,43 +221,62 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                                         placeholder="Cari judul, penulis, atau topik..."
                                         className="w-full bg-transparent px-3 text-sm text-[#0F172A] outline-none placeholder:text-slate-400"
                                     />
-                                    <button
+                                    <motion.button
                                         type="submit"
                                         className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200 transition-colors"
+                                        whileHover={hoverGlow}
+                                        transition={hoverTransition}
                                     >
                                         Cari
-                                    </button>
+                                    </motion.button>
                                 </form>
-                            </div>
+                            </motion.div>
 
                             {/* Quick Tags */}
-                            <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                            <motion.div variants={heroItem} className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-500">
                                 <span className="font-medium">Populer:</span>
                                 {['Laskar Pelangi', 'Buya Hamka', 'Atomic Habits', 'Bumi Manusia', 'Fisika SMA'].map((tag) => (
-                                    <button
+                                    <motion.button
                                         key={tag}
                                         type="button"
                                         onClick={() => router.get('/catalog', { q: tag })}
                                         className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-slate-600 hover:border-[#0B4EA2] hover:text-[#0B4EA2] transition-colors"
+                                        whileHover={{ scale: 1.05 }}
+                                        transition={chipHoverTransition}
                                     >
                                         {tag}
-                                    </button>
+                                    </motion.button>
                                 ))}
-                            </div>
-                        </div>
+                            </motion.div>
+                        </motion.div>
 
                         {/* Hero Right Visual: Figma Blobs & Layered Card Mockup */}
-                        <div className="fade-up-delay relative mx-auto h-[440px] w-full max-w-[560px] lg:h-[500px]">
+                        <motion.div variants={heroVisual} initial="hidden" animate="visible" className="relative mx-auto h-[440px] w-full max-w-[560px] lg:h-[500px]">
                             {/* Layer 1: Orange Blob */}
-                            <div className="figma-blob absolute right-[4%] top-[4%] h-[230px] w-[220px] rotate-12 bg-[#fb923c] opacity-95 sm:h-[300px] sm:w-[280px]" />
+                            <motion.div
+                                className="figma-blob absolute right-[4%] top-[4%] h-[230px] w-[220px] rotate-12 bg-[#fb923c] opacity-95 sm:h-[300px] sm:w-[280px]"
+                                animate={{ y: [0, -10] }}
+                                transition={{ duration: 2.2, ease: 'easeInOut', repeat: Infinity, repeatType: 'reverse', delay: 0.9 }}
+                                style={{ willChange: 'transform' }}
+                            />
                             {/* Layer 2: Yellow Blob */}
-                            <div className="figma-blob absolute bottom-[6%] left-[10%] h-[240px] w-[230px] -rotate-12 bg-[#facc15] opacity-95 sm:h-[310px] sm:w-[290px]" />
+                            <motion.div
+                                className="figma-blob absolute bottom-[6%] left-[10%] h-[240px] w-[230px] -rotate-12 bg-[#facc15] opacity-95 sm:h-[310px] sm:w-[290px]"
+                                animate={{ y: [0, -11] }}
+                                transition={{ duration: 2.4, ease: 'easeInOut', repeat: Infinity, repeatType: 'reverse', delay: 1.2 }}
+                                style={{ willChange: 'transform' }}
+                            />
                             {/* Layer 3: Particle dots grid */}
                             <div className="figma-dots absolute right-[2%] top-[10%] h-32 w-36 opacity-60" />
                             <div className="figma-dots absolute bottom-[10%] left-[4%] h-28 w-32 opacity-50" />
 
                             {/* Layer 4: Primary Tilted White Card (Figma Style) */}
-                            <div className="absolute left-[16%] top-[14%] h-[290px] w-[235px] rotate-[-4deg] rounded-2xl bg-white p-3 soft-shadow sm:h-[350px] sm:w-[280px] transition-transform hover:rotate-0 duration-500">
+                            <motion.div
+                                className="absolute left-[16%] top-[14%] h-[290px] w-[235px] rotate-[-4deg] rounded-2xl bg-white p-3 soft-shadow sm:h-[350px] sm:w-[280px] transition-[rotate] hover:rotate-0 duration-500"
+                                animate={{ y: [0, -12], rotate: [-2, 2] }}
+                                transition={{ duration: 2.6, ease: 'easeInOut', repeat: Infinity, repeatType: 'reverse', delay: 1.5 }}
+                                style={{ willChange: 'transform' }}
+                            >
                                 <div className="flex h-full flex-col justify-between rounded-xl border border-slate-100 bg-slate-50/70 p-5">
                                     <div className="flex items-center justify-between">
                                         <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#0B4EA2]">
@@ -185,10 +297,15 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                                         <span>EST. 1956</span>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
 
                             {/* Layer 5: Floating Secondary Badge Card */}
-                            <div className="absolute bottom-[12%] right-[4%] w-[210px] rotate-[6deg] rounded-2xl bg-white p-4 soft-shadow sm:w-[240px] transition-transform hover:rotate-0 duration-500">
+                            <motion.div
+                                className="absolute bottom-[12%] right-[4%] w-[210px] rotate-[6deg] rounded-2xl bg-white p-4 soft-shadow sm:w-[240px] transition-[rotate] hover:rotate-0 duration-500"
+                                animate={{ y: [0, -8] }}
+                                transition={{ duration: 1.8, ease: 'easeInOut', repeat: Infinity, repeatType: 'reverse', delay: 0.3 }}
+                                style={{ willChange: 'transform' }}
+                            >
                                 <div className="flex items-center gap-3">
                                     <span className="grid size-10 place-items-center rounded-xl bg-[#EAF4FF] text-[#0B4EA2]">
                                         <Sparkles size={20} />
@@ -198,13 +315,20 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                                         <p className="text-[10px] text-slate-500">Ribuan judul terindeks</p>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </motion.div>
+                        </motion.div>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* 2. STATS BAR COUNTER */}
-                <section className="border-b border-slate-100 bg-white">
+                <motion.section
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={sectionViewport}
+                    variants={sectionFade}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="border-b border-slate-100 bg-white"
+                >
                     <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-y sm:divide-y-0 sm:grid-cols-4 border-x border-slate-100">
                         {statItems.map(({ label, value, icon: Icon }) => (
                             <div key={label} className="flex items-center gap-4 px-6 py-6 sm:px-8">
@@ -213,7 +337,7 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                                 </span>
                                 <div>
                                     <p className="text-2xl font-extrabold text-[#0F172A] sm:text-3xl">
-                                        {value}
+                                        <CountUp value={value} />
                                     </p>
                                     <p className="font-mono-display text-[11px] font-bold uppercase tracking-wider text-slate-500">
                                         {label}
@@ -222,7 +346,7 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                             </div>
                         ))}
                     </div>
-                </section>
+                </motion.section>
 
                 {/* 3. FEATURE SECTION 1: CHECKLIST & MACOS 3-CARD WINDOW (Figma Middle Section) */}
                 <section className="relative border-b border-slate-100 bg-slate-50/50 py-20 sm:py-28">
@@ -290,9 +414,11 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                                     {featureCards.map((card) => {
                                         const CardIcon = card.icon;
                                         return (
-                                            <div
+                                            <motion.div
                                                 key={card.title}
                                                 className="flex flex-col justify-between rounded-xl border border-slate-100 bg-white p-3.5 shadow-sm hover:shadow-md transition-shadow"
+                                                whileHover={{ scale: 1.02 }}
+                                                transition={hoverTransition}
                                             >
                                                 <div>
                                                     <span
@@ -310,13 +436,15 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                                                         {card.desc}
                                                     </p>
                                                 </div>
-                                                <Link
+                                                <MotionLink
                                                     href={card.href}
                                                     className="mt-4 block rounded-lg border border-[#0B4EA2]/30 py-1.5 text-center text-[10px] font-bold text-[#0B4EA2] hover:bg-[#0B4EA2] hover:text-white transition-colors"
+                                                    whileHover={hoverGlow}
+                                                    transition={hoverTransition}
                                                 >
                                                     {card.buttonText}
-                                                </Link>
-                                            </div>
+                                                </MotionLink>
+                                            </motion.div>
                                         );
                                     })}
                                 </div>
@@ -326,7 +454,14 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                 </section>
 
                 {/* 4. POPULAR BOOKS CATALOG SHOWCASE */}
-                <section className="border-b border-slate-100 bg-white py-20 sm:py-24">
+                <motion.section
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={sectionViewport}
+                    variants={sectionFade}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="border-b border-slate-100 bg-white py-20 sm:py-24"
+                >
                     <div className="mx-auto max-w-7xl px-6 sm:px-8">
                         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                             <div>
@@ -349,7 +484,14 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                         <div className="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
                             {popularBooks.length > 0 ? (
                                 popularBooks.map((book) => (
-                                    <BookCard key={book.id} book={book} />
+                                    <motion.div
+                                        key={book.id}
+                                        className="h-full [&>a]:h-full"
+                                        whileHover={hoverGlow}
+                                        transition={hoverTransition}
+                                    >
+                                        <BookCard book={book} />
+                                    </motion.div>
                                 ))
                             ) : (
                                 <div className="col-span-full rounded-2xl border border-dashed border-slate-200 p-12 text-center text-sm text-slate-500">
@@ -358,7 +500,7 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                             )}
                         </div>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* 5. EDITORIAL / MAGAZINE SHOWCASE (Figma Section 3) */}
                 {latestMagazines.length > 0 && (
@@ -377,13 +519,15 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                                     Majalah Genta Smansa kini hadir dalam format digital. Akses artikel inspiratif, kabar ekstrakurikuler, dan opini siswa langsung dari gawai Anda.
                                 </p>
                                 <div className="mt-8">
-                                    <Link
+                                    <MotionLink
                                         href="/magazines"
-                                        className="inline-flex items-center gap-2 rounded-xl bg-[#0B4EA2] px-6 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#083c7d] hover-lift transition-all"
+                                        className="inline-flex items-center gap-2 rounded-xl bg-[#0B4EA2] px-6 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#083c7d] transition-colors duration-300"
+                                        whileHover={{ ...hoverGlow, y: -4 }}
+                                        transition={hoverTransition}
                                     >
                                         <span>Semua Edisi Majalah</span>
                                         <ArrowRight size={16} />
-                                    </Link>
+                                    </MotionLink>
                                 </div>
                             </div>
 
@@ -394,10 +538,12 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
 
                                 <div className="relative z-10 grid gap-4 sm:grid-cols-3">
                                     {latestMagazines.map((mag) => (
-                                        <Link
+                                        <MotionLink
                                             key={mag.id}
                                             href={`/magazines/${mag.id}`}
-                                            className="group rounded-2xl bg-white p-3.5 soft-shadow transition hover:-translate-y-1.5 duration-300"
+                                            className="group rounded-2xl bg-white p-3.5 soft-shadow"
+                                            whileHover={{ ...hoverGlow, y: -6 }}
+                                            transition={hoverTransition}
                                         >
                                             <div className="aspect-[3/4] w-full overflow-hidden rounded-xl bg-slate-100">
                                                 {mag.cover_image ? (
@@ -418,7 +564,7 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                                             <h4 className="mt-1 line-clamp-1 font-display text-sm font-bold text-[#0F172A] group-hover:text-[#0B4EA2] transition-colors">
                                                 {mag.edition_title}
                                             </h4>
-                                        </Link>
+                                        </MotionLink>
                                     ))}
                                 </div>
                             </div>
@@ -427,7 +573,14 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                 )}
 
                 {/* 6. FULL-WIDTH CTA BANNER (Figma Section 4 - Gold Background & Bold Orange Button) */}
-                <section className="bg-[#facc15] px-6 py-24 sm:px-8 lg:py-28">
+                <motion.section
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={sectionViewport}
+                    variants={sectionFade}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="bg-[#facc15] px-6 py-24 sm:px-8 lg:py-28"
+                >
                     <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
                         <span className="rounded-full bg-[#0F172A]/10 px-4 py-1 text-xs font-extrabold uppercase tracking-wider text-[#0F172A]">
                             Ayo Membaca
@@ -439,15 +592,17 @@ export default function Home({ stats, popularBooks, latestMagazines, settings }:
                         <p className="mt-6 max-w-xl text-base leading-relaxed text-[#0F172A]/85 sm:text-lg">
                             Mulai dari satu buku, lalu lihat ke mana rasa ingin tahu dan pengetahuanmu membawa masa depanmu.
                         </p>
-                        <Link
+                        <MotionLink
                             href="/catalog"
-                            className="mt-8 inline-flex items-center justify-center rounded-xl bg-[#ea580c] px-9 py-4 text-base font-extrabold text-white shadow-lg hover:bg-[#c2410c] hover:scale-105 transition-all"
+                            className="mt-8 inline-flex items-center justify-center rounded-xl bg-[#ea580c] px-9 py-4 text-base font-extrabold text-white shadow-lg hover:bg-[#c2410c] transition-colors duration-300"
+                            whileHover={hoverGlow}
+                            transition={hoverTransition}
                         >
                             <span>Cari Buku Sekarang</span>
                             <ArrowRight size={18} className="ml-2" />
-                        </Link>
+                        </MotionLink>
                     </div>
-                </section>
+                </motion.section>
             </div>
         </SiteShell>
     );

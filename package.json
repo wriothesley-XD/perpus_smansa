@@ -8,6 +8,7 @@
     "dependencies": {
         "@inertiajs/react": "^2.0.3",
         "clsx": "^2.1.1",
+        "framer-motion": "^13.2.0",
         "lucide-react": "^1.16.0",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
@@ -15,6 +16,7 @@
         "ziggy-js": "^2.4.2"
     },
     "devDependencies": {
+        "@rollup/rollup-win32-x64-msvc": "^4.63.1",
         "@tailwindcss/vite": "^4.0.9",
         "@types/node": "^22.13.5",
         "@types/react": "^18.3.18",
