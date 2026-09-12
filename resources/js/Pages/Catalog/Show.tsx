@@ -135,15 +135,10 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                             <button
                                 type="button"
                                 onClick={() => setReservationOpen(true)}
-                                disabled={!isAvailable}
-                                className={`mt-6 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold shadow-md transition-all ${
-                                    isAvailable
-                                        ? 'bg-[#0B4EA2] text-white hover:bg-[#083c7d]'
-                                        : 'cursor-not-allowed bg-slate-200 text-slate-500'
-                                }`}
+                                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B4EA2] py-3.5 text-sm font-bold text-white shadow-md transition-all hover:bg-[#083c7d]"
                             >
                                 <BookMarked size={16} />
-                                <span>{isAvailable ? 'Reservasi Buku' : 'Semua Eksemplar Dipinjam'}</span>
+                                <span>{isAvailable ? 'Reservasi Buku' : 'Ingatkan Saya Saat Tersedia'}</span>
                             </button>
                         </div>
                     </div>
