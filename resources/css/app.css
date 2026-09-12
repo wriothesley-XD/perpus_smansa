@@ -69,6 +69,19 @@
 
 .scrapbook-rule { height: 1px; background: repeating-linear-gradient(90deg, #9fc9e8 0 18px, transparent 18px 26px); }
 
+.editorial-surface {
+  background: rgba(255, 255, 255, .82);
+  border: 1px solid rgba(229, 223, 215, .95);
+  box-shadow: 0 14px 30px -20px rgba(44, 39, 32, .35);
+}
+
+.index-card {
+  background-color: #fffdf7;
+  background-image: repeating-linear-gradient(0deg, transparent 0 27px, rgba(117, 139, 157, .12) 28px);
+  border: 1px solid #eadbce;
+  box-shadow: 0 15px 28px -22px rgba(60, 50, 40, .5);
+}
+
 .card-polaroid {
   background: #FFFFFF;
   padding: 10px 10px 32px 10px;

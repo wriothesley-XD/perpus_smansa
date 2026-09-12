@@ -48,7 +48,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
             <Head title={`${book.title} � Katalog Perpustakaan SMAN 1 Bukittinggi`} />
 
             {/* Breadcrumb Navigation */}
-            <div className="border-b border-slate-200/80 bg-white">
+            <div className="paper-grain border-b border-[#e5dfd7] bg-[#fffdf9]">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-8">
                     <Link
                         href="/catalog"
@@ -70,26 +70,29 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
             </div>
 
             {/* BOOK HERO / MAIN INFO */}
-            <div className="mx-auto max-w-7xl px-6 py-12 sm:px-8">
+            <div className="paper-grain mx-auto max-w-7xl px-6 py-12 sm:px-8">
                 <div className="grid gap-10 lg:grid-cols-[340px_1fr] lg:gap-14">
                     {/* Left Column: Book Cover & Quick Status */}
                     <div className="flex flex-col items-center">
-                        <div className="relative w-full max-w-[280px] sm:max-w-[320px]">
+                            <div className="relative w-full max-w-[280px] sm:max-w-[320px]">
                             <WashiTapeStrip width="70px" height="18px" color="rgba(11,78,162,0.7)" rotate={-2} className="-top-2 left-1/2 -translate-x-1/2 z-20" />
                             <div className="absolute -top-3.5 right-3 z-20">
                                 <RealPaperClip rotate={25} color="#788796" />
                             </div>
-                            <BookCover
-                                src={book.cover_image}
-                                title={book.title}
-                                className="aspect-[3/4] w-full rounded-2xl shadow-xl"
-                            />
+                            <div className="card-polaroid rotate-[-1deg] transition-transform duration-500 hover:rotate-0">
+                                <BookCover
+                                    src={book.cover_image}
+                                    title={book.title}
+                                    className="aspect-[3/4] w-full rounded-sm shadow-xl"
+                                />
+                                <div className="mt-3 text-center font-handwriting text-sm font-bold">{book.title}</div>
+                            </div>
                             <div className="mt-3 text-center font-handwriting text-xs text-[#0B4EA2] font-bold">
                                 Koleksi Perpustakaan SMAN 1 Bukittinggi ♡
                             </div>
                         </div>
 
-                        <div className="mt-6 w-full max-w-[320px] rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div className="index-card relative mt-6 w-full max-w-[320px] rotate-[1deg] rounded-sm p-5">
                             <div className="flex items-center justify-between">
                                 <span className="text-xs font-semibold text-slate-500">Status Koleksi:</span>
                                 {isAvailable ? (
@@ -166,7 +169,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                         </p>
 
                         {/* Metadata Grid */}
-                        <div className="relative mt-8 grid grid-cols-2 gap-3 rounded-2xl border border-blue-100 bg-[#FAF8F5] p-5 sm:grid-cols-4 shadow-sm">
+                        <div className="index-card relative mt-8 grid grid-cols-2 gap-3 rounded-sm p-5 sm:grid-cols-4">
                             <div className="absolute -top-3 right-6">
                                 <span className="rounded bg-[#EAF4FF] border border-blue-200 px-2 py-0.5 font-mono-display text-[9px] font-bold uppercase tracking-wider text-[#0B4EA2]">
                                     LIBRARY CARD

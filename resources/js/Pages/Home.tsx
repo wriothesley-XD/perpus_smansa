@@ -42,7 +42,7 @@ export default function Home({ stats, popularBooks, latestMagazines }: HomeProps
             <Head title="Perpustakaan Digital SMAN 1 Bukittinggi" />
 
             {/* 1. HERO SECTION */}
-            <section className="relative px-6 py-6 sm:px-10 md:py-12 overflow-hidden">
+            <section className="paper-grain relative px-6 py-6 sm:px-10 md:py-12 overflow-hidden">
                 <div className="mx-auto max-w-7xl">
                     <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8">
                         
@@ -70,7 +70,7 @@ export default function Home({ stats, popularBooks, latestMagazines }: HomeProps
                             {/* Search Box Pill */}
                             <form
                                 onSubmit={handleSearch}
-                                className="mt-7 flex max-w-md items-center rounded-full bg-white px-4 py-1.5 shadow-[0_4px_18px_rgba(0,0,0,0.06)] border border-slate-200"
+                                className="editorial-surface mt-7 flex max-w-md items-center rounded-full px-4 py-1.5"
                             >
                                 <Search size={16} className="text-slate-400 shrink-0" />
                                 <input
