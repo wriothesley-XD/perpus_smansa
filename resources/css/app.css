@@ -107,3 +107,39 @@
 .fade-up-delay-2 {
   animation: fade-up 0.6s 0.22s both cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* ─── Dark Mode ─────────────────────────── */
+@layer base {
+  .dark body {
+    background-color: #0F172A;
+    color: #F1F5F9;
+  }
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+.dark {
+  --color-background: #0F172A;
+  --color-foreground: #F1F5F9;
+  --color-surface: #1E293B;
+  --color-border: #334155;
+  --color-muted: #94A3B8;
+}
+
+.dark .soft-shadow {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+/* ─── Dark Mode Overrides ───────────────────────────────── */
+.dark .bg-white { background-color: #1E293B; }
+.dark .bg-\[\#F8FAFC\] { background-color: #0F172A; }
+.dark .border-slate-100 { border-color: #334155; }
+.dark .border-slate-200 { border-color: #334155; }
+.dark .text-\[\#0F172A\] { color: #F1F5F9; }
+.dark .text-slate-700 { color: #CBD5E1; }
+.dark .text-slate-600 { color: #94A3B8; }
+.dark .text-slate-500 { color: #64748B; }
+.dark .bg-slate-50 { background-color: #1E293B; }
+.dark .bg-slate-100 { background-color: #1E293B; }

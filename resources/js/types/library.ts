@@ -138,3 +138,37 @@ export interface PaginatedResponse<T> {
         active: boolean;
     }[];
 }
+
+export interface Event {
+    id: number;
+    title: string;
+    slug: string;
+    description?: string | null;
+    type: 'event' | 'duta' | 'podcast';
+    type_label?: string;
+    event_date?: string | null;
+    event_time?: string | null;
+    location?: string | null;
+    cover_image?: string | null;
+    podcast_url?: string | null;
+    host_name?: string | null;
+    is_published: boolean;
+    created_at: string;
+}
+
+export interface SmansaWork {
+    id: number;
+    title: string;
+    slug: string;
+    author_name: string;
+    author_type: 'student' | 'teacher';
+    author_class?: string | null;
+    category: 'cerpen' | 'puisi' | 'esai' | 'karya_ilmiah' | 'novel';
+    category_label?: string;
+    content: string;
+    cover_image?: string | null;
+    attachment_path?: string | null;
+    is_published: boolean;
+    published_at?: string | null;
+    created_at: string;
+}
