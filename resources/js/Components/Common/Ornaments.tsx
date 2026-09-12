@@ -107,9 +107,12 @@ export function ReadMoreStamp({ className = "" }: { className?: string }) {
     <div
       className={`stamp-badge size-14 md:size-16 z-20 cursor-pointer transition-transform hover:scale-110 active:scale-95 ${className}`}
       style={{ transform: 'rotate(-8deg)' }}
-    >
+      >
       <span className="font-mono-display text-[9px] md:text-[10px] font-extrabold tracking-wider">READ</span>
-      <span className="text-[11px] md:text-[12px] leading-none">📖</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z" />
+        <path d="M4 5.5v16M8 7h8M8 11h8" />
+      </svg>
       <span className="font-mono-display text-[8px] md:text-[9px] font-extrabold tracking-wider">MORE</span>
     </div>
   );

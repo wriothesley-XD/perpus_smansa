@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { ArrowUpRight, CalendarDays, Headphones, Search, Trophy } from 'lucide-react';
+import { ArrowUpRight, BookOpen, CalendarDays, Headphones, Search, ShieldCheck, Sprout, Trophy, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import { BookCard } from '../Components/Common/BookCard';
 import {
@@ -94,7 +94,7 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
 
                             {/* Doodle text: start exploring -> */}
                             <div className="mt-3 ml-6 font-handwriting text-base text-slate-500 font-bold rotate-[-1deg]">
-                                start exploring ➔
+                                start exploring <ArrowUpRight size={14} className="inline" />
                             </div>
                         </div>
 
@@ -127,7 +127,7 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
 
                                 {/* Handwritten caption inside polaroid */}
                                 <div className="mt-3 text-center font-handwriting text-sm text-slate-600 font-semibold">
-                                    A place to grow ♡
+                                    A place to grow ·
                                 </div>
 
                                 {/* READ MORE round badge */}
@@ -163,7 +163,7 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
                             href="/catalog"
                             className="font-handwriting text-base font-bold text-[#2E8BE6] hover:underline"
                         >
-                            Lihat Semua ➔
+                            Lihat Semua →
                         </Link>
                     </div>
 
@@ -233,7 +233,7 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
                         </div>
 
                         <div className="editorial-surface rounded-2xl bg-[#fffdf7] p-5">
-                            <div className="flex items-center justify-between"><span className="flex items-center gap-2 text-[#0B3866]"><CalendarDays size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider">Agenda & Duta</span></span><Link href="/events" className="font-handwriting text-sm font-bold">Semua ➜</Link></div>
+                            <div className="flex items-center justify-between"><span className="flex items-center gap-2 text-[#0B3866]"><CalendarDays size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider">Agenda & Duta</span></span><Link href="/events" className="font-handwriting text-sm font-bold">Semua →</Link></div>
                             <div className="mt-5 space-y-3">{upcomingEvents.length > 0 ? upcomingEvents.map((event) => <Link key={event.id} href={`/events/${event.slug}`} className="block rounded-xl bg-[#eaf5ff] p-3 transition hover:-translate-y-0.5"><p className="text-sm font-bold text-[#0F172A]">{event.title}</p><p className="mt-1 text-[10px] text-slate-500">{event.event_date || 'Agenda terbaru'} {event.location ? `• ${event.location}` : ''}</p></Link>) : <p className="text-xs text-slate-500">Agenda baru sedang disiapkan oleh tim perpustakaan.</p>}</div>
                         </div>
 
@@ -243,7 +243,7 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
                         </div>
 
                         <div className="editorial-surface rounded-2xl bg-[#fffdf7] p-5 lg:col-span-2">
-                            <div className="flex items-center justify-between"><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider text-[#0B3866]">Karya SMANSA</span><Link href="/karya-smansa" className="font-handwriting text-sm font-bold">Buka galeri ➜</Link></div>
+                            <div className="flex items-center justify-between"><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider text-[#0B3866]">Karya SMANSA</span><Link href="/karya-smansa" className="font-handwriting text-sm font-bold">Buka galeri →</Link></div>
                             <div className="mt-4 grid gap-3 sm:grid-cols-2">{featuredWorks.length > 0 ? featuredWorks.map((work) => <Link key={work.id} href={`/karya-smansa/${work.slug}`} className="rounded-xl bg-[#f4efeA] p-3 transition hover:-translate-y-0.5"><span className="font-mono-display text-[9px] font-bold uppercase tracking-wider text-[#2E8BE6]">{work.category_label || work.category}</span><h3 className="mt-1 font-display text-base font-bold text-[#0F172A]">{work.title}</h3><p className="mt-1 text-[10px] text-slate-500">{work.author_name} • {work.author_type === 'teacher' ? 'Guru' : 'Siswa'}</p></Link>) : <p className="text-xs text-slate-500">Karya pilihan guru dan siswa akan tampil di sini.</p>}</div>
                         </div>
                     </div>
@@ -261,31 +261,31 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
                         </div>
 
                         {/* 4 Feature Items */}
-                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 flex-1">
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 flex-1">
                             {/* Item 1 */}
-                            <div className="text-center p-3 rounded-lg bg-white/75 border border-[#d4e5f2] shadow-xs transition hover:-translate-y-1">
-                                <div className="text-xl">📖</div>
+                            <div className="group rounded-xl border border-[#d4e5f2] bg-white/75 p-3 text-center shadow-xs transition hover:-translate-y-1">
+                                <div className="mx-auto grid size-9 place-items-center rounded-full bg-[#123b5d] text-[#f8d77e] transition group-hover:rotate-[-8deg]"><BookOpen size={17} /></div>
                                 <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Koleksi Lengkap</h4>
                                 <p className="text-[10px] text-slate-500">Buku fisik & digital</p>
                             </div>
 
                             {/* Item 2 */}
-                            <div className="text-center p-3 rounded-lg bg-white/75 border border-[#d4e5f2] shadow-xs transition hover:-translate-y-1">
-                                <div className="text-xl">👥</div>
+                            <div className="group rounded-xl border border-[#d4e5f2] bg-white/75 p-3 text-center shadow-xs transition hover:-translate-y-1">
+                                <div className="mx-auto grid size-9 place-items-center rounded-full bg-[#e37c5b] text-white transition group-hover:rotate-[-8deg]"><Users size={17} /></div>
                                 <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Akses Mudah</h4>
                                 <p className="text-[10px] text-slate-500">Kapan saja, di mana saja</p>
                             </div>
 
                             {/* Item 3 */}
-                            <div className="text-center p-3 rounded-lg bg-white/75 border border-[#d4e5f2] shadow-xs transition hover:-translate-y-1">
-                                <div className="text-xl">🛡️</div>
+                            <div className="group rounded-xl border border-[#d4e5f2] bg-white/75 p-3 text-center shadow-xs transition hover:-translate-y-1">
+                                <div className="mx-auto grid size-9 place-items-center rounded-full bg-[#7897a6] text-white transition group-hover:rotate-[-8deg]"><ShieldCheck size={17} /></div>
                                 <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Terpercaya</h4>
                                 <p className="text-[10px] text-slate-500">Untuk seluruh warga sekolah</p>
                             </div>
 
                             {/* Item 4 */}
-                            <div className="text-center p-3 rounded-lg bg-white/75 border border-[#d4e5f2] shadow-xs transition hover:-translate-y-1">
-                                <div className="text-xl">🌱</div>
+                            <div className="group rounded-xl border border-[#d4e5f2] bg-white/75 p-3 text-center shadow-xs transition hover:-translate-y-1">
+                                <div className="mx-auto grid size-9 place-items-center rounded-full bg-[#668a69] text-white transition group-hover:rotate-[-8deg]"><Sprout size={17} /></div>
                                 <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Ruang Tumbuh</h4>
                                 <p className="text-[10px] text-slate-500">Bersama pengetahuan</p>
                             </div>
@@ -296,7 +296,7 @@ export default function Home({ stats, popularBooks, latestMagazines, topReaders,
                             <WashiTapeStrip width="45px" height="15px" color="rgba(186, 215, 245, 0.85)" rotate={-5} className="-top-2 left-4" />
                             <div className="memo-note rotate-[4deg] rounded px-3 py-2 text-center font-handwriting text-xs text-slate-700 leading-tight">
                                 Good books, <br />
-                                better days! :)
+                                better days.
                             </div>
                         </div>
 

@@ -1,4 +1,5 @@
 ﻿import { Head } from '@inertiajs/react';
+import { BookOpen, Landmark, Laptop } from 'lucide-react';
 import React from 'react';
 import {
     BotanicalLeaf,
@@ -81,7 +82,7 @@ export default function Information({ librarians }: InformationProps) {
                         <h3 className="font-display text-sm font-bold text-[#0F172A]">Sekilas Kami</h3>
                         <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4">
                             <div className="bg-white rounded-lg p-4 border border-[#EDE7DF] shadow-xs flex items-center gap-3">
-                                <span className="text-2xl">🏛️</span>
+                                <span className="grid size-9 place-items-center rounded-full bg-[#e8f1f5] text-[#123b5d]"><Landmark size={17} /></span>
                                 <div>
                                     <span className="block font-display text-lg font-black text-[#0F172A]">1956</span>
                                     <span className="block text-[10px] text-slate-500">Tahun Berdiri</span>
@@ -116,10 +117,10 @@ export default function Information({ librarians }: InformationProps) {
                         <h3 className="font-display text-sm font-bold text-[#0F172A]">Fasilitas</h3>
                         <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4">
                             <div className="bg-white rounded-lg p-3 border border-[#EDE7DF] flex items-center gap-2.5 text-xs font-semibold text-slate-700">
-                                <span>📖</span> <span>Ruang Baca</span>
+                                <BookOpen size={16} className="text-[#123b5d]" /> <span>Ruang Baca</span>
                             </div>
                             <div className="bg-white rounded-lg p-3 border border-[#EDE7DF] flex items-center gap-2.5 text-xs font-semibold text-slate-700">
-                                <span>💻</span> <span>E-Katalog</span>
+                                <Laptop size={16} className="text-[#123b5d]" /> <span>E-Katalog</span>
                             </div>
                             <div className="bg-white rounded-lg p-3 border border-[#EDE7DF] flex items-center gap-2.5 text-xs font-semibold text-slate-700">
                                 <span>📰</span> <span>E-Magazine</span>

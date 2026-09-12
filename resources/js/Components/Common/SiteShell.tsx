@@ -1,13 +1,16 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
+    ArrowUpRight,
     BookOpen,
-    Search,
+    Globe2,
     Menu,
-    X,
     Moon,
+    Search,
     Sun,
+    X,
+    Play,
 } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const NAV_ITEMS = [
     { label: 'Beranda', href: '/' },
@@ -16,20 +19,17 @@ const NAV_ITEMS = [
     { label: 'Komunitas', href: '/events' },
     { label: 'Karya', href: '/karya-smansa' },
     { label: 'Bahasa', href: '/translations' },
-    { label: 'Tentang', href: '/information' },
-    { label: 'Kontak', href: '/contact' },
 ];
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
-    const { url } = usePage();
-    const { auth } = usePage().props as { auth?: { user?: { name: string; role: string } } };
+    const { url, props } = usePage();
+    const auth = props.auth as { user?: { name: string; role: string } } | undefined;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [darkMode, setDarkMode] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const stored = window.localStorage.getItem('smansa-theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const enabled = stored ? stored === 'dark' : prefersDark;
+        const enabled = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
         setDarkMode(enabled);
         document.documentElement.classList.toggle('dark', enabled);
     }, []);
@@ -41,166 +41,59 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         window.localStorage.setItem('smansa-theme', next ? 'dark' : 'light');
     };
 
-    const isActive = (path: string) => {
-        if (path === '/') return url === '/';
-        return url.startsWith(path);
-    };
+    const isActive = (path: string) => path === '/' ? url === '/' : url.startsWith(path);
+    const accountHref = auth?.user && ['admin', 'librarian'].includes(auth.user.role) ? '/admin-panel' : '/dashboard';
 
     return (
-        <div className="paper-grain flex min-h-screen flex-col bg-[#F4EFEA] text-[#0F172A] selection:bg-[#0B3866] selection:text-white transition-colors">
-            {/* Header: Transparent warm cream background matching mockup */}
-            <header className="sticky top-0 z-40 bg-[#F4EFEA]/90 backdrop-blur-md transition-all dark:bg-[#0b1728]/90">
-                <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-10">
-                    {/* Brand Logo: Clean icon + Uppercase text */}
-                    <Link href="/" className="group relative flex items-center gap-3">
-                        <span className="tape-edge absolute -left-2 top-0 z-0 h-9 w-10 -rotate-6 opacity-40 transition group-hover:rotate-0" />
-                        <span className="grid size-9 place-items-center rounded-lg bg-[#0B3866] text-white shadow-sm">
-                            <BookOpen size={18} strokeWidth={2.2} />
+        <div className="paper-grain flex min-h-screen flex-col bg-[#f4efe8] text-[#19283a] transition-colors dark:bg-[#0b1728]">
+            <header className="sticky top-0 z-40 border-b border-[#d8cbbd]/60 bg-[#f4efe8]/90 backdrop-blur-xl dark:border-white/10 dark:bg-[#0b1728]/90">
+                <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
+                    <Link href="/" className="group flex items-center gap-3" onClick={() => setMobileOpen(false)}>
+                        <span className="relative grid size-10 place-items-center rounded-[13px] bg-[#123b5d] text-[#f8d77e] shadow-[4px_4px_0_#d9c6ac] transition-transform duration-200 group-hover:-rotate-3 dark:shadow-[4px_4px_0_#1d344c]">
+                            <BookOpen size={19} strokeWidth={1.8} />
+                            <span className="absolute -right-1 -top-1 size-2 rounded-full bg-[#e37c5b]" />
                         </span>
-                        <div className="leading-tight">
-                            <span className="block font-display text-sm font-extrabold uppercase tracking-wide text-[#0B3866]">
-                                Perpustakaan
-                            </span>
-                            <span className="block font-mono-display text-[9px] font-bold uppercase tracking-[0.16em] text-slate-700">
-                                SMAN 1 Bukittinggi
-                            </span>
-                        </div>
+                        <span className="leading-none">
+                            <span className="block font-display text-[15px] font-black tracking-[-0.03em] text-[#123b5d] dark:text-[#e8f0f6]">Perpustakaan</span>
+                            <span className="mt-1 block font-mono-display text-[8px] font-bold uppercase tracking-[0.18em] text-[#78848d]">SMAN 1 Bukittinggi</span>
+                        </span>
                     </Link>
 
-                    {/* Navigation items in center */}
-                    <nav className="hidden items-center gap-4 lg:gap-6 md:flex">
+                    <nav className="hidden items-center gap-1 rounded-full border border-[#d8cbbd]/70 bg-white/35 p-1 md:flex dark:border-white/10 dark:bg-white/5">
                         {NAV_ITEMS.map((item) => {
                             const active = isActive(item.href);
-                            return (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={`text-xs font-semibold tracking-wide transition-colors hover:text-[#2E8BE6] ${
-                                        active ? 'font-bold text-[#2E8BE6]' : 'text-slate-600'
-                                    }`}
-                                >
-                                    {item.label}
-                                </Link>
-                            );
+                            return <Link key={item.href} href={item.href} className={`rounded-full px-3.5 py-2 text-[11px] font-semibold transition-all ${active ? 'bg-[#123b5d] text-white shadow-sm' : 'text-[#64717b] hover:bg-white/80 hover:text-[#123b5d] dark:text-[#a7b7c3] dark:hover:bg-white/10 dark:hover:text-white'}`}>{item.label}</Link>;
                         })}
                     </nav>
 
-                    {/* Right side: Search Icon & Login Button */}
-                    <div className="hidden items-center gap-3 md:flex">
-                        <button type="button" onClick={toggleTheme} aria-label={darkMode ? 'Gunakan mode terang' : 'Gunakan mode gelap'} className="touch-target grid place-items-center rounded-full text-slate-600 transition hover:bg-slate-200/60 dark:text-blue-100 dark:hover:bg-white/10">
+                    <div className="hidden items-center gap-1.5 md:flex">
+                        <button type="button" onClick={toggleTheme} aria-label={darkMode ? 'Gunakan mode terang' : 'Gunakan mode gelap'} className="grid size-10 place-items-center rounded-full text-[#66737d] transition hover:bg-white/70 hover:text-[#123b5d] dark:text-[#c3d2dc] dark:hover:bg-white/10">
                             {darkMode ? <Sun size={16} /> : <Moon size={16} />}
                         </button>
-                        <Link
-                            href="/catalog"
-                            className="p-1.5 text-slate-600 hover:text-[#0B3866] transition-colors"
-                            title="Pencarian"
-                        >
-                            <Search size={17} strokeWidth={2.2} />
-                        </Link>
-
-                        {auth?.user ? (
-                            <Link href={['admin', 'librarian'].includes(auth.user.role) ? '/admin-panel' : '/dashboard'} className="rounded-full bg-[#0B3866] px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-all">
-                                {['admin', 'librarian'].includes(auth.user.role) ? 'Panel Pengelola' : 'Dashboard'}
-                            </Link>
-                        ) : (
-                            <Link
-                                href="/login"
-                                className="rounded-full bg-[#0B3866] px-6 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-all"
-                            >
-                                Login
-                            </Link>
-                        )}
+                        <Link href="/catalog" aria-label="Cari di katalog" className="grid size-10 place-items-center rounded-full text-[#66737d] transition hover:bg-white/70 hover:text-[#123b5d] dark:text-[#c3d2dc] dark:hover:bg-white/10"><Search size={17} /></Link>
+                        <Link href={auth?.user ? accountHref : '/login'} className="ml-1 inline-flex items-center gap-2 rounded-full bg-[#123b5d] px-4 py-2.5 text-[11px] font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#0c2d47]">{auth?.user ? 'Ruang Saya' : 'Masuk'} <ArrowUpRight size={13} /></Link>
                     </div>
 
-                    {/* Mobile toggle */}
-                    <div className="flex items-center gap-2 md:hidden">
-                        <button
-                            type="button"
-                            onClick={() => setMobileOpen(!mobileOpen)}
-                            className="rounded-lg p-2 text-slate-700 hover:bg-slate-200/60"
-                        >
-                            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-                        </button>
-                    </div>
+                    <button type="button" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Buka menu" className="grid size-10 place-items-center rounded-full border border-[#d8cbbd] text-[#123b5d] md:hidden dark:border-white/15 dark:text-white">{mobileOpen ? <X size={19} /> : <Menu size={19} />}</button>
                 </div>
-
-                {/* Mobile menu */}
-                {mobileOpen && (
-                    <div className="border-b border-slate-200 bg-[#F4EFEA] px-6 py-4 dark:border-slate-700 dark:bg-[#0b1728] md:hidden">
-                        <nav className="flex flex-col gap-2">
-                            {NAV_ITEMS.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    onClick={() => setMobileOpen(false)}
-                                    className="py-2 text-sm font-semibold text-slate-700 hover:text-[#2E8BE6]"
-                                >
-                                    {item.label}
-                                </Link>
-                            ))}
-                            <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3 dark:border-slate-700">
-                                <button type="button" onClick={toggleTheme} className="touch-target inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 dark:border-slate-700 dark:text-blue-100">
-                                    {darkMode ? <Sun size={14} /> : <Moon size={14} />} {darkMode ? 'Mode Terang' : 'Mode Gelap'}
-                                </button>
-                                <Link href="/login" className="rounded-full bg-[#0B3866] px-5 py-2 text-xs font-bold text-white">
-                                    Login
-                                </Link>
-                            </div>
-                        </nav>
-                    </div>
-                )}
+                {mobileOpen && <div className="border-t border-[#d8cbbd]/60 bg-[#f4efe8] px-5 py-4 dark:border-white/10 dark:bg-[#0b1728] md:hidden"><nav className="grid gap-1">{NAV_ITEMS.concat([{ label: 'Tentang', href: '/information' }, { label: 'Kontak', href: '/contact' }]).map((item) => <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className={`rounded-xl px-3 py-3 text-sm font-semibold ${isActive(item.href) ? 'bg-[#123b5d] text-white' : 'text-[#596872] dark:text-[#c3d2dc]'}`}>{item.label}</Link>)}</nav><div className="mt-3 flex gap-2 border-t border-[#d8cbbd]/60 pt-3 dark:border-white/10"><button type="button" onClick={toggleTheme} className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-[#d8cbbd] px-3 py-2 text-xs font-bold dark:border-white/15 dark:text-white">{darkMode ? <Sun size={14} /> : <Moon size={14} />} {darkMode ? 'Mode terang' : 'Mode gelap'}</button><Link href={auth?.user ? accountHref : '/login'} className="flex-1 rounded-full bg-[#123b5d] px-4 py-2 text-center text-xs font-bold text-white">{auth?.user ? 'Ruang Saya' : 'Masuk'}</Link></div></div>}
             </header>
 
-            {/* Main Page Content */}
             <main className="flex-1">{children}</main>
 
-            {/* Footer: Deep Navy Bar with Center Slogan & Socials */}
-            <footer className="torn-top mt-16 bg-[#0B3866] text-white">
-                <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-8 sm:flex-row sm:px-10">
-                    {/* Left: Brand */}
-                    <div className="flex items-center gap-3">
-                        <span className="grid size-8 place-items-center rounded bg-white/10 text-white">
-                            <BookOpen size={16} />
-                        </span>
-                        <div>
-                            <span className="block text-xs font-bold uppercase tracking-wider">Perpustakaan</span>
-                            <span className="block text-[9px] uppercase tracking-widest text-blue-200">SMAN 1 Bukittinggi</span>
-                        </div>
+            <footer className="torn-top mt-20 bg-[#123b5d] text-white">
+                <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-10">
+                    <div className="grid gap-10 md:grid-cols-[1.2fr_.8fr_.8fr]">
+                        <div><div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-xl bg-white/10 text-[#f8d77e]"><BookOpen size={18} /></span><div><p className="font-display text-lg font-bold">Perpustakaan SMANSA</p><p className="mt-1 font-mono-display text-[9px] uppercase tracking-[0.18em] text-blue-200">Archive of curious minds</p></div></div><p className="mt-5 max-w-sm text-sm leading-7 text-blue-100">Tempat warga sekolah menemukan cerita, pengetahuan, dan ruang untuk bertumbuh bersama.</p></div>
+                        <div><p className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#f8d77e]">Jelajahi</p><div className="mt-4 grid gap-2 text-sm text-blue-100">{NAV_ITEMS.slice(1, 5).map((item) => <Link key={item.href} href={item.href} className="w-fit transition hover:translate-x-1 hover:text-white">{item.label}</Link>)}</div></div>
+                        <div><p className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#f8d77e]">Temui kami</p><p className="mt-4 text-sm leading-6 text-blue-100">Ruang Baca SMAN 1 Bukittinggi<br />Senin–Jumat · 07.00–16.00</p><div className="mt-5 flex gap-2"><a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Globe2" className="grid size-9 place-items-center rounded-full bg-white/10 transition hover:bg-white/20"><Globe2 size={15} /></a><a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube" className="grid size-9 place-items-center rounded-full bg-white/10 transition hover:bg-white/20"><Play size={15} /></a></div></div>
                     </div>
-
-                    {/* Center: Slogan italic */}
-                    <div className="text-center font-handwriting text-sm text-blue-100 italic">
-                        Membaca hari ini, untuk masa depan esok.
-                    </div>
-
-                    {/* Nav Links */}
-                    <div className="flex flex-wrap items-center justify-center gap-5 text-xs text-blue-100">
-                        {NAV_ITEMS.map((item) => (
-                            <Link key={item.href} href={item.href} className="hover:text-white transition-colors">
-                                {item.label}
-                            </Link>
-                        ))}
-                    </div>
-
-                    {/* Social Media Icons */}
-                    <div className="flex items-center gap-4 text-blue-100">
-                        <a href="https://instagram.com" target="_blank" rel="noreferrer" className="hover:text-white">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
-                        </a>
-                        <a href="https://youtube.com" target="_blank" rel="noreferrer" className="hover:text-white">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.2 2.7 12 2.7 12 2.7s-4.2 0-6.8.2c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.3v2c0 2.1.3 4.3.3 4.3S1.3 20 2.2 20.8c1.1 1.2 2.6 1.1 3.3 1.2C7.6 22.2 12 22.3 12 22.3s4.2 0 6.8-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.7 1.2-2.7S23.3 15.4 23.3 13v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>
-                        </a>
-                        <a href="https://tiktok.com" target="_blank" rel="noreferrer" className="hover:text-white">
-                            <svg width="14" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.74a4.85 4.85 0 01-1.01-.05z"/></svg>
-                        </a>
-                    </div>
-                </div>
-
-                {/* Bottom copyright line */}
-                <div className="border-t border-blue-800/60 py-3 text-center text-[10px] text-blue-200">
-                    © {new Date().getFullYear()} Perpustakaan SMAN 1 Bukittinggi. All rights reserved. &nbsp;•&nbsp; SLAVUSworks
+                    <div className="mt-12 flex flex-col gap-2 border-t border-white/15 pt-5 text-[10px] text-blue-200 sm:flex-row sm:items-center sm:justify-between"><span>© {new Date().getFullYear()} Perpustakaan SMAN 1 Bukittinggi</span><span className="font-mono-display uppercase tracking-[0.16em]">Made for readers · SLAVUSworks</span></div>
                 </div>
             </footer>
         </div>
     );
 }
+
+export default SiteShell;
+

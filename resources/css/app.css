@@ -1,180 +1,59 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;600;700&family=Lora:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #0B3866;
-  --color-primary-hover: #082B4E;
-  --color-primary-deep: #062854;
-  --color-primary-light: #EAF4FF;
-  --color-primary-muted: #d4e7fc;
-  --color-accent-blue: #2E8BE6;
-  --color-accent: #FACC15;
-  --color-accent-hover: #eab308;
-  --color-accent-warm: #EA580C;
-  --color-surface: #FFFFFF;
-  --color-background: #F4EFEA;
-  --color-foreground: #0F172A;
-  --color-muted: #64748B;
-  --color-border: #E5DFD7;
-  --color-cream: #F5EFE6;
-  --color-cream-card: #FFFFFF;
-  --color-scrapbook-paper: #FFFDF9;
-
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Lora", "Georgia", "Source Serif 4", serif;
-  --font-mono-display: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-primary: #123b5d;
+  --color-primary-hover: #0c2d47;
+  --color-primary-deep: #0b2940;
+  --color-primary-light: #e8f1f5;
+  --color-accent: #f8d77e;
+  --color-accent-warm: #e37c5b;
+  --color-background: #f4efe8;
+  --color-foreground: #19283a;
+  --color-muted: #71808a;
+  --color-border: #d8cbbd;
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-mono-display: "DM Mono", monospace;
   --font-handwriting: "Caveat", cursive;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
-  body {
-    background-color: #F4EFEA;
-    color: #0F172A;
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-  }
-  ::selection { background: #B9D9F5; color: #0B3866; }
+  html { scroll-behavior: smooth; }
+  body { background: #f4efe8; color: #19283a; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+  ::selection { background: #f8d77e; color: #123b5d; }
+  button, a { -webkit-tap-highlight-color: transparent; }
 }
 
-.font-handwriting {
-  font-family: var(--font-handwriting);
-  color: #2C3E50 !important;
-}
+.font-handwriting { font-family: var(--font-handwriting); }
+.paper-grain { background-color: #f4efe8; background-image: radial-gradient(rgba(78, 63, 48, .08) .65px, transparent .65px), linear-gradient(115deg, rgba(255,255,255,.26), transparent 38%, rgba(188,160,132,.05)); background-size: 9px 9px, 100% 100%; }
+.paper-lines { background-image: repeating-linear-gradient(0deg, transparent 0 27px, rgba(93,126,145,.13) 28px); }
+.editorial-surface { background: rgba(255, 253, 249, .82); border: 1px solid rgba(216, 203, 189, .9); box-shadow: 0 18px 36px -28px rgba(33, 42, 48, .5); }
+.index-card { background: #fffdf8; background-image: repeating-linear-gradient(0deg, transparent 0 27px, rgba(93,126,145,.12) 28px); border: 1px solid #eadbce; box-shadow: 0 18px 32px -26px rgba(60, 50, 40, .65); }
+.card-polaroid { background: #fff; padding: 11px 11px 32px; border-radius: 3px; box-shadow: 0 20px 38px -12px rgba(29, 38, 42, .25); }
+.scrapbook-shadow { box-shadow: 0 14px 30px -18px rgba(44, 39, 32, .4); }
+.touch-target { min-height: 44px; min-width: 44px; }
+.washi-tape { position: absolute; height: 22px; background: rgba(248, 215, 126, .82); box-shadow: 0 1px 3px rgba(0,0,0,.08); pointer-events: none; z-index: 20; }
+.washi-tape-yellow { background: rgba(248, 215, 126, .82); }
+.washi-tape-darkblue { background: rgba(18, 59, 93, .78); }
+.torn-top { position: relative; }
+.torn-top::before { content: ""; position: absolute; top: -7px; left: 0; right: 0; height: 12px; background: inherit; clip-path: polygon(0 50%, 4% 18%, 9% 58%, 15% 14%, 21% 54%, 28% 22%, 36% 57%, 44% 18%, 53% 52%, 61% 20%, 69% 56%, 77% 17%, 86% 55%, 94% 21%, 100% 50%, 100% 100%, 0 100%); }
+.tape-edge { position: relative; background: rgba(248, 215, 126, .76); clip-path: polygon(0 5%, 8% 0, 17% 5%, 26% 0, 35% 5%, 44% 0, 53% 5%, 62% 0, 71% 5%, 80% 0, 90% 5%, 100% 0, 97% 95%, 88% 100%, 78% 95%, 68% 100%, 58% 95%, 48% 100%, 38% 95%, 28% 100%, 18% 95%, 8% 100%); }
+.memo-note { background: #fffdf7; border: 1px solid #eadbce; box-shadow: 0 12px 22px -12px rgba(60,50,40,.45); position: relative; }
+.scrapbook-rule { height: 1px; background: repeating-linear-gradient(90deg, #b9d0d8 0 18px, transparent 18px 26px); }
+.stamp-badge { background: #e37c5b; color: white; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 8px 18px rgba(149,72,49,.25); position: relative; }
+.stamp-badge::after { content: ""; position: absolute; inset: -3px; border: 1.5px dashed rgba(255,255,255,.8); border-radius: 50%; }
 
-html.dark body { background: #0b1728; color: #f8f1e7; }
-html.dark .paper-grain { background-color: #0b1728 !important; background-image: radial-gradient(rgba(255,255,255,.045) .7px, transparent .7px), linear-gradient(rgba(10,24,42,.6), rgba(10,24,42,.6)); }
-html.dark .editorial-surface, html.dark .index-card, html.dark .memo-note, html.dark .card-polaroid { background-color: #14253b !important; border-color: #29415c !important; color: #f8f1e7; }
+@media (prefers-reduced-motion: no-preference) {
+  a, button { transition: transform 180ms cubic-bezier(.23,1,.32,1), background-color 180ms ease, color 180ms ease, box-shadow 180ms ease; }
+  a:active, button:active { transform: scale(.98); }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+html.dark body { background: #0b1728; color: #edf4f8; }
+html.dark .paper-grain { background-color: #0b1728; background-image: radial-gradient(rgba(255,255,255,.045) .7px, transparent .7px), linear-gradient(rgba(10,24,42,.55), rgba(10,24,42,.55)); }
+html.dark .editorial-surface, html.dark .index-card, html.dark .memo-note, html.dark .card-polaroid { background-color: #14283d !important; border-color: #29465d !important; color: #edf4f8; }
+html.dark input, html.dark textarea, html.dark select { background-color: #102237 !important; color: #f8f1e7 !important; border-color: #34516b !important; }
 html.dark [class~="text-[#0F172A]"], html.dark [class~="text-slate-700"], html.dark [class~="text-slate-600"] { color: #e7edf4 !important; }
 html.dark [class~="text-slate-500"], html.dark [class~="text-slate-400"] { color: #a8b8c9 !important; }
-html.dark [class~="bg-white"], html.dark [class~="bg-white/75"] { background-color: #14253b !important; }
-html.dark [class~="bg-[#F4EFEA]"], html.dark [class~="bg-[#fffdf7]"], html.dark [class~="bg-[#eaf5ff]"] { background-color: #102136 !important; }
-html.dark header[class*="bg-[#F4EFEA]"] { background-color: rgba(11, 23, 40, .92) !important; }
-html.dark header [class*="text-[#0B3866]"] { color: #d7e8f7 !important; }
-html.dark input, html.dark textarea, html.dark select { background-color: #102136 !important; color: #f8f1e7 !important; border-color: #34506d !important; }
-
-/* Paper and scrapbook subtle textures & shadows */
-.scrapbook-shadow {
-  box-shadow: 0 10px 25px -4px rgba(44, 39, 32, 0.08), 0 4px 8px -2px rgba(44, 39, 32, 0.04);
-}
-
-.paper-grain {
-  background-image: radial-gradient(rgba(80, 65, 48, .065) .7px, transparent .7px), linear-gradient(rgba(255,255,255,.24), rgba(255,255,255,.24));
-  background-size: 8px 8px, 100% 100%;
-}
-
-.paper-lines {
-  background-image: repeating-linear-gradient(0deg, transparent 0 25px, rgba(117, 139, 157, .12) 26px);
-}
-
-.torn-top { position: relative; }
-.torn-top::before {
-  content: "";
-  position: absolute;
-  top: -8px;
-  left: 0;
-  right: 0;
-  height: 14px;
-  background: inherit;
-  clip-path: polygon(0 55%, 5% 20%, 11% 55%, 17% 15%, 23% 52%, 30% 18%, 38% 58%, 46% 16%, 53% 55%, 61% 22%, 69% 56%, 77% 17%, 85% 58%, 93% 22%, 100% 52%, 100% 100%, 0 100%);
-}
-
-.scrapbook-rule { height: 1px; background: repeating-linear-gradient(90deg, #9fc9e8 0 18px, transparent 18px 26px); }
-
-.editorial-surface {
-  background: rgba(255, 255, 255, .82);
-  border: 1px solid rgba(229, 223, 215, .95);
-  box-shadow: 0 14px 30px -20px rgba(44, 39, 32, .35);
-}
-
-.index-card {
-  background-color: #fffdf7;
-  background-image: repeating-linear-gradient(0deg, transparent 0 27px, rgba(117, 139, 157, .12) 28px);
-  border: 1px solid #eadbce;
-  box-shadow: 0 15px 28px -22px rgba(60, 50, 40, .5);
-}
-
-.touch-target { min-height: 44px; min-width: 44px; }
-
-.card-polaroid {
-  background: #FFFFFF;
-  padding: 10px 10px 32px 10px;
-  box-shadow: 0 12px 28px -5px rgba(28, 25, 20, 0.12), 0 4px 10px -2px rgba(28, 25, 20, 0.06);
-  border-radius: 2px;
-}
-
-@media (max-width: 640px) {
-  .card-polaroid { padding: 7px 7px 24px 7px; }
-  .memo-note { max-width: 150px; }
-  .stamp-badge { transform: scale(.88); }
-  .font-handwriting { letter-spacing: .01em; }
-}
-
-/* Washi Tape Styles */
-.washi-tape {
-  position: absolute;
-  height: 22px;
-  background: rgba(186, 214, 245, 0.85);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  border-left: 2px dashed rgba(255,255,255,0.6);
-  border-right: 2px dashed rgba(255,255,255,0.6);
-  pointer-events: none;
-  z-index: 20;
-}
-
-.washi-tape-yellow {
-  background: rgba(254, 240, 138, 0.9);
-}
-
-.washi-tape-darkblue {
-  background: rgba(11, 78, 162, 0.75);
-}
-
-/* Torn paper note effect */
-.memo-note {
-  background: #FFFDF7;
-  border: 1px solid #EADBCE;
-  box-shadow: 0 8px 20px -3px rgba(60, 50, 40, 0.07);
-  position: relative;
-}
-
-/* Paper clip asset */
-.paperclip {
-  width: 24px;
-  height: 48px;
-  position: absolute;
-  pointer-events: none;
-  z-index: 25;
-}
-
-/* Read more badge circle stamp */
-.stamp-badge {
-  background: #0B3866;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 16px rgba(11, 56, 102, 0.35);
-  position: relative;
-}
-.stamp-badge::after {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border: 1.5px dashed rgba(255,255,255,0.8);
-  border-radius: 50%;
-}
-
-.tape-edge {
-  position: relative;
-  background: rgba(186, 214, 245, .85);
-  box-shadow: 0 1px 3px rgba(0,0,0,.08);
-  clip-path: polygon(0 5%, 7% 0, 14% 5%, 21% 0, 29% 5%, 38% 0, 47% 5%, 56% 0, 66% 5%, 76% 0, 86% 5%, 94% 0, 100% 5%, 97% 95%, 90% 100%, 82% 95%, 72% 100%, 63% 95%, 53% 100%, 44% 95%, 34% 100%, 24% 95%, 14% 100%, 5% 95%);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-}

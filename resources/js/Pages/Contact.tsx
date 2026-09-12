@@ -103,7 +103,7 @@ export default function Contact({ settings }: ContactProps) {
                             {/* Email */}
                             <div className="flex items-start gap-4">
                                 <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#0B3866] text-white text-xs">
-                                    ✉️
+                                    Email
                                 </div>
                                 <div>
                                     <h4 className="font-display text-xs font-bold uppercase tracking-wider text-slate-400">Email</h4>
@@ -157,7 +157,7 @@ export default function Contact({ settings }: ContactProps) {
                                 {/* Sticky note location */}
                                 <div className="absolute -bottom-3 right-4 z-20">
                                     <div className="memo-note rotate-[-2deg] rounded px-3 py-1.5 text-center font-handwriting text-xs text-[#2E8BE6] font-bold">
-                                        Lokasi Kami: Di Jantung SMAN 1 Bukittinggi ♡
+                                        Lokasi Kami: Di Jantung SMAN 1 Bukittinggi ·
                                     </div>
                                 </div>
                             </a>
@@ -223,7 +223,7 @@ export default function Contact({ settings }: ContactProps) {
                                             type="submit"
                                             className="w-full rounded-full bg-[#0B3866] py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-colors"
                                         >
-                                            Kirim ➔
+                                            Kirim →
                                         </button>
                                     </form>
                                 )}

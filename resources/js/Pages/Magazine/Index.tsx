@@ -47,7 +47,7 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
                                     href="#populer"
                                     className="rounded-full bg-[#0B3866] px-7 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-all"
                                 >
-                                    Jelajahi Semua ➔
+                                    Jelajahi Semua →
                                 </a>
 
                                 {/* Handwritten note */}
@@ -123,7 +123,7 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
                             Majalah Populer
                         </h2>
                         <a href="#populer" className="font-handwriting text-base font-bold text-[#2E8BE6] hover:underline">
-                            Lihat Semua ➔
+                            Lihat Semua →
                         </a>
                     </div>
 

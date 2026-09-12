@@ -88,7 +88,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                 <div className="mt-3 text-center font-handwriting text-sm font-bold">{book.title}</div>
                             </div>
                             <div className="mt-3 text-center font-handwriting text-xs text-[#0B4EA2] font-bold">
-                                Koleksi Perpustakaan SMAN 1 Bukittinggi ♡
+                                Koleksi Perpustakaan SMAN 1 Bukittinggi ·
                             </div>
                         </div>
 
