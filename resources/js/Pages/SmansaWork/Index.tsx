@@ -35,7 +35,7 @@ export default function SmansaWorkIndex({ works, categories, filters }: SmansaWo
                     <div className="mx-auto max-w-7xl">
                         <div className="flex items-center gap-3">
                             <BookHeart size={32} className="text-rose-500" />
-                            <div>
+                            <div className="flex-1">
                                 <h1 className="font-display text-3xl font-extrabold text-[#0F172A] dark:text-white sm:text-4xl">
                                     Karya Smansa
                                 </h1>
@@ -43,6 +43,7 @@ export default function SmansaWorkIndex({ works, categories, filters }: SmansaWo
                                     Cerpen, puisi, esai, dan karya ilmiah dari guru & siswa SMAN 1 Bukittinggi
                                 </p>
                             </div>
+                            <Link href="/contact?subject=Kirim%20Karya%20SMANSA" className="mt-5 inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#0B4EA2] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#083c7d] sm:mt-0">Kirim Karya <span>↗</span></Link>
                         </div>
                     </div>
                 </div>

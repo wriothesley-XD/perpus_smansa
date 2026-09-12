@@ -13,6 +13,7 @@ interface AdminStats {
     totalMembers: number;
     totalEvents: number;
     totalWorks: number;
+    pendingWorks: number;
 }
 
 interface AdminPanelProps {
@@ -60,6 +61,8 @@ export default function AdminPanel({ stats }: AdminPanelProps) {
         { label: 'Dipinjam', value: stats?.activeLoans ?? 0, icon: Package, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
         { label: 'Reservasi Masuk', value: stats?.pendingReservations ?? 0, icon: CalendarCheck, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
         { label: 'Anggota', value: stats?.totalMembers ?? 0, icon: Users, color: 'text-slate-600 dark:text-slate-300', bg: 'bg-slate-100 dark:bg-slate-700' },
+        { label: 'Event & Podcast', value: stats?.totalEvents ?? 0, icon: Calendar, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-900/20' },
+        { label: 'Karya Menunggu Kurasi', value: stats?.pendingWorks ?? 0, icon: FileText, color: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-50 dark:bg-rose-900/20' },
     ];
 
     return (
@@ -90,7 +93,7 @@ export default function AdminPanel({ stats }: AdminPanelProps) {
 
                 <div className="mx-auto max-w-7xl px-6 py-10 sm:px-8 space-y-10">
                     {/* Stats */}
-                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
                         {statCards.map((s) => (
                             <div key={s.label} className="rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-5">
                                 <span className={`inline-grid size-10 place-items-center rounded-xl ${s.bg}`}>

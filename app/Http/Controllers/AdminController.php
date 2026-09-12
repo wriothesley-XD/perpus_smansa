@@ -29,6 +29,7 @@ class AdminController extends Controller
             'totalMembers'        => User::whereIn('role', ['student', 'teacher'])->count(),
             'totalEvents'         => Event::count(),
             'totalWorks'          => SmansaWork::count(),
+            'pendingWorks'        => SmansaWork::where('is_published', false)->count(),
         ];
 
         return Inertia::render('Admin/Panel', compact('stats'));
