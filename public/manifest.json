@@ -1,0 +1,10 @@
+{
+  "name": "Perpustakaan SMAN 1 Bukittinggi",
+  "short_name": "Perpus SMANSA",
+  "description": "SMANSA Reading Universe — ruang digital untuk membaca, berkarya, dan tumbuh bersama.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4EFEA",
+  "theme_color": "#0B3866",
+  "icons": [{ "src": "/favicon.ico", "sizes": "any", "type": "image/x-icon" }]
+}

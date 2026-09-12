@@ -3,6 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#0B3866">
+        <link rel="manifest" href="/manifest.json">
 
         <title inertia>{{ config('app.name') === 'Laravel' ? 'Perpustakaan SMAN 1 Bukittinggi' : config('app.name', 'Perpustakaan SMAN 1 Bukittinggi') }}</title>
 

@@ -164,6 +164,15 @@ export default function Information({ librarians }: InformationProps) {
                         </div>
                     </div>
 
+                    {/* 5. NATIONAL CHAMPION ARCHIVE */}
+                    <div className="relative mt-12 overflow-hidden rounded-2xl bg-[#0B3866] p-6 text-white sm:p-8">
+                        <div className="absolute -right-12 -top-12 size-40 rounded-full border border-white/20" />
+                        <div className="relative grid gap-8 lg:grid-cols-[1.1fr_.9fr] lg:items-center">
+                            <div><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-blue-200">NATIONAL CHAMPION ARCHIVE</span><h2 className="mt-3 font-display text-2xl font-bold sm:text-3xl">Dari juara nasional, menuju generasi literasi berikutnya.</h2><p className="mt-3 max-w-xl text-sm leading-relaxed text-blue-100">Perjalanan perpustakaan SMAN 1 Bukittinggi adalah arsip hidup tentang keberanian membaca, berinovasi, dan tumbuh bersama sekolah.</p></div>
+                            <div className="relative rounded-xl border border-white/20 bg-white/10 p-5"><div className="flex items-center gap-3"><span className="grid size-12 place-items-center rounded-full bg-[#FACC15] text-2xl">🏆</span><div><p className="font-mono-display text-[10px] font-bold uppercase tracking-wider text-blue-200">Milestone</p><h3 className="font-display text-xl font-bold">Juara Nasional</h3><p className="text-xs text-blue-100">Sekitar 2020 • Program Perpustakaan Sekolah</p></div></div><div className="mt-5 border-t border-white/15 pt-4 text-xs leading-relaxed text-blue-100">Prestasi ini menjadi halaman penting dalam perjalanan kami—dan alasan untuk terus membuat ruang baca yang lebih terbuka, kreatif, dan relevan.</div></div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
         </SiteShell>

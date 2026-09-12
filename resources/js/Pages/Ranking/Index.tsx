@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { BookOpen, Crown, Medal, Trophy, Users } from 'lucide-react';
 import { SiteShell } from '../../Components/Common/SiteShell';
 import { Book } from '../../types/library';
@@ -14,6 +14,7 @@ interface RankingProps {
     topBooks: (Book & { loan_count: number })[];
     topMembers: TopMember[];
     totalLoans: number;
+    period: string;
 }
 
 const medal = (rank: number) => {
@@ -23,7 +24,8 @@ const medal = (rank: number) => {
     return <span className="w-5 text-center text-sm font-bold text-slate-500">{rank}</span>;
 };
 
-export default function RankingIndex({ topBooks, topMembers, totalLoans }: RankingProps) {
+export default function RankingIndex({ topBooks, topMembers, totalLoans, period }: RankingProps) {
+    const periods = [{ key: 'all', label: 'Sepanjang masa' }, { key: 'semester', label: 'Semester ini' }, { key: 'month', label: 'Bulan ini' }, { key: 'week', label: 'Minggu ini' }];
     return (
         <SiteShell>
             <Head title="Ranking Koleksi - Perpustakaan SMAN 1 Bukittinggi" />
@@ -42,6 +44,9 @@ export default function RankingIndex({ topBooks, topMembers, totalLoans }: Ranki
                         <div className="mt-8 inline-flex items-center gap-2 rounded-xl bg-white/15 px-5 py-3">
                             <BookOpen size={20} />
                             <span className="font-bold">{totalLoans.toLocaleString('id-ID')} total peminjaman tercatat</span>
+                        </div>
+                        <div className="mt-5 flex flex-wrap gap-2">
+                            {periods.map((item) => <button key={item.key} type="button" onClick={() => router.get('/ranking', { period: item.key }, { preserveScroll: true })} className={`rounded-full px-3 py-1.5 text-xs font-bold transition ${period === item.key ? 'bg-[#FACC15] text-[#0B3866]' : 'bg-white/10 text-white hover:bg-white/20'}`}>{item.label}</button>)}
                         </div>
                     </div>
                 </div>
