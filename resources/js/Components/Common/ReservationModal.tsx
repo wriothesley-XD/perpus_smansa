@@ -203,7 +203,7 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                                 disabled={processing}
                                 className="flex-1 rounded-xl bg-[#0B4EA2] py-3 text-sm font-bold text-white shadow-md hover:bg-[#083c7d] transition-all disabled:opacity-50"
                             >
-                                {processing ? 'Memproses…' : 'Konfirmasi Reservasi'}
+                                {processing ? 'Memproses...' : 'Konfirmasi Reservasi'}
                             </button>
                         </div>
                     </form>
