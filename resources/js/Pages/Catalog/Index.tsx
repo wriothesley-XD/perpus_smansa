@@ -61,7 +61,7 @@ export default function CatalogIndex({
             <Head title="Katalog Buku - Perpustakaan SMAN 1 Bukittinggi" />
 
             {/* 1. HERO / SEARCH & FILTER SECTION */}
-            <section className="relative px-6 py-8 sm:px-10 overflow-hidden">
+            <section className="paper-grain relative px-6 py-8 sm:px-10 overflow-hidden">
                 <div className="mx-auto max-w-7xl">
                     <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1.2fr_0.8fr]">
                         

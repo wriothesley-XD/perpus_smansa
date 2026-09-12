@@ -26,12 +26,13 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <div className="flex min-h-screen flex-col bg-[#F4EFEA] text-[#0F172A] selection:bg-[#0B3866] selection:text-white">
+        <div className="paper-grain flex min-h-screen flex-col bg-[#F4EFEA] text-[#0F172A] selection:bg-[#0B3866] selection:text-white">
             {/* Header: Transparent warm cream background matching mockup */}
             <header className="sticky top-0 z-40 bg-[#F4EFEA]/90 backdrop-blur-md transition-all">
                 <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-10">
                     {/* Brand Logo: Clean icon + Uppercase text */}
-                    <Link href="/" className="flex items-center gap-3">
+                    <Link href="/" className="group relative flex items-center gap-3">
+                        <span className="tape-edge absolute -left-2 top-0 z-0 h-9 w-10 -rotate-6 opacity-40 transition group-hover:rotate-0" />
                         <span className="grid size-9 place-items-center rounded-lg bg-[#0B3866] text-white shadow-sm">
                             <BookOpen size={18} strokeWidth={2.2} />
                         </span>
@@ -130,7 +131,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <main className="flex-1">{children}</main>
 
             {/* Footer: Deep Navy Bar with Center Slogan & Socials */}
-            <footer className="mt-16 bg-[#0B3866] text-white">
+            <footer className="torn-top mt-16 bg-[#0B3866] text-white">
                 <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-8 sm:flex-row sm:px-10">
                     {/* Left: Brand */}
                     <div className="flex items-center gap-3">

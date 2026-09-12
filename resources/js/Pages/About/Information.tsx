@@ -31,7 +31,7 @@ export default function Information({ librarians }: InformationProps) {
         <SiteShell>
             <Head title="Tentang Perpustakaan - SMAN 1 Bukittinggi" />
 
-            <section className="px-6 py-8 sm:px-10 overflow-hidden">
+            <section className="paper-grain relative px-6 py-8 sm:px-10 overflow-hidden">
                 <div className="mx-auto max-w-7xl">
                     
                     {/* 1. TOP HERO: Headline + Polaroid School Photo */}

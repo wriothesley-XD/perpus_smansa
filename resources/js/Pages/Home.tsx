@@ -201,40 +201,40 @@ export default function Home({ stats, popularBooks, latestMagazines }: HomeProps
             </section>
 
             {/* 3. VALUE PROPOSITION CARDS / BENEFIT SECTION */}
-            <section className="px-6 py-12 sm:px-10">
+            <section className="torn-top paper-lines relative mt-4 bg-[#eaf5ff] px-6 py-12 sm:px-10">
                 <div className="mx-auto max-w-7xl">
                     <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
                         
                         {/* Left handwritten annotation */}
-                        <div className="font-handwriting text-lg text-slate-500 font-bold rotate-[-3deg] shrink-0">
+                        <div className="font-handwriting text-lg text-[#315a7d] font-bold rotate-[-3deg] shrink-0">
                             Lebih dari sekadar buku ~
                         </div>
 
                         {/* 4 Feature Items */}
                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 flex-1">
                             {/* Item 1 */}
-                            <div className="text-center p-3 rounded-lg bg-white/70 border border-[#EDE7DF] shadow-xs">
+                            <div className="text-center p-3 rounded-lg bg-white/75 border border-[#d4e5f2] shadow-xs transition hover:-translate-y-1">
                                 <div className="text-xl">📖</div>
                                 <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Koleksi Lengkap</h4>
                                 <p className="text-[10px] text-slate-500">Buku fisik & digital</p>
                             </div>
 
                             {/* Item 2 */}
-                            <div className="text-center p-3 rounded-lg bg-white/70 border border-[#EDE7DF] shadow-xs">
+                            <div className="text-center p-3 rounded-lg bg-white/75 border border-[#d4e5f2] shadow-xs transition hover:-translate-y-1">
                                 <div className="text-xl">👥</div>
                                 <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Akses Mudah</h4>
                                 <p className="text-[10px] text-slate-500">Kapan saja, di mana saja</p>
                             </div>
 
                             {/* Item 3 */}
-                            <div className="text-center p-3 rounded-lg bg-white/70 border border-[#EDE7DF] shadow-xs">
+                            <div className="text-center p-3 rounded-lg bg-white/75 border border-[#d4e5f2] shadow-xs transition hover:-translate-y-1">
                                 <div className="text-xl">🛡️</div>
                                 <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Terpercaya</h4>
                                 <p className="text-[10px] text-slate-500">Untuk seluruh warga sekolah</p>
                             </div>
 
                             {/* Item 4 */}
-                            <div className="text-center p-3 rounded-lg bg-white/70 border border-[#EDE7DF] shadow-xs">
+                            <div className="text-center p-3 rounded-lg bg-white/75 border border-[#d4e5f2] shadow-xs transition hover:-translate-y-1">
                                 <div className="text-xl">🌱</div>
                                 <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Ruang Tumbuh</h4>
                                 <p className="text-[10px] text-slate-500">Bersama pengetahuan</p>

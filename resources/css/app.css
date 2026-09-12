@@ -1,4 +1,5 @@
-﻿@import "tailwindcss";
+﻿@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;600;700&family=Lora:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&display=swap');
+@import "tailwindcss";
 
 @theme {
   --color-primary: #0B3866;
@@ -32,6 +33,7 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
+  ::selection { background: #B9D9F5; color: #0B3866; }
 }
 
 .font-handwriting {
@@ -42,6 +44,29 @@
 .scrapbook-shadow {
   box-shadow: 0 10px 25px -4px rgba(44, 39, 32, 0.08), 0 4px 8px -2px rgba(44, 39, 32, 0.04);
 }
+
+.paper-grain {
+  background-image: radial-gradient(rgba(80, 65, 48, .065) .7px, transparent .7px), linear-gradient(rgba(255,255,255,.24), rgba(255,255,255,.24));
+  background-size: 8px 8px, 100% 100%;
+}
+
+.paper-lines {
+  background-image: repeating-linear-gradient(0deg, transparent 0 25px, rgba(117, 139, 157, .12) 26px);
+}
+
+.torn-top { position: relative; }
+.torn-top::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 14px;
+  background: inherit;
+  clip-path: polygon(0 55%, 5% 20%, 11% 55%, 17% 15%, 23% 52%, 30% 18%, 38% 58%, 46% 16%, 53% 55%, 61% 22%, 69% 56%, 77% 17%, 85% 58%, 93% 22%, 100% 52%, 100% 100%, 0 100%);
+}
+
+.scrapbook-rule { height: 1px; background: repeating-linear-gradient(90deg, #9fc9e8 0 18px, transparent 18px 26px); }
 
 .card-polaroid {
   background: #FFFFFF;
@@ -105,4 +130,15 @@
   inset: -3px;
   border: 1.5px dashed rgba(255,255,255,0.8);
   border-radius: 50%;
+}
+
+.tape-edge {
+  position: relative;
+  background: rgba(186, 214, 245, .85);
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  clip-path: polygon(0 5%, 7% 0, 14% 5%, 21% 0, 29% 5%, 38% 0, 47% 5%, 56% 0, 66% 5%, 76% 0, 86% 5%, 94% 0, 100% 5%, 97% 95%, 90% 100%, 82% 95%, 72% 100%, 63% 95%, 53% 100%, 44% 95%, 34% 100%, 24% 95%, 14% 100%, 5% 95%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }

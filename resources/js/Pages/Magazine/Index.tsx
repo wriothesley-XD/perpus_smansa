@@ -22,7 +22,7 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
             <Head title="E-Magazine - Perpustakaan SMAN 1 Bukittinggi" />
 
             {/* 1. HERO: READING TABLE */}
-            <section className="relative px-6 py-8 sm:px-10 overflow-hidden">
+            <section className="paper-grain relative px-6 py-8 sm:px-10 overflow-hidden">
                 <div className="mx-auto max-w-7xl">
                     <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
                         
