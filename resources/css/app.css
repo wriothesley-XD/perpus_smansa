@@ -82,11 +82,20 @@
   box-shadow: 0 15px 28px -22px rgba(60, 50, 40, .5);
 }
 
+.touch-target { min-height: 44px; min-width: 44px; }
+
 .card-polaroid {
   background: #FFFFFF;
   padding: 10px 10px 32px 10px;
   box-shadow: 0 12px 28px -5px rgba(28, 25, 20, 0.12), 0 4px 10px -2px rgba(28, 25, 20, 0.06);
   border-radius: 2px;
+}
+
+@media (max-width: 640px) {
+  .card-polaroid { padding: 7px 7px 24px 7px; }
+  .memo-note { max-width: 150px; }
+  .stamp-badge { transform: scale(.88); }
+  .font-handwriting { letter-spacing: .01em; }
 }
 
 /* Washi Tape Styles */

@@ -45,7 +45,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
 
     return (
         <SiteShell>
-            <Head title={`${book.title} � Katalog Perpustakaan SMAN 1 Bukittinggi`} />
+            <Head title={`${book.title} | Katalog Perpustakaan SMAN 1 Bukittinggi`} />
 
             {/* Breadcrumb Navigation */}
             <div className="paper-grain border-b border-[#e5dfd7] bg-[#fffdf9]">
@@ -154,7 +154,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                             <span className="font-mono-display text-xs font-bold uppercase tracking-[0.16em] text-[#0B4EA2]">
                                 {book.category?.name}
                             </span>
-                            <span className="text-slate-300">�</span>
+                            <span className="text-slate-300">•</span>
                             <span className="font-mono-display text-xs text-slate-500 font-semibold">
                                 DDC {book.ddc_class?.code}
                             </span>
@@ -180,7 +180,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                     Penerbit
                                 </span>
                                 <strong className="mt-1 block text-xs text-[#0F172A]">
-                                    {book.publisher?.name ?? '�'}
+                                    {book.publisher?.name ?? 'Belum tercatat'}
                                 </strong>
                             </div>
                             <div>
@@ -196,7 +196,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                     ISBN
                                 </span>
                                 <strong className="mt-1 block font-mono text-xs text-[#0F172A]">
-                                    {book.isbn || '�'}
+                                    {book.isbn || 'Belum tercatat'}
                                 </strong>
                             </div>
                             <div>
@@ -242,7 +242,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                                             {copy.barcode_identifier}
                                                         </span>
                                                         <span className="block text-[10px] text-slate-500">
-                                                            Eksemplar #{index + 1} � {copy.shelf_location || book.shelf_location}
+                                                            Eksemplar #{index + 1} • {copy.shelf_location || book.shelf_location}
                                                         </span>
                                                     </div>
                                                 </div>

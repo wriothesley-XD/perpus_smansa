@@ -76,7 +76,7 @@ export function BookCard({ book, hasClip = true, sticker }: BookCardProps) {
             </Link>
             <Link
                         href={`/books/${book.slug}`}
-                        className={`mt-2.5 inline-flex w-full items-center justify-center rounded-full px-2 py-1.5 text-[9px] font-bold transition-colors ${isAvailable ? 'bg-[#0B3866] text-white hover:bg-[#082B4E]' : 'border border-[#d8c88e] bg-[#fff8d9] text-[#6b5a23] hover:bg-[#f8edb8]'}`}
+                        className={`touch-target mt-2.5 inline-flex w-full items-center justify-center rounded-full px-2 py-1.5 text-[9px] font-bold transition-colors ${isAvailable ? 'bg-[#0B3866] text-white hover:bg-[#082B4E]' : 'border border-[#d8c88e] bg-[#fff8d9] text-[#6b5a23] hover:bg-[#f8edb8]'}`}
                     >
                         {isAvailable ? 'Pinjam / Detail Rak' : 'Ingatkan Saya'}
             </Link>
