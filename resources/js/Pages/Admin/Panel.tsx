@@ -23,30 +23,30 @@ const MENU_GROUPS = [
     {
         label: 'Koleksi',
         items: [
-            { label: 'Manajemen Buku', desc: 'Tambah, edit, hapus judul koleksi', icon: BookOpen, href: '/books', color: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' },
-            { label: 'Eksemplar Buku', desc: 'Kelola salinan fisik tiap judul', icon: BookCopy, href: '/copies', color: 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400' },
+            { label: 'Manajemen Buku', desc: 'Lihat koleksi dan detail katalog', icon: BookOpen, href: '/catalog', color: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' },
+            { label: 'Eksemplar Buku', desc: 'Pantau ketersediaan salinan fisik', icon: BookCopy, href: '/catalog', color: 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400' },
         ],
     },
     {
         label: 'Transaksi',
         items: [
-            { label: 'Peminjaman', desc: 'Catat dan pantau peminjaman aktif', icon: Package, href: '/loans', color: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' },
-            { label: 'Reservasi', desc: 'Konfirmasi permintaan peminjaman', icon: CalendarCheck, href: '/reservations', color: 'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400' },
+            { label: 'Peminjaman', desc: 'Pantau transaksi aktif dan statistik', icon: Package, href: '/ranking', color: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' },
+            { label: 'Reservasi', desc: 'Lihat alur reservasi dari katalog', icon: CalendarCheck, href: '/catalog', color: 'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400' },
         ],
     },
     {
         label: 'Konten Komunitas',
         items: [
-            { label: 'Event & Podcast', desc: 'Kelola event, duta, dan podcast', icon: Calendar, href: '/events/manage', color: 'bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400' },
-            { label: 'Karya Smansa', desc: 'Kelola karya siswa dan guru', icon: FileText, href: '/karya-smansa/manage', color: 'bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400' },
+            { label: 'Event & Podcast', desc: 'Lihat event, duta, dan podcast', icon: Calendar, href: '/events', color: 'bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400' },
+            { label: 'Karya Smansa', desc: 'Lihat karya siswa dan guru', icon: FileText, href: '/karya-smansa', color: 'bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400' },
         ],
     },
     {
         label: 'Anggota & Sistem',
         items: [
-            { label: 'Data Anggota', desc: 'Kelola akun siswa dan guru', icon: Users, href: '/members', color: 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300' },
-            { label: 'Laporan', desc: 'Statistik peminjaman dan koleksi', icon: BarChart3, href: '/reports', color: 'bg-teal-50 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400' },
-            { label: 'Pengaturan', desc: 'Konfigurasi perpustakaan', icon: Settings, href: '/settings', color: 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300' },
+            { label: 'Data Anggota', desc: 'Pantau komunitas pembaca', icon: Users, href: '/ranking', color: 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300' },
+            { label: 'Laporan', desc: 'Statistik peminjaman dan koleksi', icon: BarChart3, href: '/ranking', color: 'bg-teal-50 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400' },
+            { label: 'Pengaturan', desc: 'Informasi dan kontak perpustakaan', icon: Settings, href: '/information', color: 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300' },
         ],
     },
 ];

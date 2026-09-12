@@ -99,11 +99,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                         </Link>
 
                         {auth?.user ? (
-                            <Link
-                                href="/dashboard"
-                                className="rounded-full bg-[#0B3866] px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-all"
-                            >
-                                Dashboard
+                            <Link href={['admin', 'librarian'].includes(auth.user.role) ? '/admin-panel' : '/dashboard'} className="rounded-full bg-[#0B3866] px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-all">
+                                {['admin', 'librarian'].includes(auth.user.role) ? 'Panel Pengelola' : 'Dashboard'}
                             </Link>
                         ) : (
                             <Link
