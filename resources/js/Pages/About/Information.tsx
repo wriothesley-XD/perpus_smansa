@@ -1,5 +1,5 @@
 ﻿import { Head } from '@inertiajs/react';
-import { BookOpen, Landmark, Laptop } from 'lucide-react';
+import { BookOpen, DoorOpen, Landmark, Laptop, Newspaper, Trophy, Wifi } from 'lucide-react';
 import React from 'react';
 import {
     BotanicalLeaf,
@@ -89,21 +89,21 @@ export default function Information({ librarians }: InformationProps) {
                                 </div>
                             </div>
                             <div className="bg-white rounded-lg p-4 border border-[#EDE7DF] shadow-xs flex items-center gap-3">
-                                <span className="text-2xl">📚</span>
+                                <span className="grid size-9 place-items-center rounded-full bg-[#f8f0d5] text-[#123b5d]"><BookOpen size={17} /></span>
                                 <div>
                                     <span className="block font-display text-lg font-black text-[#0F172A]">12.000+</span>
                                     <span className="block text-[10px] text-slate-500">Koleksi Buku</span>
                                 </div>
                             </div>
                             <div className="bg-white rounded-lg p-4 border border-[#EDE7DF] shadow-xs flex items-center gap-3">
-                                <span className="text-2xl">🚪</span>
+                                <span className="grid size-9 place-items-center rounded-full bg-[#f8e6df] text-[#123b5d]"><DoorOpen size={17} /></span>
                                 <div>
                                     <span className="block font-display text-lg font-black text-[#0F172A]">5</span>
                                     <span className="block text-[10px] text-slate-500">Ruang Layanan</span>
                                 </div>
                             </div>
                             <div className="bg-white rounded-lg p-4 border border-[#EDE7DF] shadow-xs flex items-center gap-3">
-                                <span className="text-2xl">🥇</span>
+                                <span className="grid size-9 place-items-center rounded-full bg-[#e6eee3] text-[#123b5d]"><Trophy size={17} /></span>
                                 <div>
                                     <span className="block font-display text-lg font-black text-[#0F172A]">1</span>
                                     <span className="block text-[10px] text-slate-500">Tujuan: Literasi</span>
@@ -123,10 +123,10 @@ export default function Information({ librarians }: InformationProps) {
                                 <Laptop size={16} className="text-[#123b5d]" /> <span>E-Katalog</span>
                             </div>
                             <div className="bg-white rounded-lg p-3 border border-[#EDE7DF] flex items-center gap-2.5 text-xs font-semibold text-slate-700">
-                                <span>📰</span> <span>E-Magazine</span>
+                                <Newspaper size={16} className="text-[#123b5d]" /> <span>E-Magazine</span>
                             </div>
                             <div className="bg-white rounded-lg p-3 border border-[#EDE7DF] flex items-center gap-2.5 text-xs font-semibold text-slate-700">
-                                <span>📶</span> <span>WiFi Gratis</span>
+                                <Wifi size={16} className="text-[#123b5d]" /> <span>WiFi Gratis</span>
                             </div>
                         </div>
                     </div>
@@ -170,7 +170,7 @@ export default function Information({ librarians }: InformationProps) {
                         <div className="absolute -right-12 -top-12 size-40 rounded-full border border-white/20" />
                         <div className="relative grid gap-8 lg:grid-cols-[1.1fr_.9fr] lg:items-center">
                             <div><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-blue-200">NATIONAL CHAMPION ARCHIVE</span><h2 className="mt-3 font-display text-2xl font-bold sm:text-3xl">Dari juara nasional, menuju generasi literasi berikutnya.</h2><p className="mt-3 max-w-xl text-sm leading-relaxed text-blue-100">Perjalanan perpustakaan SMAN 1 Bukittinggi adalah arsip hidup tentang keberanian membaca, berinovasi, dan tumbuh bersama sekolah.</p></div>
-                            <div className="relative rounded-xl border border-white/20 bg-white/10 p-5"><div className="flex items-center gap-3"><span className="grid size-12 place-items-center rounded-full bg-[#F8D77E] text-2xl">🏆</span><div><p className="font-mono-display text-[10px] font-bold uppercase tracking-wider text-blue-200">Milestone</p><h3 className="font-display text-xl font-bold">Juara Nasional</h3><p className="text-xs text-blue-100">Sekitar 2020 • Program Perpustakaan Sekolah</p></div></div><div className="mt-5 border-t border-white/15 pt-4 text-xs leading-relaxed text-blue-100">Prestasi ini menjadi halaman penting dalam perjalanan kami—dan alasan untuk terus membuat ruang baca yang lebih terbuka, kreatif, dan relevan.</div></div>
+                            <div className="relative rounded-xl border border-white/20 bg-white/10 p-5"><div className="flex items-center gap-3"><span className="grid size-12 place-items-center rounded-full bg-[#F8D77E] text-[#123B5D]"><Trophy size={22} /></span><div><p className="font-mono-display text-[10px] font-bold uppercase tracking-wider text-blue-200">Milestone</p><h3 className="font-display text-xl font-bold">Juara Nasional</h3><p className="text-xs text-blue-100">Sekitar 2020 • Program Perpustakaan Sekolah</p></div></div><div className="mt-5 border-t border-white/15 pt-4 text-xs leading-relaxed text-blue-100">Prestasi ini menjadi halaman penting dalam perjalanan kami—dan alasan untuk terus membuat ruang baca yang lebih terbuka, kreatif, dan relevan.</div></div>
                         </div>
                     </div>
 

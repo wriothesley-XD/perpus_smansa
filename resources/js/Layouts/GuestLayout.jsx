@@ -19,8 +19,8 @@ export default function GuestLayout({ children }) {
                 </Link>
 
                 <div>
-                    <div className="mb-8 size-12 rounded-2xl bg-white/10 grid place-items-center text-2xl">
-                        📚
+                    <div className="mb-8 grid size-12 place-items-center rounded-2xl bg-white/10 text-[#F8D77E]">
+                        <BookOpen size={24} />
                     </div>
                     <blockquote className="font-display text-2xl font-bold leading-snug text-white">
                         "Satu buku yang kamu baca hari ini bisa mengubah cara pandangmu esok."

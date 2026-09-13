@@ -1,4 +1,5 @@
 import { Head } from '@inertiajs/react';
+import { ArrowUpRight, Clock3, Mail, MapPin, Phone } from 'lucide-react';
 import React, { useState } from 'react';
 import {
     HandDrawnStar,
@@ -62,7 +63,7 @@ export default function Contact({ settings }: ContactProps) {
                             <div className="absolute -top-3 right-0 z-20">
                                 <WashiTapeStrip width="45px" height="15px" color="rgba(11, 78, 162, 0.7)" rotate={-5} className="-top-2 left-3" />
                                 <div className="memo-note rotate-[4deg] rounded px-3 py-1.5 text-center font-handwriting text-xs text-slate-700 font-bold">
-                                    Let's <br /> Talk! :)
+                                    Let's <br /> Talk!
                                 </div>
                             </div>
 
@@ -90,7 +91,7 @@ export default function Contact({ settings }: ContactProps) {
                             {/* Alamat */}
                             <div className="flex items-start gap-4">
                                 <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#123B5D] text-white text-xs">
-                                    📍
+                                    <MapPin size={15} />
                                 </div>
                                 <div>
                                     <h4 className="font-display text-xs font-bold uppercase tracking-wider text-slate-400">Alamat</h4>
@@ -103,7 +104,7 @@ export default function Contact({ settings }: ContactProps) {
                             {/* Email */}
                             <div className="flex items-start gap-4">
                                 <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#123B5D] text-white text-xs">
-                                    Email
+                                    <Mail size={15} />
                                 </div>
                                 <div>
                                     <h4 className="font-display text-xs font-bold uppercase tracking-wider text-slate-400">Email</h4>
@@ -116,7 +117,7 @@ export default function Contact({ settings }: ContactProps) {
                             {/* Telepon */}
                             <div className="flex items-start gap-4">
                                 <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#123B5D] text-white text-xs">
-                                    📞
+                                    <Phone size={15} />
                                 </div>
                                 <div>
                                     <h4 className="font-display text-xs font-bold uppercase tracking-wider text-slate-400">Telepon</h4>
@@ -129,7 +130,7 @@ export default function Contact({ settings }: ContactProps) {
                             {/* Jam Operasional */}
                             <div className="flex items-start gap-4">
                                 <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#123B5D] text-white text-xs">
-                                    🕒
+                                    <Clock3 size={15} />
                                 </div>
                                 <div>
                                     <h4 className="font-display text-xs font-bold uppercase tracking-wider text-slate-400">Jam Operasional</h4>
@@ -151,7 +152,7 @@ export default function Contact({ settings }: ContactProps) {
                                         loading="lazy"
                                     />
                                     <div className="absolute inset-2 flex items-center justify-center rounded bg-[#123B5D]/0 transition group-hover:bg-[#123B5D]/15">
-                                        <span className="rounded-full bg-white px-3 py-2 text-[10px] font-bold text-[#123B5D] opacity-0 shadow-md transition group-hover:opacity-100">Buka navigasi ↗</span>
+                                        <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-2 text-[10px] font-bold text-[#123B5D] opacity-0 shadow-md transition group-hover:opacity-100">Buka navigasi <ArrowUpRight size={12} /></span>
                                     </div>
                                 </div>
                                 {/* Sticky note location */}
