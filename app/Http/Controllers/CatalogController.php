@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\DdcClass;
@@ -18,6 +19,7 @@ class CatalogController extends Controller
         $categorySlug = $request->input('category');
         $ddcCode = $request->input('ddc');
         $status = $request->input('status', 'all');
+        $author = $request->input('author');
         $sort = $request->input('sort', 'popular');
 
         $query = Book::with(['category', 'authors', 'copies', 'ddcClass']);
@@ -29,6 +31,12 @@ class CatalogController extends Controller
         if ($categorySlug) {
             $query->whereHas('category', function (Builder $q) use ($categorySlug) {
                 $q->where('slug', $categorySlug);
+            });
+        }
+
+        if ($author) {
+            $query->whereHas('authors', function (Builder $q) use ($author) {
+                $q->where('name', $author);
             });
         }
 
@@ -56,16 +64,19 @@ class CatalogController extends Controller
         $books = $query->paginate(12)->withQueryString();
         $categories = Category::withCount('books')->orderBy('name')->get();
         $ddcClasses = DdcClass::orderBy('code')->get();
+        $authors = Author::orderBy('name')->pluck('name');
 
         return Inertia::render('Catalog/Index', [
             'books' => $books,
             'categories' => $categories,
             'ddcClasses' => $ddcClasses,
+            'authors' => $authors,
             'filters' => [
                 'q' => $search ?? '',
                 'category' => $categorySlug ?? '',
                 'ddc' => $ddcCode ?? '',
                 'status' => $status,
+                'author' => $author ?? '',
                 'sort' => $sort,
             ],
         ]);

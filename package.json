@@ -6,6 +6,7 @@
         "build": "tsc && vite build"
     },
     "dependencies": {
+        "@headlessui/react": "^2.2.10",
         "@inertiajs/react": "^2.0.3",
         "clsx": "^2.1.1",
         "framer-motion": "^13.2.0",

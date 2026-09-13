@@ -126,6 +126,13 @@ export interface LibraryStats {
     active_members?: number;
 }
 
+export interface ReaderRank {
+    id: number;
+    name: string;
+    class?: string | null;
+    loans_count: number;
+}
+
 export interface PaginatedResponse<T> {
     data: T[];
     current_page: number;

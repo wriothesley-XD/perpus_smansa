@@ -16,7 +16,7 @@ export default function EventShow({ event }: EventShowProps) {
 
             <div className="min-h-screen bg-white dark:bg-slate-900">
                 <div className="mx-auto max-w-4xl px-6 py-10 sm:px-8">
-                    <Link href="/events" className="inline-flex items-center gap-2 text-sm font-semibold text-[#0B4EA2] dark:text-blue-400 hover:gap-3 transition-all">
+                    <Link href="/events" className="inline-flex items-center gap-2 text-sm font-semibold text-[#123B5D] dark:text-blue-400 hover:gap-3 transition-all">
                         <ArrowLeft size={16} /> Kembali ke Daftar
                     </Link>
 
@@ -70,10 +70,10 @@ export default function EventShow({ event }: EventShowProps) {
                             </span>
                             <div className="flex-1">
                                 <p className="font-semibold text-[#0F172A] dark:text-white">Dengarkan Episode Ini</p>
-                                <a href={event.podcast_url} target="_blank" rel="noopener noreferrer"
-                                    className="mt-1 break-all text-sm text-[#0B4EA2] dark:text-blue-400 hover:underline">
-                                    {event.podcast_url}
-                                </a>
+                                <audio controls preload="metadata" className="mt-3 w-full" src={event.podcast_url}>
+                                    Browser kamu belum mendukung pemutar audio.
+                                </audio>
+                                <a href={event.podcast_url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-xs text-[#123B5D] dark:text-blue-400 hover:underline">Buka sumber audio ↗</a>
                             </div>
                         </div>
                     )}

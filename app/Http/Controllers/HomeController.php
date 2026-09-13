@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\Event;
 use App\Models\LibrarySetting;
 use App\Models\MagazineEdition;
+use App\Models\SmansaWork;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -31,6 +34,24 @@ class HomeController extends Controller
             ->limit(3)
             ->get();
 
+        $topReaders = User::withCount('loans')
+            ->where('role', 'student')
+            ->orderByDesc('loans_count')
+            ->limit(3)
+            ->get(['id', 'name', 'class']);
+
+        $upcomingEvents = Event::published()
+            ->whereIn('type', ['event', 'duta'])
+            ->where(function ($query) {
+                $query->whereNull('event_date')->orWhereDate('event_date', '>=', now());
+            })
+            ->latest('event_date')
+            ->limit(2)
+            ->get();
+
+        $latestPodcasts = Event::published()->byType('podcast')->latest()->limit(2)->get();
+        $featuredWorks = SmansaWork::published()->latest('published_at')->limit(2)->get();
+
         $settings = [
             'library_name' => LibrarySetting::get('library_name', 'Perpustakaan SMAN 1 Bukittinggi'),
             'library_tagline' => LibrarySetting::get('library_tagline', 'Find it. Read it. Grow with it.'),
@@ -43,6 +64,10 @@ class HomeController extends Controller
             'stats' => $stats,
             'popularBooks' => $popularBooks,
             'latestMagazines' => $latestMagazines,
+            'topReaders' => $topReaders,
+            'upcomingEvents' => $upcomingEvents,
+            'latestPodcasts' => $latestPodcasts,
+            'featuredWorks' => $featuredWorks,
             'settings' => $settings,
         ]);
     }

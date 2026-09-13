@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+ï»¿import { Head, Link } from '@inertiajs/react';
 import {
     ArrowLeft,
     Barcode,
@@ -19,6 +19,7 @@ import { BookCover } from '../../Components/Common/BookCover';
 import { ReservationModal } from '../../Components/Common/ReservationModal';
 import { SiteShell } from '../../Components/Common/SiteShell';
 import { Book } from '../../types/library';
+import { RealPaperClip, WashiTapeStrip } from '../../Components/Common/Ornaments';
 
 interface BookDetailProps {
     book: Book;
@@ -44,14 +45,14 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
 
     return (
         <SiteShell>
-            <Head title={`${book.title} — Katalog Perpustakaan SMAN 1 Bukittinggi`} />
+            <Head title={`${book.title} | Katalog Perpustakaan SMAN 1 Bukittinggi`} />
 
             {/* Breadcrumb Navigation */}
-            <div className="border-b border-slate-200/80 bg-white">
+            <div className="paper-grain border-b border-[#e5dfd7] bg-[#fffdf9]">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-8">
                     <Link
                         href="/catalog"
-                        className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#0B4EA2] transition-colors"
+                        className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#123B5D] transition-colors"
                     >
                         <ArrowLeft size={16} />
                         <span>Kembali ke Katalog</span>
@@ -69,19 +70,29 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
             </div>
 
             {/* BOOK HERO / MAIN INFO */}
-            <div className="mx-auto max-w-7xl px-6 py-12 sm:px-8">
+            <div className="paper-grain mx-auto max-w-7xl px-6 py-12 sm:px-8">
                 <div className="grid gap-10 lg:grid-cols-[340px_1fr] lg:gap-14">
                     {/* Left Column: Book Cover & Quick Status */}
                     <div className="flex flex-col items-center">
-                        <div className="w-full max-w-[280px] sm:max-w-[320px]">
-                            <BookCover
-                                src={book.cover_image}
-                                title={book.title}
-                                className="aspect-[3/4] w-full rounded-2xl shadow-xl"
-                            />
+                            <div className="relative w-full max-w-[280px] sm:max-w-[320px]">
+                            <WashiTapeStrip width="70px" height="18px" color="rgba(11,78,162,0.7)" rotate={-2} className="-top-2 left-1/2 -translate-x-1/2 z-20" />
+                            <div className="absolute -top-3.5 right-3 z-20">
+                                <RealPaperClip rotate={25} color="#788796" />
+                            </div>
+                            <div className="card-polaroid rotate-[-1deg] transition-transform duration-500 hover:rotate-0">
+                                <BookCover
+                                    src={book.cover_image}
+                                    title={book.title}
+                                    className="aspect-[3/4] w-full rounded-sm shadow-xl"
+                                />
+                                <div className="mt-3 text-center font-handwriting text-sm font-bold">{book.title}</div>
+                            </div>
+                            <div className="mt-3 text-center font-handwriting text-xs text-[#123B5D] font-bold">
+                                Koleksi Perpustakaan SMAN 1 Bukittinggi Â·
+                            </div>
                         </div>
 
-                        <div className="mt-6 w-full max-w-[320px] rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div className="index-card relative mt-6 w-full max-w-[320px] rotate-[1deg] rounded-sm p-5">
                             <div className="flex items-center justify-between">
                                 <span className="text-xs font-semibold text-slate-500">Status Koleksi:</span>
                                 {isAvailable ? (
@@ -100,14 +111,14 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                             <div className="mt-4 space-y-2.5 border-t border-slate-100 pt-4 text-xs text-slate-600">
                                 <div className="flex items-center justify-between">
                                     <span className="flex items-center gap-1.5">
-                                        <MapPin size={13} className="text-[#0B4EA2]" />
+                                        <MapPin size={13} className="text-[#123B5D]" />
                                         <span>Lokasi Rak Fisik:</span>
                                     </span>
                                     <strong className="font-mono text-[#0F172A]">{book.shelf_location}</strong>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="flex items-center gap-1.5">
-                                        <BookOpen size={13} className="text-[#0B4EA2]" />
+                                        <BookOpen size={13} className="text-[#123B5D]" />
                                         <span>Total Eksemplar:</span>
                                     </span>
                                     <strong className="text-[#0F172A]">{book.copies?.length ?? 0} Eksemplar</strong>
@@ -124,15 +135,10 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                             <button
                                 type="button"
                                 onClick={() => setReservationOpen(true)}
-                                disabled={!isAvailable}
-                                className={`mt-6 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold shadow-md transition-all ${
-                                    isAvailable
-                                        ? 'bg-[#0B4EA2] text-white hover:bg-[#083c7d]'
-                                        : 'cursor-not-allowed bg-slate-200 text-slate-500'
-                                }`}
+                                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#123B5D] py-3.5 text-sm font-bold text-white shadow-md transition-all hover:bg-[#0C2D47]"
                             >
                                 <BookMarked size={16} />
-                                <span>{isAvailable ? 'Reservasi Buku' : 'Semua Eksemplar Dipinjam'}</span>
+                                <span>{isAvailable ? 'Reservasi Buku' : 'Ingatkan Saya Saat Tersedia'}</span>
                             </button>
                         </div>
                     </div>
@@ -140,10 +146,10 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                     {/* Right Column: Title, Metadata, Synopsis */}
                     <div>
                         <div className="flex items-center gap-2">
-                            <span className="font-mono-display text-xs font-bold uppercase tracking-[0.16em] text-[#0B4EA2]">
+                            <span className="font-mono-display text-xs font-bold uppercase tracking-[0.16em] text-[#123B5D]">
                                 {book.category?.name}
                             </span>
-                            <span className="text-slate-300">•</span>
+                            <span className="text-slate-300">â€¢</span>
                             <span className="font-mono-display text-xs text-slate-500 font-semibold">
                                 DDC {book.ddc_class?.code}
                             </span>
@@ -158,13 +164,18 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                         </p>
 
                         {/* Metadata Grid */}
-                        <div className="mt-8 grid grid-cols-2 gap-3 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-4">
+                        <div className="index-card relative mt-8 grid grid-cols-2 gap-3 rounded-sm p-5 sm:grid-cols-4">
+                            <div className="absolute -top-3 right-6">
+                                <span className="rounded bg-[#E8F1F5] border border-blue-200 px-2 py-0.5 font-mono-display text-[9px] font-bold uppercase tracking-wider text-[#123B5D]">
+                                    LIBRARY CARD
+                                </span>
+                            </div>
                             <div>
                                 <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
                                     Penerbit
                                 </span>
                                 <strong className="mt-1 block text-xs text-[#0F172A]">
-                                    {book.publisher?.name ?? '—'}
+                                    {book.publisher?.name ?? 'Belum tercatat'}
                                 </strong>
                             </div>
                             <div>
@@ -180,7 +191,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                     ISBN
                                 </span>
                                 <strong className="mt-1 block font-mono text-xs text-[#0F172A]">
-                                    {book.isbn || '—'}
+                                    {book.isbn || 'Belum tercatat'}
                                 </strong>
                             </div>
                             <div>
@@ -226,7 +237,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                                             {copy.barcode_identifier}
                                                         </span>
                                                         <span className="block text-[10px] text-slate-500">
-                                                            Eksemplar #{index + 1} • {copy.shelf_location || book.shelf_location}
+                                                            Eksemplar #{index + 1} â€¢ {copy.shelf_location || book.shelf_location}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -253,7 +264,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                     <div className="mt-20 border-t border-slate-200/80 pt-12">
                         <div className="flex items-center justify-between">
                             <div>
-                                <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#0B4EA2]">
+                                <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#123B5D]">
                                     Koleksi Terkait
                                 </span>
                                 <h2 className="mt-1 font-display text-2xl font-bold text-[#0F172A]">
@@ -262,7 +273,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                             </div>
                             <Link
                                 href="/catalog"
-                                className="text-xs font-bold text-[#0B4EA2] hover:underline"
+                                className="text-xs font-bold text-[#123B5D] hover:underline"
                             >
                                 Lihat Semua Koleksi ?
                             </Link>

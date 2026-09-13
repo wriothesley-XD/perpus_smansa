@@ -14,7 +14,7 @@ export function EmptyState({
 }: EmptyStateProps) {
     return (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white/60 p-12 text-center">
-            <div className="grid size-14 place-items-center rounded-2xl bg-[#EAF4FF] text-[#0B4EA2]">
+            <div className="grid size-14 place-items-center rounded-2xl bg-[#E8F1F5] text-[#123B5D]">
                 <BookX size={28} />
             </div>
             <h3 className="mt-4 font-display text-lg font-bold text-[#0F172A]">{title}</h3>

@@ -29,14 +29,14 @@ export default function MagazineReader({ edition, otherEditions }: MagazineReade
 
     return (
         <SiteShell>
-            <Head title={`Membaca: ${edition.edition_title} — Perpustakaan SMAN 1 Bukittinggi`} />
+            <Head title={`Membaca: ${edition.edition_title}  Perpustakaan SMAN 1 Bukittinggi`} />
 
             {/* Reader Header */}
             <div className="border-b border-slate-200/80 bg-white">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-8">
                     <Link
                         href="/magazines"
-                        className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#0B4EA2] transition-colors"
+                        className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#123B5D] transition-colors"
                     >
                         <ArrowLeft size={16} />
                         <span>Kembali ke E-Magazine</span>
@@ -55,7 +55,7 @@ export default function MagazineReader({ edition, otherEditions }: MagazineReade
                             href={edition.pdf_file_path}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 rounded-xl bg-[#0B4EA2] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#083c7d] transition-colors"
+                            className="inline-flex items-center gap-1.5 rounded-xl bg-[#123B5D] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#0C2D47] transition-colors"
                         >
                             <ExternalLink size={13} />
                             <span>Buka Tab Baru</span>
@@ -67,8 +67,8 @@ export default function MagazineReader({ edition, otherEditions }: MagazineReade
             {/* Viewer Section */}
             <div className="mx-auto max-w-7xl px-6 py-8 sm:px-8">
                 <div className="mb-6">
-                    <span className="font-mono-display text-[10px] font-bold uppercase tracking-widest text-[#0B4EA2]">
-                        {edition.edition_number} • {edition.year}
+                    <span className="font-mono-display text-[10px] font-bold uppercase tracking-widest text-[#123B5D]">
+                        {edition.edition_number}  {edition.year}
                     </span>
                     <h1 className="mt-1 font-display text-2xl font-bold text-[#0F172A] sm:text-3xl">
                         {edition.edition_title}
@@ -105,7 +105,7 @@ export default function MagazineReader({ edition, otherEditions }: MagazineReade
                                             className="h-full w-full object-cover transition-transform group-hover:scale-105"
                                         />
                                     </div>
-                                    <h3 className="mt-2 font-display text-xs font-bold text-[#0F172A] group-hover:text-[#0B4EA2] line-clamp-1">
+                                    <h3 className="mt-2 font-display text-xs font-bold text-[#0F172A] group-hover:text-[#123B5D] line-clamp-1">
                                         {item.edition_title}
                                     </h3>
                                     <span className="text-[10px] text-slate-400">{item.year}</span>

@@ -52,7 +52,7 @@ export default function ResetPassword({ token, email }) {
                         <input id="password" type={showPass ? 'text' : 'password'} name="password" value={data.password}
                             autoComplete="new-password" autoFocus onChange={(e) => setData('password', e.target.value)}
                             placeholder="Minimal 8 karakter"
-                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-11 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#0B4EA2] focus:ring-2 focus:ring-[#0B4EA2]/20" />
+                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-11 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#123B5D] focus:ring-2 focus:ring-[#123B5D]/20" />
                         <button type="button" onClick={() => setShowPass(v => !v)}
                             className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600">
                             {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -68,13 +68,13 @@ export default function ResetPassword({ token, email }) {
                         <input id="password_confirmation" type="password" name="password_confirmation" value={data.password_confirmation}
                             autoComplete="new-password" onChange={(e) => setData('password_confirmation', e.target.value)}
                             placeholder="Ketik ulang kata sandi baru"
-                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#0B4EA2] focus:ring-2 focus:ring-[#0B4EA2]/20" />
+                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#123B5D] focus:ring-2 focus:ring-[#123B5D]/20" />
                     </div>
                     <InputError message={errors.password_confirmation} className="mt-1.5" />
                 </div>
 
                 <button type="submit" disabled={processing}
-                    className="flex w-full items-center justify-center rounded-xl bg-[#0B4EA2] px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#083c7d] disabled:opacity-60">
+                    className="flex w-full items-center justify-center rounded-xl bg-[#123B5D] px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#0C2D47] disabled:opacity-60">
                     {processing ? 'Menyimpan...' : 'Simpan Kata Sandi Baru'}
                 </button>
             </form>

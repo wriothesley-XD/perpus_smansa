@@ -29,7 +29,7 @@ export default function TranslationShow({ language: lang, books }: TranslationSh
                 {/* Hero */}
                 <div className="border-b border-slate-100 dark:border-slate-800 px-6 py-14 sm:px-8" style={{ background: `linear-gradient(135deg, ${lang.bg} 0%, white 60%)` }}>
                     <div className="mx-auto max-w-7xl">
-                        <Link href="/translations" className="inline-flex items-center gap-2 text-sm font-semibold text-[#0B4EA2] dark:text-blue-400 hover:gap-3 transition-all">
+                        <Link href="/translations" className="inline-flex items-center gap-2 text-sm font-semibold text-[#123B5D] dark:text-blue-400 hover:gap-3 transition-all">
                             <ArrowLeft size={16} /> Semua Bahasa
                         </Link>
                         <div className="mt-6 flex items-start gap-5">
