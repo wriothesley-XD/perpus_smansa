@@ -184,4 +184,67 @@ class EbookReaderController extends Controller
             'bookmarks' => $progress->bookmarks,
         ]);
     }
+
+    /**
+     * Securely stream the PDF document with authorization and anti-download headers.
+     */
+    public function streamPdf(Request $request, string $slug)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            abort(401, 'Silakan masuk terlebih dahulu untuk mengakses e-book.');
+        }
+
+        $book = Book::where('slug', $slug)->orWhere('id', is_numeric($slug) ? $slug : 0)->firstOrFail();
+
+        $isStaff = in_array($user->role, ['admin', 'librarian', 'teacher']);
+
+        $activeLoan = Loan::where('user_id', $user->id)
+            ->where('is_online_loan', true)
+            ->where('status', 'active')
+            ->where('due_at', '>', now())
+            ->whereHas('bookCopy', function ($q) use ($book) {
+                $q->where('book_id', $book->id);
+            })
+            ->first();
+
+        if (!$activeLoan && !$isStaff) {
+            abort(403, 'Akses e-book terkunci. Masa peminjaman online Anda telah habis atau belum meminjam buku ini.');
+        }
+
+        $rawPath = $book->ebook_file_path;
+        $resolvedPath = null;
+
+        if ($rawPath) {
+            if (str_starts_with($rawPath, '/storage/')) {
+                $relative = substr($rawPath, strlen('/storage/'));
+                $resolvedPath = storage_path('app/public/' . $relative);
+            } elseif (file_exists(public_path(ltrim($rawPath, '/')))) {
+                $resolvedPath = public_path(ltrim($rawPath, '/'));
+            } elseif (file_exists(storage_path('app/' . ltrim($rawPath, '/')))) {
+                $resolvedPath = storage_path('app/' . ltrim($rawPath, '/'));
+            }
+        }
+
+        if (!$resolvedPath || !file_exists($resolvedPath)) {
+            // Check for sample magazine/bulletin PDF
+            $sample = public_path('storage/magazines/genta-sample.pdf');
+            if (file_exists($sample)) {
+                $resolvedPath = $sample;
+            }
+        }
+
+        if (!$resolvedPath || !file_exists($resolvedPath)) {
+            abort(404, 'Berkas e-book sedang dipersiapkan oleh pihak perpustakaan sekolah.');
+        }
+
+        return response()->file($resolvedPath, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="smansa-reader.pdf"',
+            'Cache-Control' => 'private, no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
 }

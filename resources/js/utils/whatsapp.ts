@@ -28,13 +28,13 @@ export function createDueDateReminderMessage(params: {
     const studentInfo = params.className ? `${params.studentName} (${params.className})` : params.studentName;
     return `Halo *${studentInfo}*,
 
-Salam literasi dari *Perpustakaan Sunaryaman Musthofa SMAN 1 Bukittinggi* 📚.
+Salam literasi dari *Perpustakaan Sunaryaman Musthofa SMAN 1 Bukittinggi* .
 
 Kami ingin mengingatkan bahwa masa peminjaman buku:
-📖 *"${params.bookTitle}"*
+*"${params.bookTitle}"*
 akan jatuh tempo pada *${params.dueDate}*.
 
-Mohon untuk mengembalikan buku tepat waktu atau melakukan perpanjangan di meja sirkulasi perpustakaan. Terima kasih atas kerja samanya! ✨`;
+Mohon untuk mengembalikan buku tepat waktu atau melakukan perpanjangan di meja sirkulasi perpustakaan. Terima kasih atas kerja samanya! `;
 }
 
 export function createOverdueMessage(params: {
@@ -46,13 +46,13 @@ export function createOverdueMessage(params: {
     const studentInfo = params.className ? `${params.studentName} (${params.className})` : params.studentName;
     return `Halo *${studentInfo}*,
 
-*Pemberitahuan Keterlambatan Buku* - Perpustakaan SMAN 1 Bukittinggi ⚠️.
+*Pemberitahuan Keterlambatan Buku* - Perpustakaan SMAN 1 Bukittinggi .
 
 Buku yang Anda pinjam:
-📖 *"${params.bookTitle}"*
+*"${params.bookTitle}"*
 telah melewati batas tanggal pengembalian (*${params.dueDate}*).
 
-Mohon segera mengembalikan buku tersebut ke meja sirkulasi perpustakaan agar dapat dimanfaatkan oleh warga sekolah lainnya. Terima kasih! 🙏`;
+Mohon segera mengembalikan buku tersebut ke meja sirkulasi perpustakaan agar dapat dimanfaatkan oleh warga sekolah lainnya. Terima kasih! `;
 }
 
 export function createNewBookBroadcastMessage(params: {
@@ -62,15 +62,15 @@ export function createNewBookBroadcastMessage(params: {
     url?: string;
 }): string {
     const siteUrl = params.url || 'https://perpus-smansa.sch.id/catalog';
-    return `Halo Sobat Literasi SMANSA! 🌟
+    return `Halo Sobat Literasi SMANSA! 
 
 Koleksi buku baru telah hadir di *Perpustakaan Sunaryaman Musthofa SMAN 1 Bukittinggi*:
 
-📚 *${params.bookTitle}*
-🏷️ Kategori: ${params.category || 'Umum'}
+*${params.bookTitle}*
+Kategori: ${params.category || 'Umum'}
 
 Yuk jadi yang pertama membaca dan reservasi secara online:
-🔗 ${siteUrl}
+${siteUrl}
 
-Selamat membaca dan salam literasi! 📖`;
+Selamat membaca dan salam literasi! `;
 }

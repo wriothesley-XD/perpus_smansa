@@ -20,6 +20,7 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/books/{slug}', [CatalogController::class, 'show'])->name('catalog.show');
 Route::get('/books/{slug}/read', [EbookReaderController::class, 'read'])->name('books.read');
+Route::get('/books/{slug}/stream', [EbookReaderController::class, 'streamPdf'])->name('books.stream')->middleware(['auth']);
 Route::post('/books/{id}/renew-online', [EbookReaderController::class, 'renewOnlineLoan'])->name('books.renew_online');
 Route::post('/books/{id}/save-progress', [EbookReaderController::class, 'saveProgress'])->name('books.save_progress');
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
@@ -49,6 +50,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin-panel/events', [AdminController::class, 'storeEvent'])->name('admin.events.store');
     Route::delete('/admin-panel/events/{id}', [AdminController::class, 'deleteEvent'])->name('admin.events.destroy');
     Route::post('/admin-panel/settings', [AdminController::class, 'updateSettings'])->name('admin.settings.update');
+    // Sirkulasi Meja & Scan Kartu Pelajar
+    Route::get('/admin-panel/lookup-member', [AdminController::class, 'quickLookupMember'])->name('admin.lookup_member');
+    Route::post('/admin-panel/quick-loan', [AdminController::class, 'quickStoreLoan'])->name('admin.quick_loan');
+    Route::post('/admin-panel/quick-return/{id}', [AdminController::class, 'quickReturnLoan'])->name('admin.quick_return');
+    Route::post('/admin-panel/sync-overdue', [AdminController::class, 'syncOverdueLoans'])->name('admin.sync_overdue');
+    Route::get('/admin-panel/export-report', [AdminController::class, 'exportCirculationReport'])->name('admin.export_report');
+
 
     Route::get('/dashboard', [AccountController::class, 'dashboard'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

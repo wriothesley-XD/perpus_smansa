@@ -511,51 +511,51 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                                 </div>
                             </div>
                             <p className="mt-4 max-w-xs text-xs leading-relaxed text-slate-400">
-                                Perpustakaan Sunaryaman Musthofa SMA Negeri 1 Bukittinggi (NPSN: 10303496). Mengembangkan budaya literasi unggul, riset ilmiah, dan karakter pembelajar sepanjang hayat.
+                                {t('footer_brand_desc')}
                             </p>
                             <p className="mt-2 text-[11px] text-slate-400 font-mono">
-                                Alamat: Jl. Syekh M. Djamil Djambek No. 36, Pakan Kurai, Bukittinggi, Sumatera Barat
+                                {t('footer_address_label')} {t('footer_address_val')}
                             </p>
                         </div>
 
                         {/* Links 1 */}
                         <div>
-                            <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">Koleksi & Bacaan</h4>
+                            <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">{t('footer_col_reading')}</h4>
                             <ul className="mt-4 space-y-2.5 text-xs text-slate-400">
-                                <li><Link href="/catalog" className="hover:text-white transition">Katalog Buku Pelajaran & Fiksi</Link></li>
-                                <li><Link href="/magazines" className="hover:text-white transition">E-Magazine Genta Smansa</Link></li>
-                                <li><Link href="/magazines?type=bulletin" className="hover:text-white transition">Buletin Kurtaw SMANSA</Link></li>
-                                <li><Link href="/karya-smansa" className="hover:text-white transition">Karya Tulis Siswa & Guru</Link></li>
+                                <li><Link href="/catalog" className="hover:text-white transition">{t('footer_link_catalog')}</Link></li>
+                                <li><Link href="/magazines" className="hover:text-white transition">{t('footer_link_genta')}</Link></li>
+                                <li><Link href="/magazines?type=bulletin" className="hover:text-white transition">{t('footer_link_kurtaw')}</Link></li>
+                                <li><Link href="/karya-smansa" className="hover:text-white transition">{t('footer_link_works')}</Link></li>
                             </ul>
                         </div>
 
                         {/* Links 2 */}
                         <div>
-                            <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">Komunitas & Layanan</h4>
+                            <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">{t('footer_col_services')}</h4>
                             <ul className="mt-4 space-y-2.5 text-xs text-slate-400">
-                                <li><Link href="/events" className="hover:text-white transition">Agenda & Duta Literasi</Link></li>
-                                <li><Link href="/ranking" className="hover:text-white transition">Papan Pembaca Teraktif</Link></li>
-                                <li><Link href="/information" className="hover:text-white transition">Profil Perpustakaan Sunaryaman</Link></li>
-                                <li><Link href="/contact" className="hover:text-white transition">Kontak Layanan Pustaka</Link></li>
+                                <li><Link href="/events" className="hover:text-white transition">{t('footer_link_events')}</Link></li>
+                                <li><Link href="/ranking" className="hover:text-white transition">{t('footer_link_ranking')}</Link></li>
+                                <li><Link href="/information" className="hover:text-white transition">{t('footer_link_info')}</Link></li>
+                                <li><Link href="/contact" className="hover:text-white transition">{t('footer_link_contact')}</Link></li>
                             </ul>
                         </div>
 
                         {/* Operasional */}
                         <div>
-                            <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">Jam Layanan</h4>
+                            <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">{t('footer_col_hours')}</h4>
                             <div className="mt-4 space-y-2 text-xs text-slate-400">
-                                <p><strong className="text-white">Senin - Kamis:</strong> 07.15 - 16.00 WIB</p>
-                                <p><strong className="text-white">Jumat:</strong> 07.15 - 11.45 WIB</p>
-                                <p><strong className="text-white">Sabtu:</strong> 07.30 - 13.00 WIB</p>
-                                <p className="pt-2 text-[11px] text-amber-300 font-medium">Layanan E-Book & Buletin Online: 24 Jam Nonstop</p>
+                                <p>{t('footer_hours_mon_thu')}</p>
+                                <p>{t('footer_hours_fri')}</p>
+                                <p>{t('footer_hours_sat')}</p>
+                                <p className="pt-2 text-[11px] text-amber-300 font-medium">{t('footer_hours_online')}</p>
                             </div>
                         </div>
                     </div>
 
                     <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 sm:flex-row text-xs text-slate-500">
-                        <p>© {new Date().getFullYear()} Perpustakaan Sunaryaman Musthofa SMA Negeri 1 Bukittinggi. Hak Cipta Dilindungi.</p>
+                        <p>© {new Date().getFullYear()} Perpustakaan Sunaryaman Musthofa SMA Negeri 1 Bukittinggi. {t('footer_copyright')}</p>
                         <p className="font-mono text-[10px] text-slate-500">
-                            NPSN 10303496 · Sistem Informasi Perpustakaan Terintegrasi
+                            NPSN 10303496 · {t('footer_system_label')}
                         </p>
                     </div>
                 </div>

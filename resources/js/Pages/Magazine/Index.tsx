@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import { ArrowUpRight, BookOpen, FileText, Newspaper, Sparkles, Filter } from 'lucide-react';
 import React, { useState } from 'react';
+import { useI18n } from '../../utils/i18n';
 import {
     BotanicalLeaf,
     HandDrawnStar,
@@ -16,6 +17,7 @@ interface MagazineIndexProps {
 }
 
 export default function MagazineIndex({ editions, magazines }: MagazineIndexProps) {
+    const { t } = useI18n();
     const [selectedTab, setSelectedTab] = useState<'all' | 'magazine' | 'bulletin'>('all');
 
     const filteredEditions = editions.data.filter((ed) => {
@@ -151,29 +153,31 @@ export default function MagazineIndex({ editions, magazines }: MagazineIndexProp
                                         : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
                                 }`}
                             >
-                                Semua ({editions.data.length})
+                                {t('mag_tab_all')} ({editions.data.length})
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setSelectedTab('magazine')}
-                                className={`rounded-lg px-4 py-2 text-xs font-bold transition-all ${
+                                className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold transition-all ${
                                     selectedTab === 'magazine'
                                         ? 'bg-white text-[#152238] shadow-sm dark:bg-[#2699fb] dark:text-white'
                                         : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
                                 }`}
                             >
-                                📖 Majalah Genta
+                                <BookOpen size={14} />
+                                <span>{t('mag_tab_magazine')}</span>
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setSelectedTab('bulletin')}
-                                className={`rounded-lg px-4 py-2 text-xs font-bold transition-all ${
+                                className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold transition-all ${
                                     selectedTab === 'bulletin'
                                         ? 'bg-white text-[#152238] shadow-sm dark:bg-[#2699fb] dark:text-white'
                                         : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
                                 }`}
                             >
-                                📰 Buletin Kurtaw
+                                <Newspaper size={14} />
+                                <span>{t('mag_tab_bulletin')}</span>
                             </button>
                         </div>
                     </div>

@@ -17,6 +17,7 @@ import {
     ArrowRight,
 } from 'lucide-react';
 import React from 'react';
+import { useI18n } from '../../utils/i18n';
 import { SiteShell } from '../../Components/Common/SiteShell';
 import { Book, Loan, Reservation } from '../../types/library';
 import { BookCard } from '../../Components/Common/BookCard';
@@ -50,12 +51,13 @@ export default function Dashboard({
     recommendations,
     readingProgresses = {},
 }: DashboardProps) {
+    const { t } = useI18n();
     const { auth } = usePage().props;
     const user = auth?.user;
     const stamps = [
-        { label: 'Peminjam Pertama', unlocked: passport.total_reads >= 1 },
-        { label: 'Penjelajah Genre', unlocked: passport.total_reads >= 5 },
-        { label: 'Pembaca Setia', unlocked: passport.streak >= 3 },
+        { label: t('dash_stamp_first'), unlocked: passport.total_reads >= 1 },
+        { label: t('dash_stamp_explorer'), unlocked: passport.total_reads >= 5 },
+        { label: t('dash_stamp_loyal'), unlocked: passport.streak >= 3 },
     ];
 
     const isLoanExpired = (dueAt: string) => {
@@ -150,11 +152,11 @@ export default function Dashboard({
                             <div className="flex items-center gap-2 text-blue-200">
                                 <Sparkles size={16} />
                                 <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#FFC533]">
-                                    Reading Passport SMANSA
+                                    {t('dash_passport_badge')}
                                 </span>
                             </div>
                             <h2 className="mt-3 font-display text-2xl sm:text-3xl font-bold">
-                                Jejak Literasi & Prestasi Membacamu
+                                {t('dash_passport_title')}
                             </h2>
                             <p className="mt-2 max-w-xl text-sm leading-relaxed text-blue-100/90">
                                 Simpan rekam jejak buku pelajaran, fiksi, dan e-book yang telah kamu selesaikan di Perpustakaan Sunaryaman Musthofa SMA Negeri 1 Bukittinggi.
@@ -175,7 +177,7 @@ export default function Dashboard({
                                             }`}
                                         />
                                         {stamp.label}
-                                        {!stamp.unlocked && ' · terkunci'}
+                                        {!stamp.unlocked && ` · ${t('dash_locked')}`}
                                     </span>
                                 ))}
                             </div>
@@ -186,7 +188,7 @@ export default function Dashboard({
                             <div className="flex items-start justify-between">
                                 <div>
                                     <span className="font-mono-display text-[9px] font-bold uppercase tracking-widest text-[#2699fb]">
-                                        KARTU ANGGOTA DIGITAL
+                                        {t('dash_member_card')}
                                     </span>
                                     <h3 className="mt-2 font-display text-lg font-bold">{user?.name}</h3>
                                     <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
@@ -215,18 +217,18 @@ export default function Dashboard({
                     <div className="relative mt-8 grid grid-cols-3 gap-3 border-t border-white/15 pt-5">
                         <div>
                             <strong className="block font-display text-2xl sm:text-3xl font-extrabold">{passport.total_reads}</strong>
-                            <span className="text-[10px] text-blue-200">Buku Selesai Dibaca</span>
+                            <span className="text-[10px] text-blue-200">{t('dash_total_reads')}</span>
                         </div>
                         <div>
                             <strong className="block font-display text-2xl sm:text-3xl font-extrabold">{passport.active_reads}</strong>
-                            <span className="text-[10px] text-blue-200">Sedang Dipinjam</span>
+                            <span className="text-[10px] text-blue-200">{t('dash_active_count')}</span>
                         </div>
                         <div>
                             <strong className="flex items-center gap-1 font-display text-2xl sm:text-3xl font-extrabold text-[#FFC533]">
                                 <Flame size={20} className="text-[#FFC533]" />
                                 {passport.streak}
                             </strong>
-                            <span className="text-[10px] text-blue-200">Hari Membaca Aktif</span>
+                            <span className="text-[10px] text-blue-200">{t('dash_active_streak')}</span>
                         </div>
                     </div>
                 </section>
@@ -237,11 +239,11 @@ export default function Dashboard({
                         <div className="flex items-center gap-2">
                             <BookOpen size={20} className="text-[#2699fb]" />
                             <h2 className="font-display text-xl font-bold text-[#0F172A] dark:text-white">
-                                Peminjaman Aktif & E-Book Saya ({activeLoans.length})
+                                {t('dash_active_loans')} ({activeLoans.length})
                             </h2>
                         </div>
                         <span className="text-xs text-slate-500 dark:text-slate-400">
-                            Batas peminjaman online otomatis 3 hari
+                            {t('dash_loan_rule_sub')}
                         </span>
                     </div>
 

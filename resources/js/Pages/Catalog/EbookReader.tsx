@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Book } from "../../types/library";
+import { useI18n } from "../../utils/i18n";
 
 interface EbookReaderProps {
     book: Book;
@@ -43,12 +44,14 @@ interface EbookReaderProps {
 }
 
 export default function EbookReader({ book, loan, progress, readerInfo }: EbookReaderProps) {
+    const { t } = useI18n();
     const totalPages = progress.total_pages || 24;
     const [currentPage, setCurrentPage] = useState<number>(progress.last_page || 1);
     const [bookmarks, setBookmarks] = useState<number[]>(progress.bookmarks || []);
     const [fontSize, setFontSize] = useState<"sm" | "base" | "lg">("base");
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [showBookmarksList, setShowBookmarksList] = useState(false);
+    const [viewMode, setViewMode] = useState<"canvas" | "pdf">("canvas");
     const [toastMessage, setToastMessage] = useState<string | null>(
         progress.last_page > 1 ? `Melanjutkan dari halaman ${progress.last_page}` : null
     );
@@ -235,15 +238,30 @@ export default function EbookReader({ book, loan, progress, readerInfo }: EbookR
                         </button>
                     )}
 
-                    {/* Font Size Toggle */}
+                    {/* Mode Toggle: Canvas vs PDF Stream */}
                     <button
                         type="button"
-                        onClick={() => setFontSize(fontSize === "base" ? "lg" : fontSize === "lg" ? "sm" : "base")}
-                        aria-label="Ubah ukuran huruf"
-                        className="grid size-8 place-items-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                        onClick={() => setViewMode(viewMode === "canvas" ? "pdf" : "canvas")}
+                        className={`rounded-full border px-3 py-1 text-[10px] font-bold transition ${
+                            viewMode === "pdf"
+                                ? "border-[#2699fb] bg-[#2699fb] text-white"
+                                : "border-slate-700 bg-slate-800/80 text-slate-300 hover:bg-slate-700"
+                        }`}
                     >
-                        <Type size={16} />
+                        {viewMode === "pdf" ? t("reader_mode_canvas") : t("reader_mode_pdf")}
                     </button>
+
+                    {/* Font Size Toggle */}
+                    {viewMode === "canvas" && (
+                        <button
+                            type="button"
+                            onClick={() => setFontSize(fontSize === "base" ? "lg" : fontSize === "lg" ? "sm" : "base")}
+                            aria-label="Ubah ukuran huruf"
+                            className="grid size-8 place-items-center rounded-full text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                        >
+                            <Type size={16} />
+                        </button>
+                    )}
 
                     {/* Fullscreen toggle */}
                     <button
@@ -303,63 +321,73 @@ export default function EbookReader({ book, loan, progress, readerInfo }: EbookR
                     </p>
                 </div>
 
-                {/* Simulated Protected Book Page Container */}
-                <div
-                    className={`relative mx-auto w-full max-w-2xl rounded-2xl border border-slate-800 bg-[#101520] p-8 sm:p-12 shadow-2xl transition-all ${
-                        fontSize === "sm" ? "text-xs leading-6" : fontSize === "lg" ? "text-base leading-8" : "text-sm leading-7"
-                    }`}
-                >
-                    {/* Header of page */}
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-4 text-[10px] text-slate-500 font-mono uppercase tracking-widest">
-                        <span>{book.title}</span>
-                        <span>Hal. {currentPage} / {totalPages}</span>
+                {/* Protected PDF Stream View vs Simulated Book Canvas */}
+                {viewMode === "pdf" ? (
+                    <div className="relative z-10 mx-auto w-full max-w-5xl h-[calc(100vh-140px)] rounded-2xl overflow-hidden border border-slate-800 bg-[#121824] shadow-2xl">
+                        <iframe
+                            src={`/books/${book.slug}/stream#toolbar=0&navpanes=0`}
+                            title={book.title}
+                            className="w-full h-full border-0"
+                        />
                     </div>
+                ) : (
+                    <div
+                        className={`relative mx-auto w-full max-w-2xl rounded-2xl border border-slate-800 bg-[#101520] p-8 sm:p-12 shadow-2xl transition-all ${
+                            fontSize === "sm" ? "text-xs leading-6" : fontSize === "lg" ? "text-base leading-8" : "text-sm leading-7"
+                        }`}
+                    >
+                        {/* Header of page */}
+                        <div className="flex items-center justify-between border-b border-slate-800 pb-4 text-[10px] text-slate-500 font-mono uppercase tracking-widest">
+                            <span>{book.title}</span>
+                            <span>Hal. {currentPage} / {totalPages}</span>
+                        </div>
 
-                    {/* Page Content Body */}
-                    <div className="mt-6 min-h-[360px] text-slate-300 font-sans">
-                        {currentPage === 1 ? (
-                            <div className="text-center py-8">
-                                <div className="mx-auto aspect-[3/4] w-36 overflow-hidden rounded-xl bg-slate-800 shadow-md">
-                                    <img src={book.cover_image || "/images/hero_library.jpg"} alt={book.title} className="h-full w-full object-cover" />
+                        {/* Page Content Body */}
+                        <div className="mt-6 min-h-[360px] text-slate-300 font-sans">
+                            {currentPage === 1 ? (
+                                <div className="text-center py-8">
+                                    <div className="mx-auto aspect-[3/4] w-36 overflow-hidden rounded-xl bg-slate-800 shadow-md">
+                                        <img src={book.cover_image || "/images/hero_library.jpg"} alt={book.title} className="h-full w-full object-cover" />
+                                    </div>
+                                    <h2 className="mt-6 font-display text-xl font-extrabold text-white">{book.title}</h2>
+                                    <p className="mt-2 text-xs text-slate-400">
+                                        Karya: {book.authors?.map((a) => a.name).join(", ") || "Penulis SMANSA"}
+                                    </p>
+                                    <p className="mt-1 text-[10px] font-mono uppercase tracking-wider text-[#2699fb]">
+                                        ISBN {book.isbn || "978-602-000-0"} • Tahun {book.publication_year || 2024}
+                                    </p>
+                                    <div className="mt-8 rounded-xl bg-blue-950/40 border border-blue-900/40 p-4 text-xs text-blue-200 text-left">
+                                        <p className="font-bold mb-1">Sinopsis Resmi:</p>
+                                        <p className="line-clamp-4">{book.synopsis || "Buku referensi resmi koleksi Perpustakaan Sunaryaman Musthofa SMA Negeri 1 Bukittinggi."}</p>
+                                    </div>
                                 </div>
-                                <h2 className="mt-6 font-display text-xl font-extrabold text-white">{book.title}</h2>
-                                <p className="mt-2 text-xs text-slate-400">
-                                    Karya: {book.authors?.map((a) => a.name).join(", ") || "Penulis SMANSA"}
-                                </p>
-                                <p className="mt-1 text-[10px] font-mono uppercase tracking-wider text-[#2699fb]">
-                                    ISBN {book.isbn || "978-602-000-0"} • Tahun {book.publication_year || 2024}
-                                </p>
-                                <div className="mt-8 rounded-xl bg-blue-950/40 border border-blue-900/40 p-4 text-xs text-blue-200 text-left">
-                                    <p className="font-bold mb-1">Sinopsis Resmi:</p>
-                                    <p className="line-clamp-4">{book.synopsis || "Buku referensi resmi koleksi Perpustakaan Sunaryaman Musthofa SMA Negeri 1 Bukittinggi."}</p>
+                            ) : (
+                                <div className="space-y-4">
+                                    <h3 className="font-display text-sm font-bold text-white uppercase tracking-wider">
+                                        Bab {Math.ceil(currentPage / 3)}: Bagian {currentPage}
+                                    </h3>
+                                    <p className="text-justify text-slate-300">
+                                        {book.synopsis ? `${book.synopsis.slice(0, 300)}...` : "Perpustakaan SMA Negeri 1 Bukittinggi menyediakan fasilitas membaca buku digital guna mendukung kegiatan pembelajaran berkesinambungan bagi seluruh siswa dan tenaga pendidik."}
+                                    </p>
+                                    <p className="text-justify text-slate-300">
+                                        Membaca bukan sekadar mengeja deretan kata, melainkan proses membuka jendela pemikiran, menelaah gagasan baru, dan memperkaya kosa kata yang berharga bagi pengembangan kapasitas pribadi siswa SMAN 1 Bukittinggi.
+                                    </p>
+                                    <p className="text-justify text-slate-300">
+                                        Melalui integrasi koleksi buku kurikulum, sastra daerah Minangkabau, karya ilmiah siswa, dan referensi global, setiap warga sekolah memiliki kesempatan untuk belajar kapan saja dengan penuh kemudahan.
+                                    </p>
                                 </div>
-                            </div>
-                        ) : (
-                            <div className="space-y-4">
-                                <h3 className="font-display text-sm font-bold text-white uppercase tracking-wider">
-                                    Bab {Math.ceil(currentPage / 3)}: Bagian {currentPage}
-                                </h3>
-                                <p className="text-justify text-slate-300">
-                                    {book.synopsis ? `${book.synopsis.slice(0, 300)}...` : "Perpustakaan SMA Negeri 1 Bukittinggi menyediakan fasilitas membaca buku digital guna mendukung kegiatan pembelajaran berkesinambungan bagi seluruh siswa dan tenaga pendidik."}
-                                </p>
-                                <p className="text-justify text-slate-300">
-                                    Membaca bukan sekadar mengeja deretan kata, melainkan proses membuka jendela pemikiran, menelaah gagasan baru, dan memperkaya kosa kata yang berharga bagi pengembangan kapasitas pribadi siswa SMAN 1 Bukittinggi.
-                                </p>
-                                <p className="text-justify text-slate-300">
-                                    Melalui integrasi koleksi buku kurikulum, sastra daerah Minangkabau, karya ilmiah siswa, dan referensi global, setiap warga sekolah memiliki kesempatan untuk belajar kapan saja dengan penuh kemudahan.
-                                </p>
-                            </div>
-                        )}
-                    </div>
+                            )}
+                        </div>
 
-                    {/* Footer of page */}
-                    <div className="mt-8 flex items-center justify-between border-t border-slate-800 pt-4 text-[10px] text-slate-500 font-mono">
-                        <span className="flex items-center gap-1">
-                            <ShieldAlert size={12} className="text-slate-600" /> Hak Cipta Dilindungi
-                        </span>
-                        <span>Halaman {currentPage} dari {totalPages}</span>
+                        {/* Footer of page */}
+                        <div className="mt-8 flex items-center justify-between border-t border-slate-800 pt-4 text-[10px] text-slate-500 font-mono">
+                            <span className="flex items-center gap-1">
+                                <ShieldAlert size={12} className="text-slate-600" /> Hak Cipta Dilindungi
+                            </span>
+                            <span>Halaman {currentPage} dari {totalPages}</span>
+                        </div>
                     </div>
-                </div>
+                )}
             </main>
 
             {/* ── BOTTOM PAGE CONTROLLER ── */}
@@ -370,7 +398,7 @@ export default function EbookReader({ book, loan, progress, readerInfo }: EbookR
                     onClick={() => changePage(currentPage - 1)}
                     className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed"
                 >
-                    <ChevronLeft size={15} /> Sebelumnya
+                    <ChevronLeft size={15} /> {t("reader_prev")}
                 </button>
 
                 {/* Page Slider / Indicator */}
@@ -394,7 +422,7 @@ export default function EbookReader({ book, loan, progress, readerInfo }: EbookR
                     onClick={() => changePage(currentPage + 1)}
                     className="inline-flex items-center gap-1.5 rounded-full bg-[#2699fb] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#1783df] disabled:opacity-30 disabled:cursor-not-allowed"
                 >
-                    Selanjutnya <ChevronRight size={15} />
+                    {t("reader_next")} <ChevronRight size={15} />
                 </button>
             </footer>
         </div>

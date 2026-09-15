@@ -149,7 +149,7 @@ export default function UpdateProfileInformation({
 
                     {recentlySuccessful && (
                         <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                            ✓ Data berhasil disimpan.
+                            Data berhasil disimpan.
                         </p>
                     )}
                 </div>

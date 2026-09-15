@@ -1,8 +1,23 @@
 import { Link } from "@inertiajs/react";
-import { ArrowRight, ArrowUpRight, Calendar, ChevronLeft, ChevronRight, Headphones, Search, Trophy, Sparkles } from "lucide-react";
+import {
+    ArrowRight,
+    ArrowUpRight,
+    Calendar,
+    ChevronLeft,
+    ChevronRight,
+    Headphones,
+    Search,
+    Trophy,
+    Sparkles,
+    BookOpen,
+    Newspaper,
+    PenTool,
+    Globe2,
+} from "lucide-react";
 import SiteShell from "../Components/Common/SiteShell";
 import { BookCard } from "../Components/Common/BookCard";
 import { Book, Event, LibraryStats, MagazineEdition, ReaderRank, SmansaWork } from "../types/library";
+import { useI18n } from "../utils/i18n";
 
 interface HomeProps {
     stats: LibraryStats;
@@ -15,13 +30,6 @@ interface HomeProps {
     settings?: { library_name: string; library_tagline: string; operating_hours: string; library_address: string; contact_phone: string };
 }
 
-const FEATURE_PILLS = [
-    "Koleksi terkurasi untuk seluruh warga sekolah",
-    "Reservasi buku secara online tanpa antre",
-    "Akses majalah sekolah & bacaan digital",
-    "Ruang apresiasi karya literasi guru & siswa",
-];
-
 export default function Home({
     stats = { total_books: 0, available_books: 0, total_authors: 0, total_categories: 0 },
     popularBooks = [],
@@ -31,6 +39,50 @@ export default function Home({
     latestPodcasts = [],
     featuredWorks = [],
 }: HomeProps) {
+    const { t } = useI18n();
+
+    const featurePills = [
+        t('pill_curated'),
+        t('pill_online_reservation'),
+        t('pill_digital_access'),
+        t('pill_appreciation'),
+    ];
+
+    const portalCards = [
+        {
+            label: t('portal_catalog_title'),
+            desc: t('portal_catalog_desc'),
+            href: "/catalog",
+            Icon: BookOpen,
+            color: "bg-[#eef5ff]",
+            iconColor: "text-[#2699fb]",
+        },
+        {
+            label: t('portal_magazine_title'),
+            desc: t('portal_magazine_desc'),
+            href: "/magazines",
+            Icon: Newspaper,
+            color: "bg-[#fff8ec]",
+            iconColor: "text-[#f59e0b]",
+        },
+        {
+            label: t('portal_works_title'),
+            desc: t('portal_works_desc'),
+            href: "/karya-smansa",
+            Icon: PenTool,
+            color: "bg-[#fef2f2]",
+            iconColor: "text-[#ef4444]",
+        },
+        {
+            label: t('portal_language_title'),
+            desc: t('portal_language_desc'),
+            href: "/translations",
+            Icon: Globe2,
+            color: "bg-[#f0fdf4]",
+            iconColor: "text-[#16a34a]",
+        },
+    ];
+
     return (
         <SiteShell>
             <div className="bg-white text-[#152238]">
@@ -46,17 +98,17 @@ export default function Home({
                             </div>
                             <h1 className="font-display text-[clamp(2.8rem,6vw,5.5rem)] font-black leading-[1] tracking-tight text-[#152238]">
                                 <span className="relative inline-block">
-                                    <span className="relative z-10">Sunaryaman</span>
+                                    <span className="relative z-10">{t('hero_title_1')}</span>
                                     <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none" aria-hidden="true">
                                         <path d="M2 9 C40 3, 100 1, 198 8" stroke="#FF8E4F" strokeWidth="4" strokeLinecap="round" />
                                     </svg>
                                 </span>
                                 <br />
-                                <span>Musthofa</span>
+                                <span>{t('hero_title_2')}</span>
                             </h1>
 
                             <p className="mt-6 max-w-md text-base leading-7 text-[#64748b]">
-                                Portal literasi digital SMAN 1 Bukittinggi. Jelajahi ribuan koleksi buku, majalah sekolah, agenda kegiatan, serta karya inspiratif warga sekolah.
+                                {t('hero_sub')}
                             </p>
 
                             {/* Search bar */}
@@ -64,20 +116,20 @@ export default function Home({
                                 <Search size={17} className="ml-3 shrink-0 text-gray-400" />
                                 <input
                                     name="q"
-                                    aria-label="Cari buku"
-                                    placeholder="Cari judul buku, penulis, atau kategori..."
+                                    aria-label={t('nav_search_aria')}
+                                    placeholder={t('hero_search_placeholder')}
                                     className="min-w-0 flex-1 border-0 bg-transparent px-2 py-2.5 text-sm text-[#152238] outline-none placeholder:text-gray-400"
                                 />
                                 <button className="rounded-xl bg-[#2699fb] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1783df]">
-                                    Cari
+                                    {t('hero_search_btn')}
                                 </button>
                             </form>
 
                             {/* Stats */}
                             <div className="mt-8 flex flex-wrap gap-8 text-sm text-[#64748b]">
-                                <span><strong className="mr-1 text-2xl font-black text-[#152238]">{stats.total_books || 0}</strong>koleksi</span>
-                                <span><strong className="mr-1 text-2xl font-black text-[#152238]">{stats.total_categories || 0}</strong>kategori</span>
-                                <span><strong className="mr-1 text-2xl font-black text-[#152238]">{stats.available_books || 0}</strong>tersedia</span>
+                                <span><strong className="mr-1 text-2xl font-black text-[#152238]">{stats.total_books || 0}</strong>{t('stat_collections')}</span>
+                                <span><strong className="mr-1 text-2xl font-black text-[#152238]">{stats.total_categories || 0}</strong>{t('stat_categories')}</span>
+                                <span><strong className="mr-1 text-2xl font-black text-[#152238]">{stats.available_books || 0}</strong>{t('stat_available')}</span>
                             </div>
                         </div>
 
@@ -92,8 +144,8 @@ export default function Home({
                                 <img src="/images/about_building.jpg" alt="Siswa membaca" className="h-full w-full object-cover" />
                             </div>
                             <div className="absolute bottom-10 left-4 z-30 rounded-2xl bg-white px-4 py-3 shadow-lg lg:left-2">
-                                <p className="text-[9px] font-bold uppercase tracking-[.18em] text-[#2699fb]">Terbuka untuk semua</p>
-                                <p className="mt-0.5 text-xs font-bold text-[#152238]">Baca lebih banyak, tumbuh lebih jauh.</p>
+                                <p className="text-[9px] font-bold uppercase tracking-[.18em] text-[#2699fb]">{t('hero_badge_title')}</p>
+                                <p className="mt-0.5 text-xs font-bold text-[#152238]">{t('hero_badge_sub')}</p>
                             </div>
                         </div>
                     </div>
@@ -104,20 +156,20 @@ export default function Home({
                     <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
                         <div>
                             <h2 className="font-display text-4xl font-black leading-tight tracking-tight text-[#152238] sm:text-5xl">
-                                Semua{" "}
+                                {t('sec_all_in_one_title_1')}{" "}
                                 <span className="relative inline-block">
-                                    <span className="relative z-10">ada di</span>
+                                    <span className="relative z-10">{t('sec_all_in_one_title_2')}</span>
                                     <svg className="absolute -bottom-1.5 left-0 w-full" viewBox="0 0 100 10" fill="none" aria-hidden="true">
                                         <path d="M2 7 C25 2, 60 1, 98 7" stroke="#FF8E4F" strokeWidth="4" strokeLinecap="round" />
                                     </svg>
                                 </span>{" "}
-                                satu tempat
+                                {t('sec_all_in_one_title_3')}
                             </h2>
                             <p className="mt-5 max-w-sm text-sm leading-7 text-[#64748b]">
-                                Mulai dari koleksi buku fisik, majalah digital, agenda literasi, hingga publikasi karya siswa dan guru SMAN 1 Bukittinggi.
+                                {t('sec_all_in_one_sub')}
                             </p>
                             <ul className="mt-6 grid gap-3">
-                                {FEATURE_PILLS.map((item) => (
+                                {featurePills.map((item) => (
                                     <li key={item} className="flex items-center gap-3 text-sm font-medium text-[#334155]">
                                         <span className="grid size-5 place-items-center rounded-full bg-[#2699fb]/10 text-[#2699fb]">
                                             <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -127,7 +179,7 @@ export default function Home({
                                 ))}
                             </ul>
                             <Link href="/catalog" className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#2699fb] hover:underline">
-                                Lihat semua koleksi buku <ArrowRight size={15} />
+                                {t('btn_view_all_collections')} <ArrowRight size={15} />
                             </Link>
                         </div>
 
@@ -135,27 +187,27 @@ export default function Home({
                         <div className="relative">
                             <div className="blob-yellow absolute inset-0 bg-[#FFC533]/20" />
                             <div className="relative grid grid-cols-2 gap-4 p-4 sm:p-6">
-                                {[
-                                    { label: "Katalog Buku", desc: "Ribuan judul terkurasi", href: "/catalog", icon: "📚", color: "bg-[#eef5ff]" },
-                                    { label: "E-Magazine", desc: "Majalah & bacaan digital", href: "/magazines", icon: "📰", color: "bg-[#fff8ec]" },
-                                    { label: "Karya SMANSA", desc: "Cerpen, puisi, & esai", href: "/karya-smansa", icon: "✍️", color: "bg-[#fef2f2]" },
-                                    { label: "Pojok Bahasa", desc: "Kosakata & terjemahan", href: "/translations", icon: "🌐", color: "bg-[#f0fdf4]" },
-                                ].map((cat) => (
-                                    <Link
-                                        key={cat.label}
-                                        href={cat.href}
-                                        className={`${cat.color} flex flex-col justify-between rounded-2xl p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md`}
-                                    >
-                                        <div>
-                                            <span className="text-3xl">{cat.icon}</span>
-                                            <h3 className="mt-3 text-sm font-bold text-[#152238]">{cat.label}</h3>
-                                            <p className="mt-1 text-xs text-[#64748b]">{cat.desc}</p>
-                                        </div>
-                                        <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[#2699fb]">
-                                            Buka <ArrowRight size={12} />
-                                        </span>
-                                    </Link>
-                                ))}
+                                {portalCards.map((cat) => {
+                                    const IconComponent = cat.Icon;
+                                    return (
+                                        <Link
+                                            key={cat.label}
+                                            href={cat.href}
+                                            className={`${cat.color} flex flex-col justify-between rounded-2xl p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md`}
+                                        >
+                                            <div>
+                                                <div className={`grid size-10 place-items-center rounded-xl bg-white shadow-xs ${cat.iconColor}`}>
+                                                    <IconComponent size={20} />
+                                                </div>
+                                                <h3 className="mt-3 text-sm font-bold text-[#152238]">{cat.label}</h3>
+                                                <p className="mt-1 text-xs text-[#64748b]">{cat.desc}</p>
+                                            </div>
+                                            <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[#2699fb]">
+                                                {t('btn_open')} <ArrowRight size={12} />
+                                            </span>
+                                        </Link>
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
@@ -166,11 +218,11 @@ export default function Home({
                     <div className="mx-auto max-w-7xl">
                         <div className="flex items-end justify-between gap-4">
                             <div>
-                                <p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#2699fb]">Pilihan pembaca</p>
-                                <h2 className="mt-1 font-display text-3xl font-black tracking-tight text-[#152238] sm:text-4xl">Buku terbaru</h2>
+                                <p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#2699fb]">{t('sec_books_badge')}</p>
+                                <h2 className="mt-1 font-display text-3xl font-black tracking-tight text-[#152238] sm:text-4xl">{t('sec_books_latest')}</h2>
                             </div>
                             <Link href="/catalog" className="hidden items-center gap-1 text-sm font-semibold text-[#2699fb] hover:underline sm:flex">
-                                Lihat semua <ArrowRight size={14} />
+                                {t('sec_see_all')} <ArrowRight size={14} />
                             </Link>
                         </div>
                         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -180,7 +232,7 @@ export default function Home({
                         </div>
                         {(!popularBooks || popularBooks.length === 0) && (
                             <p className="mt-8 rounded-2xl bg-gray-50 p-8 text-center text-sm text-gray-400">
-                                Koleksi buku akan segera hadir.
+                                {t('sec_books_empty')}
                             </p>
                         )}
                         <div className="mt-6 flex justify-end gap-2">
@@ -199,20 +251,20 @@ export default function Home({
                     <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
                         <div>
                             <h2 className="font-display text-4xl font-black leading-tight tracking-tight text-[#152238] sm:text-5xl">
-                                Pinjam{" "}
+                                {t('sec_borrow_title_1')}{" "}
                                 <span className="relative inline-block">
-                                    <span className="relative z-10">buku</span>
+                                    <span className="relative z-10">{t('sec_borrow_title_2')}</span>
                                     <svg className="absolute -bottom-1.5 left-0 w-full" viewBox="0 0 80 10" fill="none" aria-hidden="true">
                                         <path d="M2 7 C20 2, 50 1, 78 7" stroke="#FF8E4F" strokeWidth="4" strokeLinecap="round" />
                                     </svg>
                                 </span>{" "}
-                                dengan mudah
+                                {t('sec_borrow_title_3')}
                             </h2>
                             <p className="mt-5 max-w-sm text-sm leading-7 text-[#64748b]">
-                                Reservasi buku favoritmu secara daring kapan saja, lalu ambil langsung di meja sirkulasi perpustakaan tanpa menunggu antrean.
+                                {t('sec_borrow_sub')}
                             </p>
                             <Link href="/catalog" className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#2699fb] hover:underline">
-                                Cari buku sekarang <ArrowRight size={15} />
+                                {t('btn_find_book_now')} <ArrowRight size={15} />
                             </Link>
                         </div>
 
@@ -222,8 +274,8 @@ export default function Home({
                                 <img src="/images/hero_library.jpg" alt="Pinjam buku" className="h-full w-full object-cover" />
                             </div>
                             <div className="absolute -right-4 bottom-8 z-20 rounded-2xl bg-white px-5 py-4 shadow-xl sm:-right-8">
-                                <p className="text-[9px] font-bold uppercase tracking-[.15em] text-[#2699fb]">Ketentuan pinjam</p>
-                                <p className="mt-1 text-xs font-semibold text-[#152238]">Maks. 3 buku &bull; 7 hari pinjam</p>
+                                <p className="text-[9px] font-bold uppercase tracking-[.15em] text-[#2699fb]">{t('sec_borrow_rule_badge')}</p>
+                                <p className="mt-1 text-xs font-semibold text-[#152238]">{t('sec_borrow_rule')}</p>
                                 <div className="mt-2 h-1 w-full rounded-full bg-gray-100">
                                     <div className="h-1 w-2/3 rounded-full bg-[#2699fb]" />
                                 </div>
@@ -237,11 +289,11 @@ export default function Home({
                     <div className="mx-auto max-w-7xl">
                         <div className="flex items-end justify-between">
                             <div>
-                                <p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#2699fb]">Bacaan digital</p>
-                                <h2 className="mt-1 font-display text-3xl font-black tracking-tight text-[#152238] sm:text-4xl">E-Magazine terbaru</h2>
+                                <p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#2699fb]">{t('sec_magazine_badge')}</p>
+                                <h2 className="mt-1 font-display text-3xl font-black tracking-tight text-[#152238] sm:text-4xl">{t('sec_magazine_latest')}</h2>
                             </div>
                             <Link href="/magazines" className="hidden items-center gap-1 text-sm font-semibold text-[#2699fb] hover:underline sm:flex">
-                                Lihat semua <ArrowRight size={14} />
+                                {t('sec_see_all')} <ArrowRight size={14} />
                             </Link>
                         </div>
                         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -255,16 +307,16 @@ export default function Home({
                                         <img src={edition.cover_image || "/images/hero_library.jpg"} alt={edition.edition_title} className="h-full w-full object-cover transition group-hover:scale-105" />
                                     </div>
                                     <div className="py-1">
-                                        <p className="text-[9px] font-bold uppercase tracking-[.16em] text-[#2699fb]">Edisi {edition.edition_number}</p>
+                                        <p className="text-[9px] font-bold uppercase tracking-[.16em] text-[#2699fb]">{t('sec_magazine_edition')} {edition.edition_number}</p>
                                         <h3 className="mt-2 font-display text-lg font-bold leading-tight text-[#152238]">{edition.edition_title}</h3>
                                         <p className="mt-2 line-clamp-2 text-xs leading-5 text-gray-400">{edition.description || "Temukan cerita dan wawasan terbaru."}</p>
-                                        <span className="mt-3 inline-flex items-center gap-1 text-[10px] font-semibold text-[#2699fb]">Baca edisi <ArrowRight size={10} /></span>
+                                        <span className="mt-3 inline-flex items-center gap-1 text-[10px] font-semibold text-[#2699fb]">{t('sec_magazine_read')} <ArrowRight size={10} /></span>
                                     </div>
                                 </Link>
                             ))}
                         </div>
                         {(!latestMagazines || latestMagazines.length === 0) && (
-                            <p className="mt-8 rounded-2xl bg-gray-50 p-8 text-center text-sm text-gray-400">Majalah digital akan segera hadir.</p>
+                            <p className="mt-8 rounded-2xl bg-gray-50 p-8 text-center text-sm text-gray-400">{t('sec_magazine_empty')}</p>
                         )}
                     </div>
                 </section>
@@ -274,13 +326,13 @@ export default function Home({
                     <div className="mx-auto max-w-7xl">
                         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                             <div>
-                                <p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#2699fb]">Aktivitas & Kreativitas</p>
-                                <h2 className="mt-1 font-display text-3xl font-black tracking-tight text-[#152238] sm:text-4xl">Komunitas & Karya Literasi</h2>
+                                <p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#2699fb]">{t('sec_community_badge')}</p>
+                                <h2 className="mt-1 font-display text-3xl font-black tracking-tight text-[#152238] sm:text-4xl">{t('sec_community_title')}</h2>
                             </div>
                             <div className="flex gap-3 text-xs font-semibold">
-                                <Link href="/events" className="text-[#2699fb] hover:underline">Semua Agenda →</Link>
+                                <Link href="/events" className="text-[#2699fb] hover:underline">{t('sec_community_agenda_link')} →</Link>
                                 <span className="text-gray-300">•</span>
-                                <Link href="/karya-smansa" className="text-[#2699fb] hover:underline">Galeri Karya →</Link>
+                                <Link href="/karya-smansa" className="text-[#2699fb] hover:underline">{t('sec_community_gallery_link')} →</Link>
                             </div>
                         </div>
 
@@ -290,11 +342,11 @@ export default function Home({
                                 <div>
                                     <div className="flex items-center justify-between">
                                         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fff8ec] px-2.5 py-1 text-[10px] font-bold text-[#f59e0b]">
-                                            <Trophy size={13} /> Peringkat Pembaca
+                                            <Trophy size={13} /> {t('sec_rank_badge')}
                                         </span>
-                                        <Link href="/ranking" className="text-xs font-semibold text-[#2699fb] hover:underline">Lihat semua</Link>
+                                        <Link href="/ranking" className="text-xs font-semibold text-[#2699fb] hover:underline">{t('sec_see_all')}</Link>
                                     </div>
-                                    <h3 className="mt-3 font-display text-lg font-bold text-[#152238]">Pembaca Teraktif</h3>
+                                    <h3 className="mt-3 font-display text-lg font-bold text-[#152238]">{t('sec_rank_title')}</h3>
                                     <div className="mt-4 space-y-3">
                                         {topReaders.length > 0 ? (
                                             topReaders.slice(0, 3).map((reader, idx) => (
@@ -305,16 +357,16 @@ export default function Home({
                                                         </span>
                                                         <span className="font-semibold text-[#152238]">{reader.name}</span>
                                                     </div>
-                                                    <span className="font-mono text-gray-400">{reader.loans_count} buku</span>
+                                                    <span className="font-mono text-gray-400">{reader.loans_count} {t('stat_collections')}</span>
                                                 </div>
                                             ))
                                         ) : (
-                                            <p className="text-xs text-gray-400">Belum ada data peminjaman.</p>
+                                            <p className="text-xs text-gray-400">{t('sec_rank_empty')}</p>
                                         )}
                                     </div>
                                 </div>
                                 <Link href="/ranking" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-[#2699fb]">
-                                    Lihat papan peringkat <ArrowUpRight size={13} />
+                                    {t('sec_rank_btn')} <ArrowUpRight size={13} />
                                 </Link>
                             </div>
 
@@ -323,11 +375,11 @@ export default function Home({
                                 <div>
                                     <div className="flex items-center justify-between">
                                         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#eef5ff] px-2.5 py-1 text-[10px] font-bold text-[#2699fb]">
-                                            <Calendar size={13} /> Agenda
+                                            <Calendar size={13} /> {t('sec_events_badge')}
                                         </span>
-                                        <Link href="/events" className="text-xs font-semibold text-[#2699fb] hover:underline">Semua</Link>
+                                        <Link href="/events" className="text-xs font-semibold text-[#2699fb] hover:underline">{t('sec_see_all')}</Link>
                                     </div>
-                                    <h3 className="mt-3 font-display text-lg font-bold text-[#152238]">Kegiatan Perpustakaan</h3>
+                                    <h3 className="mt-3 font-display text-lg font-bold text-[#152238]">{t('sec_events_title')}</h3>
                                     <div className="mt-4 space-y-3">
                                         {upcomingEvents.length > 0 ? (
                                             upcomingEvents.slice(0, 2).map((event) => (
@@ -337,12 +389,12 @@ export default function Home({
                                                 </Link>
                                             ))
                                         ) : (
-                                            <p className="text-xs text-gray-400">Agenda baru sedang disiapkan.</p>
+                                            <p className="text-xs text-gray-400">{t('sec_events_empty')}</p>
                                         )}
                                     </div>
                                 </div>
                                 <Link href="/events" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-[#2699fb]">
-                                    Jelajahi agenda <ArrowRight size={13} />
+                                    {t('sec_events_btn')} <ArrowRight size={13} />
                                 </Link>
                             </div>
 
@@ -351,11 +403,11 @@ export default function Home({
                                 <div>
                                     <div className="flex items-center justify-between">
                                         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fef2f2] px-2.5 py-1 text-[10px] font-bold text-[#ef4444]">
-                                            <Headphones size={13} /> Podcast
+                                            <Headphones size={13} /> {t('sec_podcast_badge')}
                                         </span>
-                                        <Link href="/events" className="text-xs font-semibold text-[#2699fb] hover:underline">Semua</Link>
+                                        <Link href="/events" className="text-xs font-semibold text-[#2699fb] hover:underline">{t('sec_see_all')}</Link>
                                     </div>
-                                    <h3 className="mt-3 font-display text-lg font-bold text-[#152238]">Podcast Duta Literasi</h3>
+                                    <h3 className="mt-3 font-display text-lg font-bold text-[#152238]">{t('sec_podcast_title')}</h3>
                                     <div className="mt-4 space-y-3">
                                         {latestPodcasts.length > 0 ? (
                                             latestPodcasts.slice(0, 2).map((podcast) => (
@@ -368,12 +420,12 @@ export default function Home({
                                                 </Link>
                                             ))
                                         ) : (
-                                            <p className="text-xs text-gray-400">Episode perdana segera hadir.</p>
+                                            <p className="text-xs text-gray-400">{t('sec_podcast_empty')}</p>
                                         )}
                                     </div>
                                 </div>
                                 <Link href="/events" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-[#2699fb]">
-                                    Dengarkan sekarang <ArrowRight size={13} />
+                                    {t('sec_podcast_btn')} <ArrowRight size={13} />
                                 </Link>
                             </div>
 
@@ -382,11 +434,11 @@ export default function Home({
                                 <div>
                                     <div className="flex items-center justify-between">
                                         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f0fdf4] px-2.5 py-1 text-[10px] font-bold text-[#16a34a]">
-                                            ✍️ Karya SMANSA
+                                            <PenTool size={13} /> {t('sec_works_badge')}
                                         </span>
-                                        <Link href="/karya-smansa" className="text-xs font-semibold text-[#2699fb] hover:underline">Galeri</Link>
+                                        <Link href="/karya-smansa" className="text-xs font-semibold text-[#2699fb] hover:underline">{t('sec_community_gallery_link')}</Link>
                                     </div>
-                                    <h3 className="mt-3 font-display text-lg font-bold text-[#152238]">Karya Siswa & Guru</h3>
+                                    <h3 className="mt-3 font-display text-lg font-bold text-[#152238]">{t('sec_works_title')}</h3>
                                     <div className="mt-4 space-y-3">
                                         {featuredWorks.length > 0 ? (
                                             featuredWorks.slice(0, 2).map((work) => (
@@ -397,12 +449,12 @@ export default function Home({
                                                 </Link>
                                             ))
                                         ) : (
-                                            <p className="text-xs text-gray-400">Karya pilihan akan segera hadir.</p>
+                                            <p className="text-xs text-gray-400">{t('sec_works_empty')}</p>
                                         )}
                                     </div>
                                 </div>
                                 <Link href="/karya-smansa" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-[#2699fb]">
-                                    Buka galeri karya <ArrowRight size={13} />
+                                    {t('sec_works_btn')} <ArrowRight size={13} />
                                 </Link>
                             </div>
                         </div>
@@ -426,9 +478,9 @@ export default function Home({
                         </div>
 
                         <h2 className="font-display text-4xl font-black leading-tight tracking-tight text-[#152238] sm:text-5xl">
-                            Siap mulai{" "}
+                            {t('sec_ready_title_1')}{" "}
                             <span className="relative inline-block">
-                                <span className="relative z-10">membaca</span>
+                                <span className="relative z-10">{t('sec_ready_title_2')}</span>
                                 <svg className="absolute -bottom-1.5 left-0 w-full" viewBox="0 0 110 10" fill="none" aria-hidden="true">
                                     <path d="M2 7 C28 2, 70 1, 108 7" stroke="#FF8E4F" strokeWidth="4" strokeLinecap="round" />
                                 </svg>
@@ -436,20 +488,20 @@ export default function Home({
                             ?
                         </h2>
                         <p className="mx-auto mt-5 max-w-md text-base leading-7 text-[#64748b]">
-                            Koleksi baru selalu hadir. Temukan buku favoritmu, simpan daftar bacaan, dan reservasi kapan saja.
+                            {t('sec_ready_sub')}
                         </p>
                         <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
                             <Link
                                 href="/catalog"
                                 className="inline-flex items-center gap-2 rounded-full bg-[#2699fb] px-8 py-3.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#1783df]"
                             >
-                                Cari Buku <ArrowRight size={15} />
+                                {t('sec_find_book')} <ArrowRight size={15} />
                             </Link>
                             <Link
                                 href="/information"
                                 className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-8 py-3.5 text-sm font-semibold text-[#152238] transition hover:bg-gray-50"
                             >
-                                Tentang Perpustakaan
+                                {t('sec_about_lib')}
                             </Link>
                         </div>
                     </div>

@@ -20,6 +20,7 @@ import { ReservationModal } from '../../Components/Common/ReservationModal';
 import { SiteShell } from '../../Components/Common/SiteShell';
 import { Book } from '../../types/library';
 import { RealPaperClip, WashiTapeStrip } from '../../Components/Common/Ornaments';
+import { useI18n } from '../../utils/i18n';
 
 interface BookDetailProps {
     book: Book;
@@ -27,6 +28,7 @@ interface BookDetailProps {
 }
 
 export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
+    const { t } = useI18n();
     const [reservationOpen, setReservationOpen] = useState(false);
     const [copied, setCopied] = useState(false);
 
@@ -45,7 +47,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
 
     return (
         <SiteShell>
-            <Head title={`${book.title} | Katalog Perpustakaan SMAN 1 Bukittinggi`} />
+            <Head title={`${book.title} | ${t('nav_catalog')} Perpustakaan SMAN 1 Bukittinggi`} />
 
             {/* Breadcrumb Navigation */}
             <div className="paper-grain border-b border-[#e5dfd7] bg-[#fffdf9]">
@@ -55,7 +57,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                         className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#152238] transition-colors"
                     >
                         <ArrowLeft size={16} />
-                        <span>Kembali ke Katalog</span>
+                        <span>{t('btn_back')}</span>
                     </Link>
 
                     <button
@@ -74,7 +76,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                 <div className="grid gap-10 lg:grid-cols-[340px_1fr] lg:gap-14">
                     {/* Left Column: Book Cover & Quick Status */}
                     <div className="flex flex-col items-center">
-                            <div className="relative w-full max-w-[280px] sm:max-w-[320px]">
+                        <div className="relative w-full max-w-[280px] sm:max-w-[320px]">
                             <WashiTapeStrip width="70px" height="18px" color="rgba(11,78,162,0.7)" rotate={-2} className="-top-2 left-1/2 -translate-x-1/2 z-20" />
                             <div className="absolute -top-3.5 right-3 z-20">
                                 <RealPaperClip rotate={25} color="#788796" />
@@ -88,22 +90,22 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                 <div className="mt-3 text-center font-handwriting text-sm font-bold">{book.title}</div>
                             </div>
                             <div className="mt-3 text-center font-handwriting text-xs text-[#152238] font-bold">
-                                Koleksi Perpustakaan SMAN 1 Bukittinggi ·
+                                Koleksi Perpustakaan Sunaryaman Musthofa SMAN 1 Bukittinggi
                             </div>
                         </div>
 
                         <div className="index-card relative mt-6 w-full max-w-[320px] rotate-[1deg] rounded-sm p-5">
                             <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold text-slate-500">Status Koleksi:</span>
+                                <span className="text-xs font-semibold text-slate-500">Status:</span>
                                 {isAvailable ? (
                                     <Badge variant="available">
                                         <CheckCircle2 size={12} />
-                                        <span>Tersedia</span>
+                                        <span>{t('status_available')}</span>
                                     </Badge>
                                 ) : (
                                     <Badge variant="borrowed">
                                         <Clock size={12} />
-                                        <span>Sedang Dipinjam</span>
+                                        <span>{t('status_borrowed')}</span>
                                     </Badge>
                                 )}
                             </div>
@@ -112,23 +114,23 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                 <div className="flex items-center justify-between">
                                     <span className="flex items-center gap-1.5">
                                         <MapPin size={13} className="text-[#152238]" />
-                                        <span>Lokasi Rak Fisik:</span>
+                                        <span>{t('book_location')}:</span>
                                     </span>
-                                    <strong className="font-mono text-[#0F172A]">{book.shelf_location}</strong>
+                                    <strong className="font-mono text-[#0F172A]">{book.shelf_location || '-'}</strong>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="flex items-center gap-1.5">
                                         <BookOpen size={13} className="text-[#152238]" />
-                                        <span>Total Eksemplar:</span>
+                                        <span>{t('book_total_copies')}:</span>
                                     </span>
-                                    <strong className="text-[#0F172A]">{book.copies?.length ?? 0} Eksemplar</strong>
+                                    <strong className="text-[#0F172A]">{book.copies?.length ?? 0}</strong>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="flex items-center gap-1.5">
                                         <CheckCircle2 size={13} className="text-emerald-600" />
-                                        <span>Siap Dipinjam:</span>
+                                        <span>{t('book_available_copies')}:</span>
                                     </span>
-                                    <strong className="text-emerald-700">{book.available_copies_count} Eksemplar</strong>
+                                    <strong className="text-emerald-700">{book.available_copies_count ?? 0}</strong>
                                 </div>
                             </div>
 
@@ -138,7 +140,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                 className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#152238] py-3 text-sm font-bold text-white shadow-sm transition-all hover:bg-[#0f172a]"
                             >
                                 <BookMarked size={16} />
-                                <span>{isAvailable ? 'Reservasi Buku Fisik' : 'Ingatkan Saya Saat Tersedia'}</span>
+                                <span>{isAvailable ? t('btn_reserve_physical') : t('status_borrowed')}</span>
                             </button>
 
                             <Link
@@ -146,7 +148,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                 className="mt-2.5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#2699fb] py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#1783df]"
                             >
                                 <BookOpen size={16} />
-                                <span>Baca E-Book Online</span>
+                                <span>{t('btn_read_online_now')}</span>
                             </Link>
                         </div>
                     </div>
@@ -157,10 +159,14 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                             <span className="font-mono-display text-xs font-bold uppercase tracking-[0.16em] text-[#152238]">
                                 {book.category?.name}
                             </span>
-                            <span className="text-slate-300">•</span>
-                            <span className="font-mono-display text-xs text-slate-500 font-semibold">
-                                DDC {book.ddc_class?.code}
-                            </span>
+                            {book.ddc_class?.code && (
+                                <>
+                                    <span className="text-slate-300">•</span>
+                                    <span className="font-mono-display text-xs text-slate-500 font-semibold">
+                                        DDC {book.ddc_class?.code}
+                                    </span>
+                                </>
+                            )}
                         </div>
 
                         <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-[#0F172A] sm:text-4xl lg:text-5xl">
@@ -168,7 +174,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                         </h1>
 
                         <p className="mt-2 text-base text-slate-600 font-medium">
-                            Karya: <strong className="text-[#0F172A]">{authorNames}</strong>
+                            {t('book_author')}: <strong className="text-[#0F172A]">{authorNames}</strong>
                         </p>
 
                         {/* Metadata Grid */}
@@ -180,26 +186,26 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                             </div>
                             <div>
                                 <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                                    Penerbit
+                                    {t('book_publisher')}
                                 </span>
                                 <strong className="mt-1 block text-xs text-[#0F172A]">
-                                    {book.publisher?.name ?? 'Belum tercatat'}
+                                    {book.publisher?.name ?? '-'}
                                 </strong>
                             </div>
                             <div>
                                 <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                                    Tahun Terbit
+                                    {t('book_published_year')}
                                 </span>
                                 <strong className="mt-1 block text-xs text-[#0F172A]">
-                                    {book.publication_year}
+                                    {book.publication_year ?? '-'}
                                 </strong>
                             </div>
                             <div>
                                 <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                                    ISBN
+                                    {t('book_isbn')}
                                 </span>
                                 <strong className="mt-1 block font-mono text-xs text-[#0F172A]">
-                                    {book.isbn || 'Belum tercatat'}
+                                    {book.isbn || '-'}
                                 </strong>
                             </div>
                             <div>
@@ -207,27 +213,27 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                     Bahasa
                                 </span>
                                 <strong className="mt-1 block text-xs text-[#0F172A]">
-                                    {book.language}
+                                    {book.language || 'Indonesia'}
                                 </strong>
                             </div>
                         </div>
 
                         {/* Synopsis */}
                         <div className="mt-8">
-                            <h2 className="font-display text-xl font-bold text-[#0F172A]">Sinopsis Buku</h2>
+                            <h2 className="font-display text-xl font-bold text-[#0F172A]">{t('book_synopsis')}</h2>
                             <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-slate-700">
-                                {book.synopsis}
+                                {book.synopsis || 'Sinopsis belum tersedia untuk judul ini.'}
                             </p>
                         </div>
 
-                        {/* Physical Copies / Barcodes Status */}
+                        {/* Physical Copies */}
                         {book.copies && book.copies.length > 0 && (
                             <div className="mt-10 border-t border-slate-200 pt-8">
                                 <h2 className="font-display text-lg font-bold text-[#0F172A]">
                                     Data Eksemplar Fisik ({book.copies.length})
                                 </h2>
                                 <p className="mt-1 text-xs text-slate-500">
-                                    Setiap buku fisik memiliki barcode unik untuk keperluan sirkulasi peminjaman.
+                                    Setiap buku fisik memiliki barcode unik untuk sirkulasi peminjaman.
                                 </p>
 
                                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -256,7 +262,7 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                                                             : 'bg-slate-100 text-slate-600'
                                                     }`}
                                                 >
-                                                    {copyAvailable ? 'Tersedia' : copy.status}
+                                                    {copyAvailable ? t('status_available') : t('status_borrowed')}
                                                 </span>
                                             </div>
                                         );
@@ -273,17 +279,17 @@ export function CatalogShow({ book, relatedBooks }: BookDetailProps) {
                         <div className="flex items-center justify-between">
                             <div>
                                 <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#152238]">
-                                    Koleksi Terkait
+                                    {t('book_category')}
                                 </span>
                                 <h2 className="mt-1 font-display text-2xl font-bold text-[#0F172A]">
-                                    Rekomendasi Serupa
+                                    {t('book_related')}
                                 </h2>
                             </div>
                             <Link
                                 href="/catalog"
                                 className="text-xs font-bold text-[#152238] hover:underline"
                             >
-                                Lihat Semua Koleksi ?
+                                {t('sec_see_all')} →
                             </Link>
                         </div>
 

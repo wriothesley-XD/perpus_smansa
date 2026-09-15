@@ -1,8 +1,9 @@
-﻿import { Link } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import { ArrowUpRight } from "lucide-react";
 import React from "react";
 import { Book } from "../../types/library";
 import { BookCover } from "./BookCover";
+import { useI18n } from "../../utils/i18n";
 
 interface BookCardProps {
     book: Book;
@@ -12,6 +13,7 @@ interface BookCardProps {
 }
 
 export function BookCard({ book, sticker }: BookCardProps) {
+    const { t } = useI18n();
     const isAvailable = (book.available_copies_count ?? 0) > 0;
     const authorName = book.authors?.length
         ? book.authors.map((a) => a.name).join(", ")
@@ -29,7 +31,7 @@ export function BookCard({ book, sticker }: BookCardProps) {
                     <BookCover src={book.cover_image} title={book.title} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
                     {/* Available badge overlay */}
                     <span className={`absolute bottom-2 right-2 rounded-full px-2 py-0.5 text-[8px] font-bold shadow-sm ${isAvailable ? "bg-[#dcfce7] text-[#166534]" : "bg-gray-100 text-gray-500"}`}>
-                        {isAvailable ? "Tersedia" : "Dipinjam"}
+                        {isAvailable ? t("status_available") : t("status_borrowed")}
                     </span>
                 </div>
                 <div className="p-3">
@@ -45,7 +47,7 @@ export function BookCard({ book, sticker }: BookCardProps) {
                     href={`/books/${book.slug}`}
                     className="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-[#152238] px-3 py-2 text-[10px] font-bold text-white transition hover:bg-[#2699fb]"
                 >
-                    {isAvailable ? "Lihat & Reservasi" : "Lihat detail"} <ArrowUpRight size={11} />
+                    {isAvailable ? t("btn_view_reserve") : t("btn_view_detail")} <ArrowUpRight size={11} />
                 </Link>
             </div>
         </article>
