@@ -8,6 +8,7 @@ import {
     Clock,
     FileText,
     HelpCircle,
+    LogOut,
     MessageSquare,
     Package,
     Plus,
@@ -15,6 +16,7 @@ import {
     Settings,
     Trash2,
     Upload,
+    User,
     Users,
 } from "lucide-react";
 import React, { useState } from "react";
@@ -214,13 +216,42 @@ export default function AdminPanel({
                                 </p>
                             </div>
 
-                            <button
-                                type="button"
-                                onClick={() => setActiveTab("guide")}
-                                className="inline-flex items-center gap-2 self-start rounded-full border border-blue-200 bg-blue-50/50 px-4 py-2 text-xs font-bold text-[#2699fb] transition hover:bg-blue-100/50 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-300"
-                            >
-                                <HelpCircle size={15} /> Baca Panduan Guru
-                            </button>
+                            <div className="flex flex-wrap items-center gap-2">
+                                <Link
+                                    href="/dashboard"
+                                    className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3.5 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 shadow-xs transition"
+                                >
+                                    <BookOpen size={14} className="text-[#2699fb]" />
+                                    <span>Ruang Saya (Dashboard)</span>
+                                </Link>
+
+                                <Link
+                                    href="/profile"
+                                    className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3.5 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 shadow-xs transition"
+                                >
+                                    <User size={14} className="text-slate-500" />
+                                    <span>Profil Saya</span>
+                                </Link>
+
+                                <button
+                                    type="button"
+                                    onClick={() => setActiveTab("guide")}
+                                    className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50/50 px-3.5 py-2 text-xs font-bold text-[#2699fb] hover:bg-blue-100/50 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-300 transition"
+                                >
+                                    <HelpCircle size={14} />
+                                    <span>Panduan Guru</span>
+                                </button>
+
+                                <Link
+                                    method="post"
+                                    as="button"
+                                    href="/logout"
+                                    className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3.5 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300 transition"
+                                >
+                                    <LogOut size={14} />
+                                    <span>Keluar</span>
+                                </Link>
+                            </div>
                         </div>
 
                         {/* Quick Stats Grid */}

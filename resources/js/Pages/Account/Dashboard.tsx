@@ -8,9 +8,12 @@ import {
     CheckCircle2,
     Clock,
     Flame,
+    LogOut,
+    Shield,
     Smartphone,
     Sparkles,
     User,
+    UserCog,
     ArrowRight,
 } from 'lucide-react';
 import React from 'react';
@@ -98,12 +101,40 @@ export default function Dashboard({
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                            {user && ['admin', 'librarian', 'teacher'].includes(user.role) && (
+                                <Link
+                                    href="/admin-panel"
+                                    className="inline-flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-2.5 text-xs font-bold text-[#2699fb] hover:bg-blue-100/70 dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-300 shadow-xs transition-colors"
+                                >
+                                    <Shield size={14} />
+                                    <span>Admin Panel</span>
+                                </Link>
+                            )}
+
+                            <Link
+                                href="/profile"
+                                className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 shadow-xs transition-colors"
+                            >
+                                <UserCog size={14} className="text-slate-500 dark:text-slate-400" />
+                                <span>Profil Saya</span>
+                            </Link>
+
                             <Link
                                 href="/catalog"
-                                className="rounded-xl bg-[#152238] px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#0f172a] transition-colors dark:bg-[#2699fb] dark:hover:bg-[#1c7ed6]"
+                                className="rounded-xl bg-[#152238] px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#0f172a] transition-colors dark:bg-[#2699fb] dark:hover:bg-[#1a83e0]"
                             >
-                                Cari & Pinjam Buku →
+                                Cari Buku →
+                            </Link>
+
+                            <Link
+                                method="post"
+                                as="button"
+                                href="/logout"
+                                className="inline-flex items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-xs font-bold text-rose-700 hover:bg-rose-100 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300 transition-colors"
+                            >
+                                <LogOut size={14} />
+                                <span>Keluar</span>
                             </Link>
                         </div>
                     </div>
