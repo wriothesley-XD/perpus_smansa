@@ -1,324 +1,50 @@
-import { Head, Link, router } from '@inertiajs/react';
-import { ArrowUpRight, BookOpen, Bookmark, CalendarDays, Headphones, Search, ShieldCheck, Sparkles, Sprout, Trophy, Users } from 'lucide-react';
-import React, { useState } from 'react';
+import { Link } from '@inertiajs/react';
+import { ArrowRight, ChevronLeft, ChevronRight, Search, Sparkles } from 'lucide-react';
+import SiteShell from '../Components/Common/SiteShell';
 import { BookCard } from '../Components/Common/BookCard';
-import {
-    BotanicalLeaf,
-    HandDrawnStar,
-    ReadMoreStamp,
-    RealPaperClip,
-    WashiTapeStrip,
-} from '../Components/Common/Ornaments';
-import { SiteShell } from '../Components/Common/SiteShell';
-import { Book, Event, LibraryStats, MagazineEdition, ReaderRank, SmansaWork } from '../types/library';
+import { Book, MagazineEdition, LibraryStats, SmansaWork } from '../types/library';
 
 interface HomeProps {
     stats: LibraryStats;
     popularBooks: Book[];
-    latestMagazines: MagazineEdition[];
-    topReaders: ReaderRank[];
-    upcomingEvents: Event[];
-    latestPodcasts: Event[];
+    latestMagazines: (MagazineEdition & { magazine?: { title: string; slug: string } })[];
     featuredWorks: SmansaWork[];
-    settings: {
-        library_name: string;
-        library_tagline: string;
-        operating_hours: string;
-        library_address: string;
-        contact_phone: string;
-    };
+    settings: { library_name: string; library_tagline: string; operating_hours: string; library_address: string; contact_phone: string };
 }
 
-export default function Home({ stats, popularBooks, latestMagazines, topReaders, upcomingEvents, latestPodcasts, featuredWorks }: HomeProps) {
-    const [searchQuery, setSearchQuery] = useState('');
+const featureCards = [
+    { eyebrow: 'E-Katalog', title: 'Cari koleksi buku', description: 'Temukan buku berdasarkan judul, penulis, atau kategori.', href: '/catalog', color: 'bg-[#eef7fb]', icon: '⌕' },
+    { eyebrow: 'E-Magazine', title: 'Baca digital', description: 'Nikmati majalah dan edisi pilihan kapan saja.', href: '/magazines', color: 'bg-[#fff5d9]', icon: '▤' },
+    { eyebrow: 'Kontak', title: 'Hubungi pustaka', description: 'Tanyakan koleksi atau bantuan peminjaman.', href: '/contact', color: 'bg-[#fbece5]', icon: '✦' },
+];
 
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (searchQuery.trim()) {
-            router.get('/catalog', { q: searchQuery.trim() });
-        } else {
-            router.get('/catalog');
-        }
-    };
-
+export default function Home({ stats = { total_books: 0, available_books: 0, total_authors: 0, total_categories: 0 }, popularBooks = [], latestMagazines = [] }: HomeProps) {
     return (
         <SiteShell>
-            <Head title="Perpustakaan Digital SMAN 1 Bukittinggi" />
-
-            {/* 1. HERO SECTION */}
-            <section className="paper-grain relative px-6 py-6 sm:px-10 md:py-12 overflow-hidden">
-                <div className="mx-auto max-w-7xl">
-                    <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8">
-                        
-                        {/* LEFT COLUMN */}
+            <div className="bg-[#fffdfa] text-[#172334]">
+                <section className="relative overflow-hidden px-5 pb-16 pt-12 sm:px-8 lg:px-12 lg:pb-24 lg:pt-20">
+                    <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.02fr_.98fr] lg:gap-20">
                         <div className="relative z-10">
-                            {/* Memo Note: Selamat Datang */}
-                            <div className="relative inline-block mb-4">
-                                <WashiTapeStrip width="60px" height="18px" color="rgba(254, 240, 138, 0.9)" rotate={-3} className="-top-2 left-4" />
-                                <div className="memo-note rotate-[-2deg] rounded px-3 py-1.5 text-[11px] font-handwriting text-slate-700 font-bold">
-                                    Selamat Datang di <br />
-                                    Perpustakaan Digital SMAN 1 Bukittinggi
-                                </div>
-                            </div>
-
-                            {/* Main Title */}
-                            <h1 className="font-display text-4xl sm:text-5xl lg:text-[56px] font-extrabold leading-[1.12] tracking-tight text-[#0F172A]">
-                                Temukan halaman <br />
-                                yang <span className="text-[#E37C5B]">menunggumu.</span>
-                            </h1>
-
-                            <p className="mt-4 max-w-lg text-xs sm:text-sm leading-relaxed text-slate-600">
-                                Jelajahi ribuan koleksi buku, majalah, dan sumber bacaan digital untuk mendukung perjalanan belajar dan impianmu.
-                            </p>
-
-                            {/* Search Box Pill */}
-                            <form
-                                onSubmit={handleSearch}
-                                className="editorial-surface mt-7 flex max-w-md items-center rounded-full px-4 py-1.5"
-                            >
-                                <Search size={16} className="text-slate-400 shrink-0" />
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Cari buku, penulis, atau kategori..."
-                                    className="w-full bg-transparent px-3 py-1 text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
-                                />
-                                <button
-                                    type="submit"
-                                    className="rounded-full bg-[#123B5D] px-7 py-2.5 text-xs font-bold text-white hover:bg-[#0C2D47] transition-colors"
-                                >
-                                    Cari
-                                </button>
+                            <div className="mb-7 inline-flex items-center gap-2 rounded-full bg-[#edf8fc] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[.18em] text-[#1e91ba]"><Sparkles size={13} /> Ruang baca SMANSA</div>
+                            <h1 className="max-w-xl font-display text-[clamp(3.2rem,7vw,6.6rem)] font-black leading-[.9] tracking-[-.065em] text-[#152235]">Temukan buku<br /><span className="text-[#159ac4]">favoritmu</span><br />hari ini.</h1>
+                            <p className="mt-7 max-w-md text-sm leading-7 text-[#687580]">Jelajahi koleksi Perpustakaan SMAN 1 Bukittinggi. Baca, temukan ide baru, dan tumbuh bersama pengetahuan.</p>
+                            <form action="/catalog" method="get" className="mt-8 flex max-w-lg items-center gap-2 rounded-2xl border border-[#e5e9e8] bg-white p-2 shadow-[0_15px_35px_-25px_rgba(21,77,100,.45)] focus-within:border-[#159ac4] focus-within:ring-4 focus-within:ring-[#159ac4]/10">
+                                <Search size={18} className="ml-3 shrink-0 text-[#8b9ba4]" /><input name="q" aria-label="Cari buku" placeholder="Cari judul, penulis, atau kategori..." className="min-w-0 flex-1 border-0 bg-transparent px-2 py-3 text-xs text-[#172334] outline-none placeholder:text-[#a9b4b8]" /><button className="rounded-xl bg-[#159ac4] px-5 py-3 text-xs font-bold text-white shadow-sm hover:bg-[#117fa3]">Cari</button>
                             </form>
-
-                            {/* Doodle text: start exploring -> */}
-                            <div className="mt-3 ml-6 font-handwriting text-base text-slate-500 font-bold rotate-[-1deg]">
-                                start exploring <ArrowUpRight size={14} className="inline" />
-                            </div>
+                            <div className="mt-8 flex flex-wrap gap-7 text-[11px] text-[#71808a]"><span><strong className="mr-1 text-xl font-black text-[#172334]">{stats.total_books || 0}</strong> koleksi buku</span><span><strong className="mr-1 text-xl font-black text-[#172334]">{stats.total_categories || 0}</strong> kategori</span><span><strong className="mr-1 text-xl font-black text-[#172334]">{stats.available_books || 0}</strong> siap dibaca</span></div>
                         </div>
-
-                        {/* RIGHT COLUMN: POLAROID PHOTO COLLAGE */}
-                        <div className="relative mx-auto w-full max-w-[440px] pt-4 pb-8 lg:pt-0">
-                            {/* Paperclip top */}
-                            <div className="absolute top-0 right-28 z-30">
-                                <RealPaperClip rotate={20} color="#788796" />
-                            </div>
-
-                            {/* Top right sticky note: Buku adalah jendela dunia :) */}
-                            <div className="absolute -top-4 right-2 z-20 hidden sm:block">
-                                <div className="memo-note rotate-[4deg] rounded p-2.5 text-center font-handwriting text-xs text-slate-700 leading-snug">
-                                    Buku <br />
-                                    adalah <br />
-                                    jendela <br />
-                                    dunia  :)
-                                </div>
-                            </div>
-
-                            {/* Main Tilted Photo Frame (Polaroid) */}
-                            <div className="card-polaroid relative z-10 mx-auto w-[85%] rotate-[3deg] transition-transform duration-500 hover:rotate-0">
-                                <div className="overflow-hidden rounded-sm bg-slate-200 aspect-[4/3] relative">
-                                    <img
-                                        src="/images/hero_library.jpg"
-                                        alt="Ruang Baca SMAN 1 Bukittinggi"
-                                        className="h-full w-full object-cover"
-                                    />
-                                </div>
-
-                                {/* Handwritten caption inside polaroid */}
-                                <div className="mt-3 text-center font-handwriting text-sm text-slate-600 font-semibold">
-                                    A place to grow ·
-                                </div>
-
-                                {/* READ MORE round badge */}
-                                <div className="absolute -left-6 top-1/2 -translate-y-1/2">
-                                    <Link href="/catalog">
-                                        <ReadMoreStamp />
-                                    </Link>
-                                </div>
-                            </div>
-
-                            {/* Botanical leaf beside the photo */}
-                            <div className="absolute bottom-2 -right-4 z-20 pointer-events-none">
-                                <BotanicalLeaf size={60} color="#355E49" rotate={25} />
-                            </div>
-                        </div>
-
+                        <div className="relative min-h-[360px] lg:min-h-[500px]"><div className="absolute right-4 top-2 h-16 w-16 rounded-full border border-[#f0d56d] lg:right-16" /><div className="absolute left-0 top-14 h-72 w-72 rounded-[48%] bg-[#f9d34f] lg:left-8 lg:h-[390px] lg:w-[390px]" /><div className="absolute bottom-2 right-0 h-64 w-64 rounded-[48%] bg-[#f4a56b] lg:right-8 lg:h-[350px] lg:w-[350px]" /><img src="/images/hero_library.jpg" alt="Ruang baca perpustakaan" className="absolute left-3 top-16 z-10 h-64 w-52 rotate-[-6deg] rounded-[30px] object-cover shadow-[0_25px_40px_-20px_rgba(35,50,60,.55)] lg:left-12 lg:top-24 lg:h-[350px] lg:w-[285px]" /><img src="/images/about_building.jpg" alt="Perpustakaan SMANSA" className="absolute bottom-8 right-2 z-20 h-52 w-44 rotate-[7deg] rounded-[28px] border-8 border-white object-cover shadow-[0_25px_40px_-20px_rgba(35,50,60,.55)] lg:bottom-4 lg:right-16 lg:h-[290px] lg:w-[240px]" /><div className="absolute bottom-0 left-2 z-30 rounded-2xl bg-white px-4 py-3 shadow-lg lg:left-0"><p className="text-[9px] font-bold uppercase tracking-[.16em] text-[#159ac4]">Open for everyone</p><p className="mt-1 text-xs font-bold text-[#172334]">Baca lebih banyak, tumbuh lebih jauh.</p></div></div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* 2. DAILY DISCOVERY / MOOD SHELF */}
-            <section className="px-6 py-10 sm:px-10">
-                <div className="mx-auto max-w-7xl">
-                    <div className="grid gap-4 lg:grid-cols-[1.05fr_.95fr]">
-                        <div className="relative overflow-hidden rounded-[20px] bg-[#123b5d] p-6 text-white shadow-[0_20px_35px_-22px_rgba(18,59,93,.65)] sm:p-7">
-                            <div className="absolute -right-12 -top-12 size-40 rounded-full border border-white/15" /><div className="absolute -bottom-16 right-16 size-32 rounded-full border border-[#f8d77e]/30" />
-                            <div className="relative flex items-center gap-2 text-[#f8d77e]"><Sparkles size={16} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em]">Daily discovery · 13 Sep</span></div>
-                            <h2 className="relative mt-5 max-w-md font-display text-3xl leading-tight sm:text-4xl">Satu halaman untuk menemani hari ini.</h2>
-                            <p className="relative mt-3 max-w-md text-sm leading-6 text-blue-100">Mulai dari buku yang sedang banyak dipinjam, atau temukan rak berdasarkan suasana bacamu.</p>
-                            <div className="relative mt-6 flex items-center gap-3"><Link href={popularBooks[0] ? `/books/${popularBooks[0].slug}` : '/catalog'} className="inline-flex items-center gap-2 rounded-full bg-[#f8d77e] px-4 py-2.5 text-xs font-bold text-[#123b5d]">Pilihan hari ini <ArrowUpRight size={14} /></Link><span className="font-handwriting text-sm text-blue-100">slow down & read</span></div>
-                        </div>
-                        <div className="editorial-surface rounded-[20px] p-5 sm:p-6"><div className="flex items-center justify-between"><div><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#e37c5b]">Mood shelf</span><h2 className="mt-1 font-display text-2xl font-bold text-[#19283a] dark:text-white">Pilih suasanamu.</h2></div><Bookmark size={20} className="text-[#123b5d]" /></div><div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3">{[{ label: 'Fokus & tenang', query: 'sains', color: 'bg-[#e8f1f5]' }, { label: 'Imajinasi', query: 'fiksi', color: 'bg-[#f8e6df]' }, { label: 'Persiapan ujian', query: 'pelajaran', color: 'bg-[#f8f0d5]' }, { label: 'Budaya lokal', query: 'budaya', color: 'bg-[#e6eee3]' }, { label: 'Baca santai', query: 'novel', color: 'bg-[#eee6f1]' }, { label: 'Coba hal baru', query: '', color: 'bg-[#e9e7df]' }].map((mood) => <Link key={mood.label} href={mood.query ? `/catalog?q=${mood.query}` : '/catalog'} className={`group rounded-xl ${mood.color} p-3 transition hover:-translate-y-1 hover:shadow-sm`}><span className="block size-2 rounded-full bg-[#e37c5b] transition group-hover:scale-150" /><span className="mt-7 block text-[11px] font-bold leading-tight text-[#253544]">{mood.label}</span><ArrowUpRight size={13} className="mt-2 text-[#70808a] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /></Link>)}</div></div>
-                    </div>
-                </div>
-            </section>
+                <section className="border-y border-[#edf0ee] bg-[#fbfcfa] px-5 py-14 sm:px-8 lg:px-12 lg:py-20"><div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[.8fr_1.2fr]"><div><p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#159ac4]">Semua ada di satu tempat</p><h2 className="mt-3 max-w-sm font-display text-4xl font-black leading-[.98] tracking-[-.045em] text-[#172334] sm:text-5xl">Satu ruang untuk semua rasa ingin tahu.</h2><p className="mt-5 max-w-sm text-sm leading-7 text-[#71808a]">Mulai dari buku pelajaran, bacaan ringan, sampai karya warga sekolah—semuanya mudah ditemukan di sini.</p><ul className="mt-6 grid gap-3 text-xs font-semibold text-[#44535d]"><li>✓ Koleksi terkurasi untuk warga sekolah</li><li>✓ Reservasi buku tanpa antre panjang</li><li>✓ Akses majalah digital pilihan</li></ul><Link href="/information" className="mt-7 inline-flex items-center gap-2 text-xs font-bold text-[#159ac4]">Lihat semua fitur <ArrowRight size={14} /></Link></div><div className="grid gap-4 sm:grid-cols-3">{featureCards.map((card) => <Link key={card.href} href={card.href} className={`${card.color} group rounded-[26px] p-5 shadow-[0_18px_30px_-25px_rgba(34,54,64,.45)] transition hover:-translate-y-2`}><div className="flex h-28 items-end justify-between"><span className="grid size-12 place-items-center rounded-2xl bg-white/75 text-2xl text-[#159ac4] shadow-sm">{card.icon}</span><ArrowRight size={17} className="text-[#60727b] transition group-hover:translate-x-1" /></div><p className="mt-5 text-[9px] font-bold uppercase tracking-[.16em] text-[#71808a]">{card.eyebrow}</p><h3 className="mt-1 font-display text-xl font-black leading-tight text-[#172334]">{card.title}</h3><p className="mt-2 text-xs leading-5 text-[#71808a]">{card.description}</p><span className="mt-5 inline-flex rounded-full border border-[#159ac4]/40 px-3 py-1.5 text-[10px] font-bold text-[#159ac4]">Buka</span></Link>)}</div></div></section>
 
-            {/* 3. BUKU TERPOPULER SECTION */}
-            <section className="px-6 py-10 sm:px-10">
-                <div className="mx-auto max-w-7xl">
-                    {/* Header bar */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A]">
-                                Buku Terpopuler
-                            </h2>
-                            <HandDrawnStar size={20} color="#E37C5B" />
-                        </div>
-                        <Link
-                            href="/catalog"
-                            className="font-handwriting text-base font-bold text-[#E37C5B] hover:underline"
-                        >
-                            Lihat Semua →
-                        </Link>
-                    </div>
+                <section className="px-5 py-14 sm:px-8 lg:px-12 lg:py-20"><div className="mx-auto max-w-7xl"><div className="flex items-end justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#159ac4]">Pilihan pembaca</p><h2 className="mt-2 font-display text-3xl font-black tracking-[-.04em] text-[#172334] sm:text-4xl">Buku terbaru</h2></div><Link href="/catalog" className="hidden items-center gap-1 text-xs font-bold text-[#159ac4] sm:flex">Lihat semua <ArrowRight size={14} /></Link></div><div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">{popularBooks?.slice(0, 5).map((book) => <BookCard key={book.id} book={book} hasClip={false} />)}</div>{(!popularBooks || popularBooks.length === 0) && <p className="mt-8 rounded-2xl bg-[#f4f8f7] p-8 text-center text-sm text-[#71808a]">Koleksi buku akan segera hadir.</p>}<div className="mt-7 flex justify-end gap-2"><button aria-label="Buku sebelumnya" className="grid size-9 place-items-center rounded-full border border-[#dce5e5] text-[#71808a]"><ChevronLeft size={15} /></button><button aria-label="Buku berikutnya" className="grid size-9 place-items-center rounded-full border border-[#dce5e5] text-[#71808a]"><ChevronRight size={15} /></button></div></div></section>
 
-                    {/* Books Row */}
-                    <div className="relative mt-8">
-                        {/* Most Picked Ribbon on top left */}
-                        <div className="absolute -top-6 -left-2 z-20 hidden md:block">
-                            <span className="inline-block bg-white border border-slate-200 px-3 py-1 font-handwriting text-sm font-bold text-slate-700 rotate-[-6deg] shadow-sm rounded-sm">
-                                Most Picked
-                            </span>
-                        </div>
+                <section className="bg-[#f4f8f7] px-5 py-14 sm:px-8 lg:px-12 lg:py-20"><div className="mx-auto max-w-7xl"><div className="flex items-end justify-between"><div><p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#159ac4]">Bacaan digital</p><h2 className="mt-2 font-display text-3xl font-black tracking-[-.04em] text-[#172334] sm:text-4xl">E-Magazine terbaru</h2></div><Link href="/magazines" className="hidden items-center gap-1 text-xs font-bold text-[#159ac4] sm:flex">Lihat semua <ArrowRight size={14} /></Link></div><div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{latestMagazines?.map((edition) => <Link key={edition.id} href={`/magazines/${edition.magazine?.slug ?? edition.magazine_id}`} className="group flex gap-4 rounded-2xl bg-white p-3 shadow-[0_15px_30px_-25px_rgba(34,54,64,.5)]"><div className="h-36 w-28 shrink-0 overflow-hidden rounded-xl bg-[#edf1ef]"><img src={edition.cover_image || '/images/hero_library.jpg'} alt={edition.edition_title} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" /></div><div className="py-2"><p className="text-[9px] font-bold uppercase tracking-[.16em] text-[#159ac4]">Edisi {edition.edition_number}</p><h3 className="mt-2 font-display text-xl font-black leading-tight text-[#172334]">{edition.edition_title}</h3><p className="mt-2 text-xs leading-5 text-[#71808a]">{edition.description || 'Temukan cerita dan wawasan terbaru dari ruang baca kami.'}</p><span className="mt-4 inline-flex items-center gap-1 text-[10px] font-bold text-[#159ac4]">Baca edisi <ArrowRight size={12} /></span></div></Link>)}</div>{(!latestMagazines || latestMagazines.length === 0) && <p className="mt-8 rounded-2xl bg-white p-8 text-center text-sm text-[#71808a]">Majalah digital akan segera hadir.</p>}</div></section>
 
-                        {/* New! doodle on top right */}
-                        <div className="absolute -top-7 right-6 z-20 hidden md:block">
-                            <span className="font-handwriting text-2xl font-bold text-[#E37C5B] rotate-[8deg]">
-                                New!
-                            </span>
-                        </div>
-
-                        {/* Book Grid: 5 columns on desktop matching mockup */}
-                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                            {popularBooks && popularBooks.length > 0 ? (
-                                popularBooks.slice(0, 5).map((book, idx) => (
-                                    <BookCard
-                                        key={book.id}
-                                        book={book}
-                                        hasClip={true}
-                                        sticker={idx === 2 ? 'Koleksi' : undefined}
-                                    />
-                                ))
-                            ) : (
-                                <div className="col-span-full py-8 text-center text-xs text-slate-400">
-                                    Memuat koleksi buku...
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* 3. READING ROOM COMMUNITY RAIL */}
-            <section className="px-6 py-12 sm:px-10">
-                <div className="mx-auto max-w-7xl">
-                    <div className="mb-6 flex items-end justify-between gap-4">
-                        <div>
-                            <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.2em] text-[#123B5D]">THE READING ROOM</span>
-                            <h2 className="mt-2 font-display text-2xl font-extrabold text-[#0F172A] sm:text-3xl">Perpustakaan yang terus bergerak.</h2>
-                        </div>
-                        <Link href="/events" className="hidden items-center gap-1 font-handwriting text-base font-bold md:flex">Jelajahi komunitas <ArrowUpRight size={16} /></Link>
-                    </div>
-
-                    <div className="grid gap-4 lg:grid-cols-[1.1fr_.9fr_.9fr]">
-                        <div className="editorial-surface relative overflow-hidden rounded-2xl bg-[#123B5D] p-6 text-white lg:row-span-2">
-                            <div className="absolute -right-8 -top-8 size-32 rounded-full border border-white/20" />
-                            <div className="relative flex items-center gap-2 text-blue-200"><Trophy size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.16em]">Reading wall · minggu ini</span></div>
-                            <h3 className="relative mt-8 max-w-xs font-display text-3xl font-bold leading-tight">Cerita bacaan warga SMANSA.</h3>
-                            <div className="relative mt-8 space-y-3">
-                                {topReaders.length > 0 ? topReaders.map((reader, index) => (
-                                    <div key={reader.id} className="flex items-center gap-3 rounded-xl bg-white/10 p-3">
-                                        <span className="grid size-8 place-items-center rounded-full bg-[#F8D77E] font-display text-sm font-bold text-[#123B5D]">{index + 1}</span>
-                                        <div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{reader.name}</p><p className="text-[10px] text-blue-200">{reader.class || 'Pembaca aktif'}</p></div>
-                                        <strong className="font-mono-display text-xs text-[#F8D77E]">{reader.loans_count} buku</strong>
-                                    </div>
-                                )) : <p className="text-sm text-blue-100">Papan pembaca akan muncul setelah transaksi peminjaman tercatat.</p>}
-                            </div>
-                            <Link href="/ranking" className="relative mt-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-[#123B5D]">Lihat ranking lengkap <ArrowUpRight size={14} /></Link>
-                        </div>
-
-                        <div className="editorial-surface rounded-2xl bg-[#fffdf7] p-5">
-                            <div className="flex items-center justify-between"><span className="flex items-center gap-2 text-[#123B5D]"><CalendarDays size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider">Agenda & Duta</span></span><Link href="/events" className="font-handwriting text-sm font-bold">Semua →</Link></div>
-                            <div className="mt-5 space-y-3">{upcomingEvents.length > 0 ? upcomingEvents.map((event) => <Link key={event.id} href={`/events/${event.slug}`} className="block rounded-xl bg-[#eaf5ff] p-3 transition hover:-translate-y-0.5"><p className="text-sm font-bold text-[#0F172A]">{event.title}</p><p className="mt-1 text-[10px] text-slate-500">{event.event_date || 'Agenda terbaru'} {event.location ? `• ${event.location}` : ''}</p></Link>) : <p className="text-xs text-slate-500">Agenda baru sedang disiapkan oleh tim perpustakaan.</p>}</div>
-                        </div>
-
-                        <div className="editorial-surface rounded-2xl bg-[#fffdf7] p-5">
-                            <div className="flex items-center gap-2 text-[#123B5D]"><Headphones size={17} /><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider">Podcast Duta</span></div>
-                            <div className="mt-5 space-y-3">{latestPodcasts.length > 0 ? latestPodcasts.map((podcast) => <Link key={podcast.id} href={`/events/${podcast.slug}`} className="flex items-center gap-3 rounded-xl border border-[#eadbce] p-3 transition hover:-translate-y-0.5"><span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#F8D77E] text-[#123B5D]">▶</span><span className="min-w-0"><strong className="block truncate text-sm text-[#0F172A]">{podcast.title}</strong><small className="text-[10px] text-slate-500">{podcast.host_name || 'Duta literasi SMANSA'}</small></span></Link>) : <p className="text-xs text-slate-500">Episode podcast perdana segera hadir.</p>}</div>
-                        </div>
-
-                        <div className="editorial-surface rounded-2xl bg-[#fffdf7] p-5 lg:col-span-2">
-                            <div className="flex items-center justify-between"><span className="font-mono-display text-[10px] font-bold uppercase tracking-wider text-[#123B5D]">Karya SMANSA</span><Link href="/karya-smansa" className="font-handwriting text-sm font-bold">Buka galeri →</Link></div>
-                            <div className="mt-4 grid gap-3 sm:grid-cols-2">{featuredWorks.length > 0 ? featuredWorks.map((work) => <Link key={work.id} href={`/karya-smansa/${work.slug}`} className="rounded-xl bg-[#f4efeA] p-3 transition hover:-translate-y-0.5"><span className="font-mono-display text-[9px] font-bold uppercase tracking-wider text-[#E37C5B]">{work.category_label || work.category}</span><h3 className="mt-1 font-display text-base font-bold text-[#0F172A]">{work.title}</h3><p className="mt-1 text-[10px] text-slate-500">{work.author_name} • {work.author_type === 'teacher' ? 'Guru' : 'Siswa'}</p></Link>) : <p className="text-xs text-slate-500">Karya pilihan guru dan siswa akan tampil di sini.</p>}</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* 4. VALUE PROPOSITION CARDS / BENEFIT SECTION */}
-            <section className="torn-top paper-lines relative mt-4 bg-[#eaf5ff] px-6 py-12 sm:px-10">
-                <div className="mx-auto max-w-7xl">
-                    <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
-                        
-                        {/* Left handwritten annotation */}
-                        <div className="font-handwriting text-lg text-[#315a7d] font-bold rotate-[-3deg] shrink-0">
-                            Lebih dari sekadar buku ~
-                        </div>
-
-                        {/* 4 Feature Items */}
-                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 flex-1">
-                            {/* Item 1 */}
-                            <div className="group rounded-xl border border-[#d4e5f2] bg-white/75 p-3 text-center shadow-xs transition hover:-translate-y-1">
-                                <div className="mx-auto grid size-9 place-items-center rounded-full bg-[#123b5d] text-[#f8d77e] transition group-hover:rotate-[-8deg]"><BookOpen size={17} /></div>
-                                <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Koleksi Lengkap</h4>
-                                <p className="text-[10px] text-slate-500">Buku fisik & digital</p>
-                            </div>
-
-                            {/* Item 2 */}
-                            <div className="group rounded-xl border border-[#d4e5f2] bg-white/75 p-3 text-center shadow-xs transition hover:-translate-y-1">
-                                <div className="mx-auto grid size-9 place-items-center rounded-full bg-[#e37c5b] text-white transition group-hover:rotate-[-8deg]"><Users size={17} /></div>
-                                <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Akses Mudah</h4>
-                                <p className="text-[10px] text-slate-500">Kapan saja, di mana saja</p>
-                            </div>
-
-                            {/* Item 3 */}
-                            <div className="group rounded-xl border border-[#d4e5f2] bg-white/75 p-3 text-center shadow-xs transition hover:-translate-y-1">
-                                <div className="mx-auto grid size-9 place-items-center rounded-full bg-[#7897a6] text-white transition group-hover:rotate-[-8deg]"><ShieldCheck size={17} /></div>
-                                <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Terpercaya</h4>
-                                <p className="text-[10px] text-slate-500">Untuk seluruh warga sekolah</p>
-                            </div>
-
-                            {/* Item 4 */}
-                            <div className="group rounded-xl border border-[#d4e5f2] bg-white/75 p-3 text-center shadow-xs transition hover:-translate-y-1">
-                                <div className="mx-auto grid size-9 place-items-center rounded-full bg-[#668a69] text-white transition group-hover:rotate-[-8deg]"><Sprout size={17} /></div>
-                                <h4 className="mt-1 font-display text-xs font-bold text-[#0F172A]">Ruang Tumbuh</h4>
-                                <p className="text-[10px] text-slate-500">Bersama pengetahuan</p>
-                            </div>
-                        </div>
-
-                        {/* Right sticky note: Good books, better days! :) */}
-                        <div className="shrink-0 hidden lg:block">
-                            <WashiTapeStrip width="45px" height="15px" color="rgba(186, 215, 245, 0.85)" rotate={-5} className="-top-2 left-4" />
-                            <div className="memo-note rotate-[4deg] rounded px-3 py-2 text-center font-handwriting text-xs text-slate-700 leading-tight">
-                                Good books, <br />
-                                better days.
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
+                <section className="px-5 py-14 sm:px-8 lg:px-12 lg:py-20"><div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-8 rounded-[32px] bg-[#142c43] px-7 py-10 text-center text-white sm:px-12 lg:flex-row lg:text-left"><div><p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#f4d35e]">Mulai perjalanan membaca</p><h2 className="mt-3 max-w-xl font-display text-3xl font-black leading-tight sm:text-4xl">Sudah siap menemukan buku berikutnya?</h2><p className="mt-3 max-w-lg text-sm leading-6 text-blue-100">Koleksi baru menunggumu. Cari buku, simpan favorit, dan reservasi dengan mudah.</p></div><Link href="/catalog" className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#159ac4] px-6 py-3.5 text-xs font-bold text-white hover:bg-[#38afd0]">Cari buku sekarang <ArrowRight size={15} /></Link></div></section>
+            </div>
         </SiteShell>
     );
 }
