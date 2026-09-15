@@ -65,16 +65,47 @@ class AdminController extends Controller
             'library_name'              => LibrarySetting::get('library_name', 'Perpustakaan SMAN 1 Bukittinggi'),
             'library_address'           => LibrarySetting::get('library_address', 'Jl. Syekh M. Jamil Jambek No. 36, Bukittinggi'),
             'contact_phone'             => LibrarySetting::get('contact_phone', '(0752) 22543'),
+            'inlislite_guestbook_url'   => LibrarySetting::get('inlislite_guestbook_url', env('INLISLITE_GUESTBOOK_URL', 'http://192.168.1.100:8123/inlislite3/buku-tamu')),
         ];
 
+        $inlisliteInfo = [
+            'guestbook_url'  => $settings['inlislite_guestbook_url'],
+            'connected'      => false,
+            'today_visitors' => 0,
+            'message'        => 'Koneksi database INLISLite siap terhubung saat server lokal perpustakaan diaktifkan.',
+        ];
+
+        try {
+            if (config('database.connections.inlislite')) {
+                $pdo = \Illuminate\Support\Facades\DB::connection('inlislite')->getPdo();
+                if ($pdo) {
+                    $inlisliteInfo['connected'] = true;
+                    $tables = \Illuminate\Support\Facades\DB::connection('inlislite')->select("SHOW TABLES LIKE 'memberguesses'");
+                    if (!empty($tables)) {
+                        $inlisliteInfo['today_visitors'] = \Illuminate\Support\Facades\DB::connection('inlislite')
+                            ->table('memberguesses')
+                            ->whereDate('CreateDate', now()->toDateString())
+                            ->count();
+                        $inlisliteInfo['message'] = 'Terhubung langsung ke database INLISLite v3 Perpusnas.';
+                    } else {
+                        $inlisliteInfo['message'] = 'Terhubung ke server MySQL INLISLite.';
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            $inlisliteInfo['connected'] = false;
+            $inlisliteInfo['message'] = 'Menunggu server lokal perpustakaan sekolah aktif di jaringan.';
+        }
+
         return Inertia::render('Admin/Panel', [
-            'stats'      => $stats,
-            'books'      => $books,
-            'magazines'  => $magazines,
-            'events'     => $events,
-            'activeLoans'=> $activeLoans,
-            'categories' => $categories,
-            'settings'   => $settings,
+            'stats'         => $stats,
+            'books'         => $books,
+            'magazines'     => $magazines,
+            'events'        => $events,
+            'activeLoans'   => $activeLoans,
+            'categories'    => $categories,
+            'settings'      => $settings,
+            'inlisliteInfo' => $inlisliteInfo,
         ]);
     }
 
@@ -269,14 +300,18 @@ class AdminController extends Controller
             'online_loan_duration_days' => 'required|integer|min:1|max:30',
             'max_online_loans'          => 'required|integer|min:1|max:10',
             'library_name'              => 'required|string|max:255',
+            'library_address'           => 'nullable|string|max:255',
             'contact_phone'             => 'nullable|string|max:50',
+            'inlislite_guestbook_url'   => 'nullable|string|max:255',
         ]);
 
         foreach ($validated as $key => $value) {
-            LibrarySetting::set($key, (string)$value);
+            if ($value !== null) {
+                LibrarySetting::set($key, (string)$value);
+            }
         }
 
-        return back()->with('status', 'Pengaturan perpustakaan berhasil diperbarui.');
+        return back()->with('status', 'Pengaturan perpustakaan dan tautan INLISLite berhasil disimpan.');
     }
 
     /**
@@ -462,3 +497,4 @@ class AdminController extends Controller
         ]);
     }
 }
+

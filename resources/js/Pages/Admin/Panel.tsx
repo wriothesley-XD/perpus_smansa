@@ -9,6 +9,7 @@ import {
     CheckCircle2,
     Clock,
     Download,
+    ExternalLink,
     FileText,
     HelpCircle,
     LogOut,
@@ -92,6 +93,13 @@ interface PanelProps {
         library_name: string;
         library_address: string;
         contact_phone: string;
+        inlislite_guestbook_url?: string;
+    };
+    inlisliteInfo?: {
+        guestbook_url: string;
+        connected: boolean;
+        today_visitors: number;
+        message: string;
     };
 }
 
@@ -105,6 +113,7 @@ export default function AdminPanel({
     activeLoans,
     categories,
     settings,
+    inlisliteInfo,
 }: PanelProps) {
     const [activeTab, setActiveTab] = useState<TabType>("circulation");
     const [showAddBookModal, setShowAddBookModal] = useState(false);
@@ -1065,6 +1074,43 @@ export default function AdminPanel({
                                     <li>• Klik tombol <em>Unduh Laporan Excel</em> di kanan atas panel admin.</li>
                                     <li>• File berformat <code>.CSV</code> siap dibuka di Microsoft Excel dengan data lengkap nomor induk siswa, judul buku, dan tanggal sirkulasi.</li>
                                 </ul>
+                            </div>
+
+                            <div className="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-5 dark:border-indigo-900/40 dark:bg-slate-800/60">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                    <div>
+                                        <h3 className="flex items-center gap-2 font-display text-sm font-bold text-indigo-700 dark:text-indigo-400">
+                                            <CheckCircle2 size={16} /> 4. Integrasi INLISLite Perpusnas RI & Buku Tamu Masuk
+                                        </h3>
+                                        <p className="mt-1 text-xs text-gray-600 dark:text-slate-300">
+                                            Sistem web ini terhubung langsung dengan pangkalan data INLISLite v3 yang terpasang pada komputer server lokal perpustakaan sekolah.
+                                        </p>
+                                    </div>
+                                    <div className="shrink-0">
+                                        <a
+                                            href={inlisliteInfo?.guestbook_url || "http://192.168.1.100:8123/inlislite3/buku-tamu"}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-indigo-700 transition"
+                                        >
+                                            <ExternalLink size={14} /> Buka Layar Buku Tamu (Perangkat Pintu)
+                                        </a>
+                                    </div>
+                                </div>
+                                <div className="mt-4 grid gap-3 sm:grid-cols-2 text-xs border-t border-indigo-100/60 dark:border-slate-700 pt-3">
+                                    <div className="flex items-center justify-between rounded-lg bg-white/70 dark:bg-slate-900/60 p-3 border border-indigo-100/60 dark:border-slate-800">
+                                        <span className="text-gray-500 dark:text-slate-400">Status Database INLISLite:</span>
+                                        <span className={`font-bold ${inlisliteInfo?.connected ? "text-emerald-600" : "text-amber-600"}`}>
+                                            {inlisliteInfo?.connected ? "Terhubung (Database Lokal)" : "Siap Terhubung di Jaringan Sekolah"}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between rounded-lg bg-white/70 dark:bg-slate-900/60 p-3 border border-indigo-100/60 dark:border-slate-800">
+                                        <span className="text-gray-500 dark:text-slate-400">IP / URL Buku Tamu Lokal:</span>
+                                        <span className="font-mono font-bold text-indigo-700 dark:text-indigo-300 truncate max-w-[200px]">
+                                            {inlisliteInfo?.guestbook_url || "192.168.1.100"}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
