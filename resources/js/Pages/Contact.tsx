@@ -47,9 +47,9 @@ export default function Contact({ settings }: ContactProps) {
                             <div className="flex items-center gap-3 mt-2">
                                 <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F172A]">
                                     Kami siap <br />
-                                    <span className="text-[#E37C5B]">membantu.</span>
+                                    <span className="text-[#FF8E4F]">membantu.</span>
                                 </h1>
-                                <HandDrawnStar size={24} color="#E37C5B" className="mt-2" />
+                                <HandDrawnStar size={24} color="#FF8E4F" className="mt-2" />
                             </div>
 
                             <p className="mt-4 max-w-md text-xs sm:text-sm leading-relaxed text-slate-600">
@@ -90,7 +90,7 @@ export default function Contact({ settings }: ContactProps) {
                             <div className="space-y-6">
                             {/* Alamat */}
                             <div className="flex items-start gap-4">
-                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#123B5D] text-white text-xs">
+                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#152238] text-white text-xs">
                                     <MapPin size={15} />
                                 </div>
                                 <div>
@@ -103,12 +103,12 @@ export default function Contact({ settings }: ContactProps) {
 
                             {/* Email */}
                             <div className="flex items-start gap-4">
-                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#123B5D] text-white text-xs">
+                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#152238] text-white text-xs">
                                     <Mail size={15} />
                                 </div>
                                 <div>
                                     <h4 className="font-display text-xs font-bold uppercase tracking-wider text-slate-400">Email</h4>
-                                    <p className="mt-1 text-xs text-[#123B5D] font-semibold">
+                                    <p className="mt-1 text-xs text-[#152238] font-semibold">
                                         {settings.contact_email || 'perpustakaan@sman1bukittinggi.sch.id'}
                                     </p>
                                 </div>
@@ -116,7 +116,7 @@ export default function Contact({ settings }: ContactProps) {
 
                             {/* Telepon */}
                             <div className="flex items-start gap-4">
-                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#123B5D] text-white text-xs">
+                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#152238] text-white text-xs">
                                     <Phone size={15} />
                                 </div>
                                 <div>
@@ -129,7 +129,7 @@ export default function Contact({ settings }: ContactProps) {
 
                             {/* Jam Operasional */}
                             <div className="flex items-start gap-4">
-                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#123B5D] text-white text-xs">
+                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#152238] text-white text-xs">
                                     <Clock3 size={15} />
                                 </div>
                                 <div>
@@ -151,13 +151,13 @@ export default function Contact({ settings }: ContactProps) {
                                         className="pointer-events-none h-full w-full rounded border-0"
                                         loading="lazy"
                                     />
-                                    <div className="absolute inset-2 flex items-center justify-center rounded bg-[#123B5D]/0 transition group-hover:bg-[#123B5D]/15">
-                                        <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-2 text-[10px] font-bold text-[#123B5D] opacity-0 shadow-md transition group-hover:opacity-100">Buka navigasi <ArrowUpRight size={12} /></span>
+                                    <div className="absolute inset-2 flex items-center justify-center rounded bg-[#152238]/0 transition group-hover:bg-[#152238]/15">
+                                        <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-2 text-[10px] font-bold text-[#152238] opacity-0 shadow-md transition group-hover:opacity-100">Buka navigasi <ArrowUpRight size={12} /></span>
                                     </div>
                                 </div>
                                 {/* Sticky note location */}
                                 <div className="absolute -bottom-3 right-4 z-20">
-                                    <div className="memo-note rotate-[-2deg] rounded px-3 py-1.5 text-center font-handwriting text-xs text-[#E37C5B] font-bold">
+                                    <div className="memo-note rotate-[-2deg] rounded px-3 py-1.5 text-center font-handwriting text-xs text-[#FF8E4F] font-bold">
                                         Lokasi Kami: Di Jantung SMAN 1 Bukittinggi ·
                                     </div>
                                 </div>
@@ -190,7 +190,7 @@ export default function Contact({ settings }: ContactProps) {
                                                 required
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
-                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#123B5D] focus:bg-white focus:outline-none"
+                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#152238] focus:bg-white focus:outline-none"
                                             />
                                         </div>
 
@@ -203,7 +203,7 @@ export default function Contact({ settings }: ContactProps) {
                                                 required
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
-                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#123B5D] focus:bg-white focus:outline-none"
+                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#152238] focus:bg-white focus:outline-none"
                                             />
                                         </div>
 
@@ -216,13 +216,13 @@ export default function Contact({ settings }: ContactProps) {
                                                 rows={4}
                                                 value={message}
                                                 onChange={(e) => setMessage(e.target.value)}
-                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#123B5D] focus:bg-white focus:outline-none"
+                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#152238] focus:bg-white focus:outline-none"
                                             />
                                         </div>
 
                                         <button
                                             type="submit"
-                                            className="w-full rounded-full bg-[#123B5D] py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#0C2D47] transition-colors"
+                                            className="w-full rounded-full bg-[#152238] py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#0f172a] transition-colors"
                                         >
                                             Kirim →
                                         </button>

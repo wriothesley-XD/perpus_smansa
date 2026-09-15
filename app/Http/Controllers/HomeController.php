@@ -26,7 +26,7 @@ class HomeController extends Controller
 
         $popularBooks = Book::with(['category', 'authors', 'copies'])
             ->popular()
-            ->limit(4)
+            ->limit(5)
             ->get();
 
         $latestMagazines = MagazineEdition::with('magazine')

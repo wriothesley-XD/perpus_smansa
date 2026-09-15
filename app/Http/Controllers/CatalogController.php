@@ -6,6 +6,7 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\DdcClass;
+use App\Models\MagazineEdition;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -65,12 +66,17 @@ class CatalogController extends Controller
         $categories = Category::withCount('books')->orderBy('name')->get();
         $ddcClasses = DdcClass::orderBy('code')->get();
         $authors = Author::orderBy('name')->pluck('name');
+        $latestMagazines = MagazineEdition::with('magazine')
+            ->orderByDesc('publication_date')
+            ->limit(4)
+            ->get();
 
         return Inertia::render('Catalog/Index', [
             'books' => $books,
             'categories' => $categories,
             'ddcClasses' => $ddcClasses,
             'authors' => $authors,
+            'latestMagazines' => $latestMagazines,
             'filters' => [
                 'q' => $search ?? '',
                 'category' => $categorySlug ?? '',

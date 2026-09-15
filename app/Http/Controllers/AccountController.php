@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Loan;
 use App\Models\Book;
 use App\Models\Reservation;
+use App\Models\ReadingProgress;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -34,6 +35,10 @@ class AccountController extends Controller
             ->limit(10)
             ->get();
 
+        $readingProgresses = ReadingProgress::where('user_id', $user->id)
+            ->get()
+            ->keyBy('book_id');
+
         $completedReads = Loan::where('user_id', $user->id)->where('status', 'returned')->count();
         $passport = [
             'total_reads' => $completedReads,
@@ -54,6 +59,7 @@ class AccountController extends Controller
             'reservations' => $reservations,
             'passport' => $passport,
             'recommendations' => $recommendations,
+            'readingProgresses' => $readingProgresses,
         ]);
     }
 }

@@ -8,6 +8,9 @@ export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
+        identifier_number: '',
+        class_name: '',
+        phone_number: '',
         password: '',
         password_confirmation: '',
     });
@@ -29,14 +32,14 @@ export default function Register() {
                     Buat akun anggota
                 </h1>
                 <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                    Daftar untuk mengakses katalog digital dan fitur peminjaman buku.
+                    Daftar untuk mengakses katalog digital, peminjaman e-book, dan reservasi buku fisik.
                 </p>
             </div>
 
-            <form onSubmit={submit} className="mt-8 space-y-5">
+            <form onSubmit={submit} className="mt-8 space-y-4">
                 {/* Name */}
                 <div>
-                    <label htmlFor="name" className="block text-sm font-semibold text-[#0F172A] dark:text-slate-200 mb-1.5">
+                    <label htmlFor="name" className="block text-sm font-semibold text-[#0F172A] dark:text-slate-200 mb-1">
                         Nama Lengkap
                     </label>
                     <div className="relative">
@@ -52,16 +55,16 @@ export default function Register() {
                             autoFocus
                             onChange={(e) => setData('name', e.target.value)}
                             required
-                            placeholder="Nama sesuai rapor / ID karyawan"
-                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#123B5D] focus:ring-2 focus:ring-[#123B5D]/20"
+                            placeholder="Nama lengkap siswa / guru"
+                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-2.5 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#2699fb] focus:ring-2 focus:ring-[#2699fb]/20"
                         />
                     </div>
-                    <InputError message={errors.name} className="mt-1.5" />
+                    <InputError message={errors.name} className="mt-1" />
                 </div>
 
                 {/* Email */}
                 <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-[#0F172A] dark:text-slate-200 mb-1.5">
+                    <label htmlFor="email" className="block text-sm font-semibold text-[#0F172A] dark:text-slate-200 mb-1">
                         Alamat Email
                     </label>
                     <div className="relative">
@@ -77,10 +80,75 @@ export default function Register() {
                             onChange={(e) => setData('email', e.target.value)}
                             required
                             placeholder="nama@email.com"
-                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#123B5D] focus:ring-2 focus:ring-[#123B5D]/20"
+                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-2.5 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#2699fb] focus:ring-2 focus:ring-[#2699fb]/20"
                         />
                     </div>
-                    <InputError message={errors.email} className="mt-1.5" />
+                    <InputError message={errors.email} className="mt-1" />
+                </div>
+
+                {/* Bagian Khusus Warga SMANSA: NIS/NISN & WhatsApp */}
+                <div className="rounded-2xl border border-blue-100 bg-[#f0f7ff]/60 p-4 dark:border-blue-900/40 dark:bg-slate-800/80">
+                    <p className="text-xs font-bold text-[#2699fb] uppercase tracking-wider mb-2.5">
+                        Khusus Siswa SMAN 1 Bukittinggi (Opsional)
+                    </p>
+
+                    <div className="grid gap-3 sm:grid-cols-2">
+                        {/* NIS / NISN */}
+                        <div>
+                            <label htmlFor="identifier_number" className="block text-xs font-semibold text-[#152238] dark:text-slate-200 mb-1">
+                                NIS / NISN
+                            </label>
+                            <input
+                                id="identifier_number"
+                                type="text"
+                                name="identifier_number"
+                                value={data.identifier_number}
+                                onChange={(e) => setData('identifier_number', e.target.value)}
+                                placeholder="Contoh: 20240101"
+                                className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-2 px-3 text-xs text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#2699fb]"
+                            />
+                            <p className="mt-1 text-[10px] text-slate-500">Bisa digunakan untuk login tanpa email</p>
+                            <InputError message={errors.identifier_number} className="mt-1" />
+                        </div>
+
+                        {/* Kelas */}
+                        <div>
+                            <label htmlFor="class_name" className="block text-xs font-semibold text-[#152238] dark:text-slate-200 mb-1">
+                                Kelas
+                            </label>
+                            <input
+                                id="class_name"
+                                type="text"
+                                name="class_name"
+                                value={data.class_name}
+                                onChange={(e) => setData('class_name', e.target.value)}
+                                placeholder="Contoh: X-E1 / XI-F2"
+                                className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-2 px-3 text-xs text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#2699fb]"
+                            />
+                            <p className="mt-1 text-[10px] text-slate-500">Kelas aktif tahun ajaran berjalan</p>
+                            <InputError message={errors.class_name} className="mt-1" />
+                        </div>
+                    </div>
+
+                    {/* WhatsApp */}
+                    <div className="mt-3">
+                        <label htmlFor="phone_number" className="block text-xs font-semibold text-[#152238] dark:text-slate-200 mb-1">
+                            Nomor WhatsApp Aktif
+                        </label>
+                        <input
+                            id="phone_number"
+                            type="tel"
+                            name="phone_number"
+                            value={data.phone_number}
+                            onChange={(e) => setData('phone_number', e.target.value)}
+                            placeholder="Contoh: 081234567890"
+                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-2 px-3 text-xs text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#2699fb]"
+                        />
+                        <p className="mt-1 text-[10px] text-slate-500">
+                            Untuk pengingat masa pengembalian buku dan info koleksi baru
+                        </p>
+                        <InputError message={errors.phone_number} className="mt-1" />
+                    </div>
                 </div>
 
                 {/* Password */}
@@ -101,7 +169,7 @@ export default function Register() {
                             onChange={(e) => setData('password', e.target.value)}
                             required
                             placeholder="Minimal 8 karakter"
-                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-11 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#123B5D] focus:ring-2 focus:ring-[#123B5D]/20"
+                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-11 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#152238] focus:ring-2 focus:ring-[#152238]/20"
                         />
                         <button type="button" onClick={() => setShowPass(v => !v)}
                             className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600">
@@ -129,7 +197,7 @@ export default function Register() {
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             required
                             placeholder="Ketik ulang kata sandi"
-                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#123B5D] focus:ring-2 focus:ring-[#123B5D]/20"
+                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#152238] focus:ring-2 focus:ring-[#152238]/20"
                         />
                     </div>
                     <InputError message={errors.password_confirmation} className="mt-1.5" />
@@ -138,7 +206,7 @@ export default function Register() {
                 <button
                     type="submit"
                     disabled={processing}
-                    className="mt-2 flex w-full items-center justify-center rounded-xl bg-[#123B5D] px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#0C2D47] disabled:opacity-60"
+                    className="mt-2 flex w-full items-center justify-center rounded-xl bg-[#152238] px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#0f172a] disabled:opacity-60"
                 >
                     {processing ? 'Mendaftarkan...' : 'Buat Akun'}
                 </button>
@@ -146,7 +214,7 @@ export default function Register() {
 
             <p className="mt-8 text-center text-sm text-slate-500 dark:text-slate-400">
                 Sudah punya akun?{' '}
-                <Link href={route('login')} className="font-semibold text-[#123B5D] dark:text-blue-400 hover:underline">
+                <Link href={route('login')} className="font-semibold text-[#152238] dark:text-blue-400 hover:underline">
                     Masuk di sini
                 </Link>
             </p>

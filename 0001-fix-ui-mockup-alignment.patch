@@ -1,0 +1,615 @@
+From f7463afb6442795f26f634b264404ebb65e629bf Mon Sep 17 00:00:00 2001
+From: Claude <claude@anthropic.com>
+Date: Sat, 12 Sep 2026 18:23:38 +0000
+Subject: [PATCH] fix: samakan detail UI dengan mockup (font serif, sistem 2
+ warna biru, filter penulis, headline About)
+
+- Ganti font display dari Space Grotesk ke Lora (serif) sesuai mockup
+- Pisahkan aksen biru jadi navy #0B3866 (tombol/footer/badge) dan azure #2E8BE6 (highlight teks/link)
+- Perbaiki headline About: hanya kata "tumbuh." yang berwarna biru
+- Tambah filter Penulis di halaman Katalog (frontend + backend CatalogController)
+- Perbaiki link "Lihat Semua" di Magazine agar bisa diklik
+---
+ app/Http/Controllers/CatalogController.php   | 11 +++++++++
+ resources/css/app.css                        | 11 +++++----
+ resources/js/Components/Common/BookCard.tsx  |  6 ++---
+ resources/js/Components/Common/BookCover.tsx |  2 +-
+ resources/js/Components/Common/Ornaments.tsx |  4 +--
+ resources/js/Components/Common/SiteShell.tsx | 24 +++++++++---------
+ resources/js/Pages/About/Information.tsx     |  3 ++-
+ resources/js/Pages/Catalog/Index.tsx         | 24 ++++++++++++++++--
+ resources/js/Pages/Contact.tsx               | 26 ++++++++++----------
+ resources/js/Pages/Home.tsx                  | 12 ++++-----
+ resources/js/Pages/Magazine/Index.tsx        | 14 +++++------
+ resources/views/app.blade.php                |  6 ++---
+ 12 files changed, 88 insertions(+), 55 deletions(-)
+
+diff --git a/app/Http/Controllers/CatalogController.php b/app/Http/Controllers/CatalogController.php
+index 1d0910d..1f32c02 100644
+--- a/app/Http/Controllers/CatalogController.php
++++ b/app/Http/Controllers/CatalogController.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\Http\Controllers;
+ 
++use App\Models\Author;
+ use App\Models\Book;
+ use App\Models\Category;
+ use App\Models\DdcClass;
+@@ -18,6 +19,7 @@ public function index(Request $request): Response
+         $categorySlug = $request->input('category');
+         $ddcCode = $request->input('ddc');
+         $status = $request->input('status', 'all');
++        $author = $request->input('author');
+         $sort = $request->input('sort', 'popular');
+ 
+         $query = Book::with(['category', 'authors', 'copies', 'ddcClass']);
+@@ -32,6 +34,12 @@ public function index(Request $request): Response
+             });
+         }
+ 
++        if ($author) {
++            $query->whereHas('authors', function (Builder $q) use ($author) {
++                $q->where('name', $author);
++            });
++        }
++
+         if ($ddcCode) {
+             $query->whereHas('ddcClass', function (Builder $q) use ($ddcCode) {
+                 $q->where('code', $ddcCode);
+@@ -56,16 +64,19 @@ public function index(Request $request): Response
+         $books = $query->paginate(12)->withQueryString();
+         $categories = Category::withCount('books')->orderBy('name')->get();
+         $ddcClasses = DdcClass::orderBy('code')->get();
++        $authors = Author::orderBy('name')->pluck('name');
+ 
+         return Inertia::render('Catalog/Index', [
+             'books' => $books,
+             'categories' => $categories,
+             'ddcClasses' => $ddcClasses,
++            'authors' => $authors,
+             'filters' => [
+                 'q' => $search ?? '',
+                 'category' => $categorySlug ?? '',
+                 'ddc' => $ddcCode ?? '',
+                 'status' => $status,
++                'author' => $author ?? '',
+                 'sort' => $sort,
+             ],
+         ]);
+diff --git a/resources/css/app.css b/resources/css/app.css
+index 459109c..0098e16 100644
+--- a/resources/css/app.css
++++ b/resources/css/app.css
+@@ -1,11 +1,12 @@
+ ﻿@import "tailwindcss";
+ 
+ @theme {
+-  --color-primary: #0B4EA2;
+-  --color-primary-hover: #083c7d;
++  --color-primary: #0B3866;
++  --color-primary-hover: #082B4E;
+   --color-primary-deep: #062854;
+   --color-primary-light: #EAF4FF;
+   --color-primary-muted: #d4e7fc;
++  --color-accent-blue: #2E8BE6;
+   --color-accent: #FACC15;
+   --color-accent-hover: #eab308;
+   --color-accent-warm: #EA580C;
+@@ -19,7 +20,7 @@ @theme {
+   --color-scrapbook-paper: #FFFDF9;
+ 
+   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+-  --font-display: "Space Grotesk", "Plus Jakarta Sans", "Inter", sans-serif;
++  --font-display: "Lora", "Georgia", "Source Serif 4", serif;
+   --font-mono-display: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+   --font-handwriting: "Caveat", cursive;
+ }
+@@ -88,14 +89,14 @@ .paperclip {
+ 
+ /* Read more badge circle stamp */
+ .stamp-badge {
+-  background: #0B4EA2;
++  background: #0B3866;
+   color: white;
+   border-radius: 50%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+-  box-shadow: 0 6px 16px rgba(11, 78, 162, 0.35);
++  box-shadow: 0 6px 16px rgba(11, 56, 102, 0.35);
+   position: relative;
+ }
+ .stamp-badge::after {
+diff --git a/resources/js/Components/Common/BookCard.tsx b/resources/js/Components/Common/BookCard.tsx
+index 371491f..5cde91a 100644
+--- a/resources/js/Components/Common/BookCard.tsx
++++ b/resources/js/Components/Common/BookCard.tsx
+@@ -1,4 +1,4 @@
+-﻿import { Link } from '@inertiajs/react';
++import { Link } from '@inertiajs/react';
+ import React from 'react';
+ import { Book } from '../../types/library';
+ import { BookCover } from './BookCover';
+@@ -50,7 +50,7 @@ export function BookCard({ book, hasClip = true, sticker }: BookCardProps) {
+ 
+                 {/* Book Details */}
+                 <div className="mt-3 flex flex-col">
+-                    <h3 className="line-clamp-1 font-display text-[13px] font-bold text-[#0F172A] group-hover:text-[#0B4EA2] transition-colors">
++                    <h3 className="line-clamp-1 font-display text-[13px] font-bold text-[#0F172A] group-hover:text-[#2E8BE6] transition-colors">
+                         {book.title}
+                     </h3>
+                     <p className="line-clamp-1 text-[11px] text-slate-500 mt-0.5">
+@@ -67,7 +67,7 @@ export function BookCard({ book, hasClip = true, sticker }: BookCardProps) {
+                                 Tersedia
+                             </span>
+                         ) : (
+-                            <span className="inline-block rounded-full bg-[#EBF2FC] px-2.5 py-0.5 text-[9px] font-bold text-[#0B4EA2]">
++                            <span className="inline-block rounded-full bg-[#EBF2FC] px-2.5 py-0.5 text-[9px] font-bold text-[#0B3866]">
+                                 Dipinjam
+                             </span>
+                         )}
+diff --git a/resources/js/Components/Common/BookCover.tsx b/resources/js/Components/Common/BookCover.tsx
+index e3a85cb..5aef769 100644
+--- a/resources/js/Components/Common/BookCover.tsx
++++ b/resources/js/Components/Common/BookCover.tsx
+@@ -13,7 +13,7 @@ export function BookCover({ src, title, className = '' }: BookCoverProps) {
+     if (failed || !src) {
+         return (
+             <div
+-                className={`relative flex flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#0B4EA2] to-[#092E61] p-4 text-center text-white shadow-md ${className}`}
++                className={`relative flex flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#0B3866] to-[#092E61] p-4 text-center text-white shadow-md ${className}`}
+                 aria-label={`Sampul ${title}`}
+             >
+                 <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]" />
+diff --git a/resources/js/Components/Common/Ornaments.tsx b/resources/js/Components/Common/Ornaments.tsx
+index 9e0a23c..19f7277 100644
+--- a/resources/js/Components/Common/Ornaments.tsx
++++ b/resources/js/Components/Common/Ornaments.tsx
+@@ -1,4 +1,4 @@
+-﻿import React from 'react';
++import React from 'react';
+ 
+ /** Realistic Paper Clip SVG */
+ export function RealPaperClip({ className = "", color = "#788796", rotate = 15 }: { className?: string; color?: string; rotate?: number }) {
+@@ -87,7 +87,7 @@ export function BotanicalLeaf({ className = "", size = 64, color = "#2E5A44", ro
+ }
+ 
+ /** Hand-drawn Star Doodle */
+-export function HandDrawnStar({ size = 20, color = "#0B4EA2", className = "" }: { size?: number; color?: string; className?: string }) {
++export function HandDrawnStar({ size = 20, color = "#2E8BE6", className = "" }: { size?: number; color?: string; className?: string }) {
+   return (
+     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+       <path
+diff --git a/resources/js/Components/Common/SiteShell.tsx b/resources/js/Components/Common/SiteShell.tsx
+index ab1c91b..8cd2228 100644
+--- a/resources/js/Components/Common/SiteShell.tsx
++++ b/resources/js/Components/Common/SiteShell.tsx
+@@ -1,4 +1,4 @@
+-﻿import { Link, usePage } from '@inertiajs/react';
++import { Link, usePage } from '@inertiajs/react';
+ import {
+     BookOpen,
+     Search,
+@@ -26,17 +26,17 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
+     };
+ 
+     return (
+-        <div className="flex min-h-screen flex-col bg-[#F4EFEA] text-[#0F172A] selection:bg-[#0B4EA2] selection:text-white">
++        <div className="flex min-h-screen flex-col bg-[#F4EFEA] text-[#0F172A] selection:bg-[#0B3866] selection:text-white">
+             {/* Header: Transparent warm cream background matching mockup */}
+             <header className="sticky top-0 z-40 bg-[#F4EFEA]/90 backdrop-blur-md transition-all">
+                 <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-10">
+                     {/* Brand Logo: Clean icon + Uppercase text */}
+                     <Link href="/" className="flex items-center gap-3">
+-                        <span className="grid size-9 place-items-center rounded-lg bg-[#0B4EA2] text-white shadow-sm">
++                        <span className="grid size-9 place-items-center rounded-lg bg-[#0B3866] text-white shadow-sm">
+                             <BookOpen size={18} strokeWidth={2.2} />
+                         </span>
+                         <div className="leading-tight">
+-                            <span className="block font-display text-sm font-extrabold uppercase tracking-wide text-[#0B4EA2]">
++                            <span className="block font-display text-sm font-extrabold uppercase tracking-wide text-[#0B3866]">
+                                 Perpustakaan
+                             </span>
+                             <span className="block font-mono-display text-[9px] font-bold uppercase tracking-[0.16em] text-slate-700">
+@@ -53,8 +53,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
+                                 <Link
+                                     key={item.href}
+                                     href={item.href}
+-                                    className={`text-xs font-semibold tracking-wide transition-colors hover:text-[#0B4EA2] ${
+-                                        active ? 'font-bold text-[#0B4EA2]' : 'text-slate-600'
++                                    className={`text-xs font-semibold tracking-wide transition-colors hover:text-[#2E8BE6] ${
++                                        active ? 'font-bold text-[#2E8BE6]' : 'text-slate-600'
+                                     }`}
+                                 >
+                                     {item.label}
+@@ -67,7 +67,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
+                     <div className="hidden items-center gap-4 md:flex">
+                         <Link
+                             href="/catalog"
+-                            className="p-1.5 text-slate-600 hover:text-[#0B4EA2] transition-colors"
++                            className="p-1.5 text-slate-600 hover:text-[#0B3866] transition-colors"
+                             title="Pencarian"
+                         >
+                             <Search size={17} strokeWidth={2.2} />
+@@ -76,14 +76,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
+                         {auth?.user ? (
+                             <Link
+                                 href="/dashboard"
+-                                className="rounded-full bg-[#0B4EA2] px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#083c7d] transition-all"
++                                className="rounded-full bg-[#0B3866] px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-all"
+                             >
+                                 Dashboard
+                             </Link>
+                         ) : (
+                             <Link
+                                 href="/login"
+-                                className="rounded-full bg-[#0B4EA2] px-6 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#083c7d] transition-all"
++                                className="rounded-full bg-[#0B3866] px-6 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-all"
+                             >
+                                 Login
+                             </Link>
+@@ -111,13 +111,13 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
+                                     key={item.href}
+                                     href={item.href}
+                                     onClick={() => setMobileOpen(false)}
+-                                    className="py-2 text-sm font-semibold text-slate-700 hover:text-[#0B4EA2]"
++                                    className="py-2 text-sm font-semibold text-slate-700 hover:text-[#2E8BE6]"
+                                 >
+                                     {item.label}
+                                 </Link>
+                             ))}
+                             <div className="mt-3 pt-3 border-t border-slate-200 flex justify-between items-center">
+-                                <Link href="/login" className="rounded-full bg-[#0B4EA2] px-5 py-2 text-xs font-bold text-white">
++                                <Link href="/login" className="rounded-full bg-[#0B3866] px-5 py-2 text-xs font-bold text-white">
+                                     Login
+                                 </Link>
+                             </div>
+@@ -130,7 +130,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
+             <main className="flex-1">{children}</main>
+ 
+             {/* Footer: Deep Navy Bar with Center Slogan & Socials */}
+-            <footer className="mt-16 bg-[#0B4EA2] text-white">
++            <footer className="mt-16 bg-[#0B3866] text-white">
+                 <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-8 sm:flex-row sm:px-10">
+                     {/* Left: Brand */}
+                     <div className="flex items-center gap-3">
+diff --git a/resources/js/Pages/About/Information.tsx b/resources/js/Pages/About/Information.tsx
+index b0ddcd3..0293a5c 100644
+--- a/resources/js/Pages/About/Information.tsx
++++ b/resources/js/Pages/About/Information.tsx
+@@ -44,7 +44,8 @@ export default function Information({ librarians }: InformationProps) {
+                             <h1 className="mt-2 font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F172A] leading-tight">
+                                 Lebih dari <br />
+                                 sekadar perpustakaan, <br />
+-                                <span className="text-[#0B4EA2]">ini adalah ruang untuk tumbuh.</span>
++                                ini adalah ruang untuk <br />
++                                <span className="text-[#2E8BE6]">tumbuh.</span>
+                             </h1>
+ 
+                             <p className="mt-4 max-w-md text-xs sm:text-sm leading-relaxed text-slate-600">
+diff --git a/resources/js/Pages/Catalog/Index.tsx b/resources/js/Pages/Catalog/Index.tsx
+index b88f866..ede6c5b 100644
+--- a/resources/js/Pages/Catalog/Index.tsx
++++ b/resources/js/Pages/Catalog/Index.tsx
+@@ -14,29 +14,34 @@ interface CatalogIndexProps {
+     books: PaginatedResponse<Book>;
+     categories: Category[];
+     ddcClasses: DdcClass[];
++    authors: string[];
+     filters: {
+         q: string;
+         category: string;
+         ddc: string;
+         status: string;
+         sort: string;
++        author?: string;
+     };
+ }
+ 
+ export default function CatalogIndex({
+     books,
+     categories,
++    authors,
+     filters,
+ }: CatalogIndexProps) {
+     const [search, setSearch] = useState(filters.q || '');
+     const [category, setCategory] = useState(filters.category || '');
+     const [status, setStatus] = useState(filters.status || 'all');
++    const [author, setAuthor] = useState(filters.author || '');
+ 
+     const applyFilters = (overrides = {}) => {
+         const queryParams = {
+             q: search.trim() || undefined,
+             category: category || undefined,
+             status: status !== 'all' ? status : undefined,
++            author: author || undefined,
+             ...overrides,
+         };
+ 
+@@ -75,7 +80,7 @@ export default function CatalogIndex({
+                                 </h1>
+                                 {/* Annotation note beside title */}
+                                 <div className="absolute top-1 -right-28 hidden sm:block">
+-                                    <span className="font-handwriting text-sm text-[#0B4EA2] font-semibold rotate-[8deg] inline-block">
++                                    <span className="font-handwriting text-sm text-[#2E8BE6] font-semibold rotate-[8deg] inline-block">
+                                         koleksi untuk <br /> setiap cerita
+                                     </span>
+                                 </div>
+@@ -96,7 +101,7 @@ export default function CatalogIndex({
+                                 />
+                                 <button
+                                     type="submit"
+-                                    className="rounded-full bg-[#0B4EA2] px-6 py-2 text-xs font-bold text-white hover:bg-[#083c7d] transition-colors"
++                                    className="rounded-full bg-[#0B3866] px-6 py-2 text-xs font-bold text-white hover:bg-[#082B4E] transition-colors"
+                                 >
+                                     Cari
+                                 </button>
+@@ -132,6 +137,21 @@ export default function CatalogIndex({
+                                     <option value="available">Tersedia</option>
+                                     <option value="borrowed">Sedang Dipinjam</option>
+                                 </select>
++
++                                {/* Penulis Dropdown */}
++                                <select
++                                    value={author}
++                                    onChange={(e) => {
++                                        setAuthor(e.target.value);
++                                        applyFilters({ author: e.target.value });
++                                    }}
++                                    className="rounded-lg border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow-xs focus:outline-none"
++                                >
++                                    <option value="">Penulis ▾</option>
++                                    {authors.map((name) => (
++                                        <option key={name} value={name}>{name}</option>
++                                    ))}
++                                </select>
+                             </div>
+                         </div>
+ 
+diff --git a/resources/js/Pages/Contact.tsx b/resources/js/Pages/Contact.tsx
+index 823c6a7..bbfa80f 100644
+--- a/resources/js/Pages/Contact.tsx
++++ b/resources/js/Pages/Contact.tsx
+@@ -1,4 +1,4 @@
+-﻿import { Head } from '@inertiajs/react';
++import { Head } from '@inertiajs/react';
+ import React, { useState } from 'react';
+ import {
+     HandDrawnStar,
+@@ -46,9 +46,9 @@ export default function Contact({ settings }: ContactProps) {
+                             <div className="flex items-center gap-3 mt-2">
+                                 <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F172A]">
+                                     Kami siap <br />
+-                                    <span className="text-[#0B4EA2]">membantu.</span>
++                                    <span className="text-[#2E8BE6]">membantu.</span>
+                                 </h1>
+-                                <HandDrawnStar size={24} color="#0B4EA2" className="mt-2" />
++                                <HandDrawnStar size={24} color="#2E8BE6" className="mt-2" />
+                             </div>
+ 
+                             <p className="mt-4 max-w-md text-xs sm:text-sm leading-relaxed text-slate-600">
+@@ -88,7 +88,7 @@ export default function Contact({ settings }: ContactProps) {
+                         <div className="space-y-6">
+                             {/* Alamat */}
+                             <div className="flex items-start gap-4">
+-                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#0B4EA2] text-white text-xs">
++                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#0B3866] text-white text-xs">
+                                     📍
+                                 </div>
+                                 <div>
+@@ -101,12 +101,12 @@ export default function Contact({ settings }: ContactProps) {
+ 
+                             {/* Email */}
+                             <div className="flex items-start gap-4">
+-                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#0B4EA2] text-white text-xs">
++                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#0B3866] text-white text-xs">
+                                     ✉️
+                                 </div>
+                                 <div>
+                                     <h4 className="font-display text-xs font-bold uppercase tracking-wider text-slate-400">Email</h4>
+-                                    <p className="mt-1 text-xs text-[#0B4EA2] font-semibold">
++                                    <p className="mt-1 text-xs text-[#0B3866] font-semibold">
+                                         {settings.contact_email || 'perpustakaan@sman1bukittinggi.sch.id'}
+                                     </p>
+                                 </div>
+@@ -114,7 +114,7 @@ export default function Contact({ settings }: ContactProps) {
+ 
+                             {/* Telepon */}
+                             <div className="flex items-start gap-4">
+-                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#0B4EA2] text-white text-xs">
++                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#0B3866] text-white text-xs">
+                                     📞
+                                 </div>
+                                 <div>
+@@ -127,7 +127,7 @@ export default function Contact({ settings }: ContactProps) {
+ 
+                             {/* Jam Operasional */}
+                             <div className="flex items-start gap-4">
+-                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#0B4EA2] text-white text-xs">
++                                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-[#0B3866] text-white text-xs">
+                                     🕒
+                                 </div>
+                                 <div>
+@@ -150,7 +150,7 @@ export default function Contact({ settings }: ContactProps) {
+                                 </div>
+                                 {/* Sticky note location */}
+                                 <div className="absolute -bottom-3 right-4 z-20">
+-                                    <div className="memo-note rotate-[-2deg] rounded px-3 py-1.5 text-center font-handwriting text-xs text-[#0B4EA2] font-bold">
++                                    <div className="memo-note rotate-[-2deg] rounded px-3 py-1.5 text-center font-handwriting text-xs text-[#2E8BE6] font-bold">
+                                         Lokasi Kami: Di Jantung SMAN 1 Bukittinggi ♡
+                                     </div>
+                                 </div>
+@@ -183,7 +183,7 @@ export default function Contact({ settings }: ContactProps) {
+                                                 required
+                                                 value={name}
+                                                 onChange={(e) => setName(e.target.value)}
+-                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#0B4EA2] focus:bg-white focus:outline-none"
++                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#0B3866] focus:bg-white focus:outline-none"
+                                             />
+                                         </div>
+ 
+@@ -196,7 +196,7 @@ export default function Contact({ settings }: ContactProps) {
+                                                 required
+                                                 value={email}
+                                                 onChange={(e) => setEmail(e.target.value)}
+-                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#0B4EA2] focus:bg-white focus:outline-none"
++                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#0B3866] focus:bg-white focus:outline-none"
+                                             />
+                                         </div>
+ 
+@@ -209,13 +209,13 @@ export default function Contact({ settings }: ContactProps) {
+                                                 rows={4}
+                                                 value={message}
+                                                 onChange={(e) => setMessage(e.target.value)}
+-                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#0B4EA2] focus:bg-white focus:outline-none"
++                                                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-xs text-slate-800 focus:border-[#0B3866] focus:bg-white focus:outline-none"
+                                             />
+                                         </div>
+ 
+                                         <button
+                                             type="submit"
+-                                            className="w-full rounded-full bg-[#0B4EA2] py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#083c7d] transition-colors"
++                                            className="w-full rounded-full bg-[#0B3866] py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-colors"
+                                         >
+                                             Kirim ➔
+                                         </button>
+diff --git a/resources/js/Pages/Home.tsx b/resources/js/Pages/Home.tsx
+index 0873359..24b526e 100644
+--- a/resources/js/Pages/Home.tsx
++++ b/resources/js/Pages/Home.tsx
+@@ -1,4 +1,4 @@
+-﻿import { Head, Link, router } from '@inertiajs/react';
++import { Head, Link, router } from '@inertiajs/react';
+ import { Search } from 'lucide-react';
+ import React, { useState } from 'react';
+ import { BookCard } from '../Components/Common/BookCard';
+@@ -60,7 +60,7 @@ export default function Home({ stats, popularBooks, latestMagazines }: HomeProps
+                             {/* Main Title */}
+                             <h1 className="font-display text-4xl sm:text-5xl lg:text-[56px] font-extrabold leading-[1.12] tracking-tight text-[#0F172A]">
+                                 Temukan halaman <br />
+-                                yang <span className="text-[#0B4EA2]">menunggumu.</span>
++                                yang <span className="text-[#2E8BE6]">menunggumu.</span>
+                             </h1>
+ 
+                             <p className="mt-4 max-w-lg text-xs sm:text-sm leading-relaxed text-slate-600">
+@@ -82,7 +82,7 @@ export default function Home({ stats, popularBooks, latestMagazines }: HomeProps
+                                 />
+                                 <button
+                                     type="submit"
+-                                    className="rounded-full bg-[#0B4EA2] px-6 py-2 text-xs font-bold text-white hover:bg-[#083c7d] transition-colors"
++                                    className="rounded-full bg-[#0B3866] px-6 py-2 text-xs font-bold text-white hover:bg-[#082B4E] transition-colors"
+                                 >
+                                     Cari
+                                 </button>
+@@ -153,11 +153,11 @@ export default function Home({ stats, popularBooks, latestMagazines }: HomeProps
+                             <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A]">
+                                 Buku Terpopuler
+                             </h2>
+-                            <HandDrawnStar size={20} color="#0B4EA2" />
++                            <HandDrawnStar size={20} color="#2E8BE6" />
+                         </div>
+                         <Link
+                             href="/catalog"
+-                            className="font-handwriting text-base font-bold text-[#0B4EA2] hover:underline"
++                            className="font-handwriting text-base font-bold text-[#2E8BE6] hover:underline"
+                         >
+                             Lihat Semua ➔
+                         </Link>
+@@ -174,7 +174,7 @@ export default function Home({ stats, popularBooks, latestMagazines }: HomeProps
+ 
+                         {/* New! doodle on top right */}
+                         <div className="absolute -top-7 right-6 z-20 hidden md:block">
+-                            <span className="font-handwriting text-2xl font-bold text-[#0B4EA2] rotate-[8deg]">
++                            <span className="font-handwriting text-2xl font-bold text-[#2E8BE6] rotate-[8deg]">
+                                 New!
+                             </span>
+                         </div>
+diff --git a/resources/js/Pages/Magazine/Index.tsx b/resources/js/Pages/Magazine/Index.tsx
+index cd34529..b5d3081 100644
+--- a/resources/js/Pages/Magazine/Index.tsx
++++ b/resources/js/Pages/Magazine/Index.tsx
+@@ -1,4 +1,4 @@
+-﻿import { Head, Link } from '@inertiajs/react';
++import { Head, Link } from '@inertiajs/react';
+ import React from 'react';
+ import {
+     BotanicalLeaf,
+@@ -35,7 +35,7 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
+                             <h1 className="mt-3 font-display text-4xl sm:text-5xl lg:text-[54px] font-extrabold leading-[1.12] tracking-tight text-[#0F172A]">
+                                 Majalah digital <br />
+                                 untuk pikiran yang <br />
+-                                <span className="text-[#0B4EA2]">lebih luas.</span>
++                                <span className="text-[#2E8BE6]">lebih luas.</span>
+                             </h1>
+ 
+                             <p className="mt-4 max-w-md text-xs sm:text-sm leading-relaxed text-slate-600">
+@@ -45,7 +45,7 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
+                             <div className="mt-7 flex items-center gap-6">
+                                 <a
+                                     href="#populer"
+-                                    className="rounded-full bg-[#0B4EA2] px-7 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#083c7d] transition-all"
++                                    className="rounded-full bg-[#0B3866] px-7 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#082B4E] transition-all"
+                                 >
+                                     Jelajahi Semua ➔
+                                 </a>
+@@ -88,7 +88,7 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
+                                             className="h-full w-full object-cover"
+                                         />
+                                     ) : (
+-                                        <div className="h-full w-full bg-gradient-to-br from-[#0B4EA2] to-[#041D3F] p-4 text-white flex flex-col justify-between">
++                                        <div className="h-full w-full bg-gradient-to-br from-[#0B3866] to-[#041D3F] p-4 text-white flex flex-col justify-between">
+                                             <span className="font-mono-display text-[9px] uppercase tracking-widest text-blue-200">
+                                                 Genta Smansa
+                                             </span>
+@@ -122,9 +122,9 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
+                         <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A]">
+                             Majalah Populer
+                         </h2>
+-                        <span className="font-handwriting text-base font-bold text-[#0B4EA2]">
++                        <a href="#populer" className="font-handwriting text-base font-bold text-[#2E8BE6] hover:underline">
+                             Lihat Semua ➔
+-                        </span>
++                        </a>
+                     </div>
+ 
+                     <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
+@@ -164,7 +164,7 @@ export default function MagazineIndex({ editions }: MagazineIndexProps) {
+                                         </p>
+                                         <Link
+                                             href={`/magazines/${ed.id}`}
+-                                            className="mt-2.5 inline-block rounded-full bg-[#0B4EA2] px-3 py-1 text-[10px] font-bold text-white hover:bg-[#083c7d]"
++                                            className="mt-2.5 inline-block rounded-full bg-[#0B3866] px-3 py-1 text-[10px] font-bold text-white hover:bg-[#082B4E]"
+                                         >
+                                             Baca
+                                         </Link>
+diff --git a/resources/views/app.blade.php b/resources/views/app.blade.php
+index 3cb4173..eeadd26 100644
+--- a/resources/views/app.blade.php
++++ b/resources/views/app.blade.php
+@@ -6,10 +6,10 @@
+ 
+         <title inertia>{{ config('app.name', 'Perpustakaan SMAN 1 Bukittinggi') }}</title>
+ 
+-        <!-- Typography: Inter, Space Grotesk, JetBrains Mono -->
++        <!-- Typography: Inter, Lora (serif display), JetBrains Mono, Caveat -->
+         <link rel="preconnect" href="https://fonts.googleapis.com">
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+-        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
++        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;600;700&family=Lora:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&display=swap" rel="stylesheet">
+ 
+         <!-- Scripts -->
+         @routes
+@@ -17,7 +17,7 @@
+         @vite(['resources/css/app.css', 'resources/js/app.tsx'])
+         @inertiaHead
+     </head>
+-    <body class="min-h-full bg-[#F8FAFC] text-[#0F172A] font-sans antialiased selection:bg-[#0B4EA2] selection:text-white">
++    <body class="min-h-full bg-[#F8FAFC] text-[#0F172A] font-sans antialiased selection:bg-[#0B3866] selection:text-white">
+         @inertia
+     </body>
+ </html>
+-- 
+2.43.0
+
