@@ -59,6 +59,8 @@ export interface Book {
     copies_count?: number;
     available_copies_count?: number;
     is_available?: boolean;
+    ebook_file_path?: string | null;
+    is_ebook?: boolean;
     created_at: string;
     updated_at: string;
 }
@@ -89,6 +91,7 @@ export interface Loan {
     due_at: string;
     returned_at?: string | null;
     status: 'active' | 'returned' | 'overdue';
+    is_online_loan?: boolean;
     notes?: string | null;
     book_copy?: BookCopy & { book?: Book };
     created_at: string;
@@ -105,6 +108,7 @@ export interface MagazineEdition {
     pdf_file_path: string;
     description?: string | null;
     page_count?: number;
+    magazine?: Magazine;
 }
 
 export interface Magazine {
@@ -113,6 +117,7 @@ export interface Magazine {
     slug: string;
     description: string;
     cover_image: string;
+    type?: 'magazine' | 'bulletin';
     editions?: MagazineEdition[];
     latest_edition?: MagazineEdition;
 }
@@ -124,6 +129,13 @@ export interface LibraryStats {
     total_categories: number;
     total_loans?: number;
     active_members?: number;
+}
+
+export interface ReaderRank {
+    id: number;
+    name: string;
+    class?: string | null;
+    loans_count: number;
 }
 
 export interface PaginatedResponse<T> {

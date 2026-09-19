@@ -1,315 +1,741 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from "@inertiajs/react";
 import {
-    BookHeart,
+    ArrowUp,
     BookOpen,
     Calendar,
     ChevronDown,
     ChevronRight,
     Globe,
-    LogIn,
+    Home,
+    Info,
+    LayoutDashboard,
     LogOut,
+    Mail,
     MapPin,
-    Menu,
     Moon,
+    Newspaper,
+    PenTool,
+    Phone,
+    Search,
+    Shield,
+    Sliders,
     Sun,
     Trophy,
     User,
-    X,
-} from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
-
-const NAV_ITEMS = [
-    { label: 'Beranda', href: '/' },
-    { label: 'E-Katalog', href: '/catalog' },
-    { label: 'E-Magazine', href: '/magazines' },
-    { label: 'Tentang', href: '/information' },
-    { label: 'Kontak', href: '/contact' },
-];
-
-const KOMUNITAS_ITEMS = [
-    { label: 'Event, Duta & Podcast', href: '/events', icon: Calendar },
-    { label: 'Karya Smansa', href: '/karya-smansa', icon: BookHeart },
-    { label: 'Ranking Peminjam', href: '/ranking', icon: Trophy },
-    { label: 'Koleksi Multibahasa', href: '/translations', icon: Globe },
-];
+    UserCog,
+} from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { useI18n, Language } from "../../utils/i18n";
+import { ScrollRevealProvider } from "./ScrollRevealProvider";
+import { HamburgerButton } from "./HamburgerButton";
+import { MegaMenu } from "./MegaMenu";
+import { SearchBar } from "./SearchBar";
+import { Tooltip } from "./Tooltip";
+import { ToastProvider } from "./ToastProvider";
+import { ThemeToggleSwitch } from "./ThemeToggleSwitch";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
-    const { url } = usePage();
-    const { auth } = usePage().props as { auth?: { user?: { name: string; role: string } } };
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const [komunitas, setKomunitas] = useState(false);
-    const [darkMode, setDarkMode] = useState(false);
-    const komunitasRef = useRef<HTMLDivElement>(null);
+    const { url, props } = usePage();
+    const auth = props.auth as {
+        user?: {
+            id: number;
+            name: string;
+            email: string;
+            role: string;
+            identifier_number?: string;
+            class_name?: string;
+            phone_number?: string;
+        };
+    } | undefined;
 
-    // Initialize dark mode from localStorage
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [langOpen, setLangOpen] = useState(false);
+    const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+    const [darkMode, setDarkMode] = useState(false);
+    const [pageTransition, setPageTransition] = useState<"enter" | "exit">("enter");
+    const { lang, setLanguage, t } = useI18n();
+    const userDropdownRef = useRef<HTMLDivElement>(null);
+    const langDropdownRef = useRef<HTMLDivElement>(null);
+
+    // Inertia Page Transition handling
     useEffect(() => {
-        const saved = localStorage.getItem('darkMode');
-        if (saved === 'true' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            setDarkMode(true);
-            document.documentElement.classList.add('dark');
-        }
+        const removeStart = router.on("start", () => {
+            setPageTransition("exit");
+        });
+        const removeFinish = router.on("finish", () => {
+            setPageTransition("enter");
+        });
+        return () => {
+            removeStart();
+            removeFinish();
+        };
     }, []);
 
-    const toggleDark = () => {
+    // Dark mode sync
+    useEffect(() => {
+        const savedTheme = localStorage.getItem("smansa-theme");
+        const isDark = savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        setDarkMode(isDark);
+        document.documentElement.classList.toggle("dark", isDark);
+    }, []);
+
+    const toggleTheme = () => {
         const next = !darkMode;
         setDarkMode(next);
-        if (next) {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('darkMode', 'true');
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('darkMode', 'false');
+        document.documentElement.classList.toggle("dark", next);
+        localStorage.setItem("smansa-theme", next ? "dark" : "light");
+    };
+
+    // Close drawers/dropdowns on navigation
+    useEffect(() => {
+        setMobileOpen(false);
+        setUserDropdownOpen(false);
+        setLangOpen(false);
+    }, [url]);
+
+    useEffect(() => {
+        document.body.style.overflow = mobileOpen ? "hidden" : "";
+        return () => { document.body.style.overflow = ""; };
+    }, [mobileOpen]);
+
+    // Close dropdowns on outside click
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+                setUserDropdownOpen(false);
+            }
+            if (langDropdownRef.current && !langDropdownRef.current.contains(event.target as Node)) {
+                setLangOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const isActive = (path: string) => path === "/" ? url === "/" : url.startsWith(path);
+    const isAdminOrLibrarian = auth?.user && ["admin", "librarian", "teacher"].includes(auth.user.role);
+
+    const mobileNavItems = [
+        { label: t("nav_home"), href: "/", icon: Home },
+        { label: t("nav_catalog"), href: "/catalog", icon: BookOpen },
+        { label: t("nav_magazine"), href: "/magazines", icon: Newspaper },
+        { label: t("nav_events"), href: "/events", icon: Calendar },
+        { label: t("nav_works"), href: "/karya-smansa", icon: PenTool },
+        { label: t("nav_ranking"), href: "/ranking", icon: Trophy },
+        { label: t("nav_about"), href: "/information", icon: Info },
+        { label: t("nav_contact"), href: "/contact", icon: Phone },
+    ];
+
+    const langFlags: Record<Language, { label: string; flag: string }> = {
+        id: { label: "ID", flag: "🇮🇩" },
+        en: { label: "EN", flag: "🇬🇧" },
+        de: { label: "DE", flag: "🇩🇪" },
+    };
+
+    const getRoleBadge = (role?: string) => {
+        switch (role) {
+            case "admin":
+                return { label: "Admin", color: "bg-rose-100 text-rose-800 dark:bg-rose-950/70 dark:text-rose-300" };
+            case "librarian":
+                return { label: "Pustakawan", color: "bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300" };
+            case "teacher":
+                return { label: "Guru", color: "bg-purple-100 text-purple-800 dark:bg-purple-950/70 dark:text-purple-300" };
+            default:
+                return { label: "Siswa", color: "bg-blue-100 text-blue-800 dark:bg-blue-950/70 dark:text-blue-300" };
         }
     };
 
-    // Close Komunitas dropdown on outside click
-    useEffect(() => {
-        const handler = (e: MouseEvent) => {
-            if (komunitasRef.current && !komunitasRef.current.contains(e.target as Node)) {
-                setKomunitas(false);
-            }
-        };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
-    }, []);
-
-    const isActive = (path: string) => {
-        if (path === '/') return url === '/';
-        return url.startsWith(path);
-    };
-
-    const isKomunitasActive = KOMUNITAS_ITEMS.some(i => url.startsWith(i.href));
-
     return (
-        <div className="flex min-h-screen flex-col bg-white dark:bg-slate-900 text-[#0F172A] dark:text-slate-100">
-            {/* Main Header */}
-            <header className="sticky top-0 z-40 border-b border-slate-100 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md transition-all">
-                <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-8">
-                    {/* Brand Logo */}
-                    <Link href="/" className="group flex items-center gap-3">
-                        <span className="grid size-10 place-items-center rounded-xl bg-[#0B4EA2] text-white shadow-sm transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105">
-                            <BookOpen size={20} strokeWidth={2} />
+        <ToastProvider>
+        <ScrollRevealProvider>
+        <div className="flex min-h-screen flex-col bg-white text-[#152238] transition-colors duration-200 dark:bg-[#090d16] dark:text-[#f8fafc]">
+            {/* ── NAVBAR ── */}
+            <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/95 shadow-xs backdrop-blur-md dark:border-slate-800/80 dark:bg-[#090d16]/95">
+                <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+                    {/* Logo */}
+                    <Link href="/" className="flex items-center gap-2.5 shrink-0" onClick={() => setMobileOpen(false)}>
+                        <span className="grid size-9 place-items-center rounded-xl bg-[#152238] text-white shadow-sm dark:bg-[#2699fb]">
+                            <BookOpen size={17} strokeWidth={2} />
                         </span>
-                        <div className="leading-tight">
-                            <span className="block font-display text-lg font-bold tracking-tight text-[#0F172A] dark:text-white">
-                                Perpustakaan
-                            </span>
-                            <span className="block font-mono-display text-[9px] font-bold uppercase tracking-[0.18em] text-[#0B4EA2] dark:text-blue-400">
-                                SMAN 1 Bukittinggi
-                            </span>
-                        </div>
+                        <span className="leading-none">
+                            <span className="block font-display text-[14px] font-extrabold tracking-tight text-[#152238] dark:text-white">Perpustakaan</span>
+                            <span className="block text-[9px] font-semibold uppercase tracking-[0.14em] text-[#64748b] dark:text-slate-400">SMAN 1 Bukittinggi</span>
+                        </span>
                     </Link>
 
-                    {/* Desktop Navigation */}
-                    <nav className="hidden items-center gap-6 lg:flex" aria-label="Navigasi Utama">
-                        {NAV_ITEMS.map((item) => {
-                            const active = isActive(item.href);
-                            return (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={`relative py-2 text-sm font-medium transition-colors hover:text-[#0B4EA2] dark:hover:text-blue-400 ${
-                                        active ? 'font-bold text-[#0B4EA2] dark:text-blue-400' : 'text-slate-600 dark:text-slate-400'
-                                    }`}
+                    {/* Desktop nav */}
+                    <nav className="hidden items-center gap-1 xl:gap-2 lg:flex">
+                        <Link
+                            href="/"
+                            className={`nav-underline-link rounded-full px-3.5 py-1.5 text-[13px] font-semibold ${
+                                isActive("/")
+                                    ? "is-active text-[#2699fb] font-bold"
+                                    : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
+                            }`}
+                        >
+                            {t("nav_home")}
+                        </Link>
+                        <Link
+                            href="/catalog"
+                            className={`nav-underline-link rounded-full px-3.5 py-1.5 text-[13px] font-semibold ${
+                                isActive("/catalog")
+                                    ? "is-active text-[#2699fb] font-bold"
+                                    : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
+                            }`}
+                        >
+                            {t("nav_catalog")}
+                        </Link>
+                        <Link
+                            href="/magazines"
+                            className={`nav-underline-link rounded-full px-3.5 py-1.5 text-[13px] font-semibold ${
+                                isActive("/magazines")
+                                    ? "is-active text-[#2699fb] font-bold"
+                                    : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
+                            }`}
+                        >
+                            {t("nav_magazine")}
+                        </Link>
+
+                        {/* Mega Menu Dropdown */}
+                        <MegaMenu currentUrl={url} label="Jelajahi" />
+
+                        <Link
+                            href="/contact"
+                            className={`nav-underline-link rounded-full px-3.5 py-1.5 text-[13px] font-semibold ${
+                                isActive("/contact")
+                                    ? "is-active text-[#2699fb] font-bold"
+                                    : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
+                            }`}
+                        >
+                            {t("nav_contact")}
+                        </Link>
+                    </nav>
+
+                    {/* Right actions */}
+                    <div className="hidden items-center gap-2 sm:flex">
+                        {/* Language Selector Dropdown */}
+                        <div className="relative" ref={langDropdownRef}>
+                            <Tooltip content="Ganti Bahasa / Switch Language" position="bottom">
+                                <button
+                                    type="button"
+                                    onClick={() => setLangOpen(!langOpen)}
+                                    aria-label="Ganti bahasa / Switch language"
+                                    className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-2.5 py-1 text-xs font-semibold text-[#152238] hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
                                 >
-                                    {item.label}
-                                    {active && (
-                                        <span className="absolute -bottom-[25px] left-0 right-0 mx-auto h-[3px] w-6 rounded-full bg-[#0B4EA2]" />
-                                    )}
-                                </Link>
-                            );
-                        })}
-
-                        {/* Komunitas Dropdown */}
-                        <div className="relative" ref={komunitasRef}>
-                            <button
-                                onClick={() => setKomunitas(v => !v)}
-                                className={`flex items-center gap-1.5 rounded-xl py-2 text-sm font-medium transition-colors hover:text-[#0B4EA2] dark:hover:text-blue-400 ${
-                                    isKomunitasActive ? 'font-bold text-[#0B4EA2] dark:text-blue-400' : 'text-slate-600 dark:text-slate-400'
-                                }`}
-                            >
-                                Komunitas
-                                <ChevronDown size={14} className={`transition-transform ${komunitas ? 'rotate-180' : ''}`} />
-                            </button>
-
-                            {komunitas && (
-                                <div className="absolute top-full left-1/2 mt-3 w-56 -translate-x-1/2 rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 shadow-xl">
-                                    {KOMUNITAS_ITEMS.map(({ label, href, icon: Icon }) => (
-                                        <Link
-                                            key={href}
-                                            href={href}
-                                            onClick={() => setKomunitas(false)}
-                                            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors hover:bg-[#EAF4FF] dark:hover:bg-slate-700 hover:text-[#0B4EA2] dark:hover:text-blue-400 ${
-                                                url.startsWith(href) ? 'bg-[#EAF4FF] dark:bg-slate-700 text-[#0B4EA2] dark:text-blue-400 font-semibold' : 'text-slate-700 dark:text-slate-300'
-                                            }`}
-                                        >
-                                            <Icon size={16} className="shrink-0" />
-                                            {label}
-                                        </Link>
-                                    ))}
+                                    <span className="text-sm">{langFlags[lang].flag}</span>
+                                    <span>{langFlags[lang].label}</span>
+                                </button>
+                            </Tooltip>
+                            {langOpen && (
+                                <div className="absolute right-0 mt-2 w-36 overflow-hidden rounded-2xl border border-gray-100 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-900 z-50">
+                                    <button
+                                        type="button"
+                                        onClick={() => { setLanguage("id"); setLangOpen(false); }}
+                                        className={`flex w-full items-center gap-2 px-3 py-2 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 ${lang === "id" ? "text-[#2699fb]" : "text-gray-700 dark:text-slate-300"}`}
+                                    >
+                                        <span>🇮🇩</span> Bahasa Indonesia
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => { setLanguage("en"); setLangOpen(false); }}
+                                        className={`flex w-full items-center gap-2 px-3 py-2 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 ${lang === "en" ? "text-[#2699fb]" : "text-gray-700 dark:text-slate-300"}`}
+                                    >
+                                        <span>🇬🇧</span> English
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => { setLanguage("de"); setLangOpen(false); }}
+                                        className={`flex w-full items-center gap-2 px-3 py-2 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 ${lang === "de" ? "text-[#2699fb]" : "text-gray-700 dark:text-slate-300"}`}
+                                    >
+                                        <span>🇩🇪</span> Deutsch
+                                    </button>
                                 </div>
                             )}
                         </div>
-                    </nav>
 
-                    {/* Right: Dark toggle + Auth */}
-                    <div className="hidden items-center gap-2 lg:flex">
-                        {/* Dark Mode Toggle */}
-                        <button
-                            onClick={toggleDark}
-                            className="grid size-9 place-items-center rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                            title={darkMode ? 'Mode Terang' : 'Mode Gelap'}
-                        >
-                            {darkMode ? <Sun size={17} /> : <Moon size={17} />}
-                        </button>
+                        {/* Celestial Day/Night Theme Toggle Switch */}
+                        <Tooltip content={darkMode ? t("theme_light") : t("theme_dark")} position="bottom">
+                            <ThemeToggleSwitch
+                                checked={darkMode}
+                                onChange={toggleTheme}
+                                ariaLabel={darkMode ? t("theme_light") : t("theme_dark")}
+                                scale={0.82}
+                            />
+                        </Tooltip>
 
-                        {auth?.user?.role === 'librarian' || auth?.user?.role === 'admin' ? (
-                            <a href="/admin" className="rounded-lg border border-amber-300 bg-[#FACC15]/20 px-3 py-1.5 text-xs font-bold text-amber-900 dark:text-amber-400 hover:bg-[#FACC15]/40 transition-colors">
-                                Panel Admin
-                            </a>
-                        ) : null}
+                        {/* Animated Search Bar */}
+                        <SearchBar placeholder={t("nav_search_placeholder")} />
 
+                        {/* User Account State (Guest vs Logged In) */}
                         {auth?.user ? (
-                            <div className="flex items-center gap-2">
-                                <Link href="/dashboard" className="flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 py-1.5 pl-2.5 pr-4 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:border-[#0B4EA2] transition-colors">
-                                    <span className="grid size-6 place-items-center rounded-full bg-[#0B4EA2] text-white text-[10px] font-bold">
-                                        {auth.user.name.charAt(0)}
+                            <div className="relative ml-1" ref={userDropdownRef}>
+                                <button
+                                    type="button"
+                                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                                    className={`inline-flex items-center gap-2 rounded-full border py-1.5 pl-2 pr-3 text-xs font-bold transition-all ${
+                                        userDropdownOpen
+                                            ? "border-[#2699fb] bg-blue-50/50 dark:bg-blue-950/50"
+                                            : "border-gray-200 bg-white hover:bg-gray-50 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
+                                    }`}
+                                >
+                                    <div className="grid size-7 place-items-center rounded-full bg-gradient-to-tr from-[#152238] to-[#2699fb] text-white text-xs font-black shadow-xs">
+                                        {auth.user.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <span className="max-w-[110px] truncate text-[#152238] dark:text-white">
+                                        {auth.user.name.split(" ")[0]}
                                     </span>
-                                    <span>{auth.user.name.split(' ')[0]}</span>
-                                    <span className="rounded bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-slate-600 dark:text-slate-300">
-                                        {auth.user.role}
+                                    <span className={`rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase ${getRoleBadge(auth.user.role).color}`}>
+                                        {getRoleBadge(auth.user.role).label}
                                     </span>
-                                </Link>
-                                <Link href="/logout" method="post" as="button" className="rounded-full p-2 text-slate-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:text-rose-600 transition-colors" title="Keluar">
-                                    <LogOut size={16} />
-                                </Link>
+                                    <ChevronDown size={14} className={`text-gray-400 transition-transform ${userDropdownOpen ? "rotate-180 text-[#2699fb]" : ""}`} />
+                                </button>
+
+                                {/* User Dropdown Menu */}
+                                {userDropdownOpen && (
+                                    <div className="absolute right-0 mt-2 w-72 origin-top-right rounded-2xl border border-gray-200/80 bg-white p-2 shadow-2xl dark:border-slate-800 dark:bg-[#121826] z-50 animate-in fade-in zoom-in-95 duration-100">
+                                        {/* User Header Profile Card */}
+                                        <div className="rounded-xl bg-slate-50 p-3 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800/80">
+                                            <div className="flex items-center gap-3">
+                                                <div className="grid size-10 place-items-center rounded-xl bg-[#152238] text-sm font-black text-white dark:bg-[#2699fb]">
+                                                    {auth.user.name.charAt(0).toUpperCase()}
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="truncate font-display text-xs font-bold text-[#152238] dark:text-white">
+                                                        {auth.user.name}
+                                                    </p>
+                                                    <p className="truncate text-[10px] text-gray-500 dark:text-slate-400">
+                                                        {auth.user.email}
+                                                    </p>
+                                                    <p className="mt-0.5 font-mono text-[9px] font-semibold text-slate-400 dark:text-slate-500">
+                                                        {auth.user.identifier_number ? `ID: ${auth.user.identifier_number}` : 'SMANSA Member'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Menu List */}
+                                        <div className="mt-2 space-y-1">
+                                            {/* Ruang Saya / Dashboard */}
+                                            <Link
+                                                href="/dashboard"
+                                                onClick={() => setUserDropdownOpen(false)}
+                                                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-[#152238] hover:bg-slate-100/70 dark:text-slate-200 dark:hover:bg-slate-800/70 transition-colors"
+                                            >
+                                                <div className="grid size-8 place-items-center rounded-lg bg-blue-50 text-[#2699fb] dark:bg-blue-950/60">
+                                                    <BookOpen size={16} />
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold">Ruang Saya (Dashboard)</p>
+                                                    <p className="text-[10px] text-gray-400">Buku dipinjam & kartu digital</p>
+                                                </div>
+                                            </Link>
+
+                                            {/* Admin Panel (Special Section for Admin/Teacher/Librarian) */}
+                                            {isAdminOrLibrarian && (
+                                                <Link
+                                                    href="/admin-panel"
+                                                    onClick={() => setUserDropdownOpen(false)}
+                                                    className="flex items-center gap-3 rounded-xl border border-blue-100 bg-blue-50/50 px-3 py-2.5 text-xs font-semibold text-[#152238] hover:bg-blue-100/60 dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-200 dark:hover:bg-blue-950/70 transition-colors"
+                                                >
+                                                    <div className="grid size-8 place-items-center rounded-lg bg-[#2699fb] text-white shadow-xs">
+                                                        <Shield size={16} />
+                                                    </div>
+                                                    <div>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <p className="font-bold">Admin Panel</p>
+                                                            <span className="rounded bg-[#2699fb] px-1 py-0.2 text-[8px] font-black uppercase text-white">Guru</span>
+                                                        </div>
+                                                        <p className="text-[10px] text-slate-500 dark:text-blue-300/80">Kelola buku, buletin & WA</p>
+                                                    </div>
+                                                </Link>
+                                            )}
+
+                                            {/* Pengaturan Profil */}
+                                            <Link
+                                                href="/profile"
+                                                onClick={() => setUserDropdownOpen(false)}
+                                                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-[#152238] hover:bg-slate-100/70 dark:text-slate-200 dark:hover:bg-slate-800/70 transition-colors"
+                                            >
+                                                <div className="grid size-8 place-items-center rounded-lg bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                                                    <UserCog size={16} />
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold">Pengaturan Profil</p>
+                                                    <p className="text-[10px] text-gray-400">Ubah data diri & kata sandi</p>
+                                                </div>
+                                            </Link>
+                                        </div>
+
+                                        {/* Divider */}
+                                        <div className="my-1.5 border-t border-gray-100 dark:border-slate-800" />
+
+                                        {/* Log Out Button */}
+                                        <Link
+                                            method="post"
+                                            as="button"
+                                            href="/logout"
+                                            className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/40 transition-colors text-left"
+                                        >
+                                            <div className="grid size-8 place-items-center rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400">
+                                                <LogOut size={16} />
+                                            </div>
+                                            <div>
+                                                <p>Keluar (Log Out)</p>
+                                                <p className="text-[10px] text-rose-400/80">Akhiri sesi di perangkat ini</p>
+                                            </div>
+                                        </Link>
+                                    </div>
+                                )}
                             </div>
                         ) : (
-                            <Link href="/login" className="flex items-center gap-2 rounded-xl bg-[#0B4EA2] px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#083c7d] transition-all">
-                                <LogIn size={14} />
-                                <span>Masuk</span>
+                            <Link
+                                href="/login"
+                                className="ml-1 inline-flex items-center gap-2 rounded-full bg-[#2699fb] px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-[#1783df]"
+                            >
+                                <User size={14} />
+                                <span>{t("nav_login")}</span>
                             </Link>
                         )}
                     </div>
 
-                    {/* Mobile Hamburger */}
-                    <div className="flex items-center gap-2 lg:hidden">
-                        <button onClick={toggleDark} className="grid size-9 place-items-center rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                            {darkMode ? <Sun size={17} /> : <Moon size={17} />}
-                        </button>
-                        <button type="button" onClick={() => setMobileOpen(!mobileOpen)} className="rounded-xl border border-slate-200 dark:border-slate-700 p-2.5 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Menu navigasi">
-                            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-                        </button>
+                    {/* Mobile hamburger & theme switch */}
+                    <div className="flex items-center gap-2.5 lg:hidden">
+                        <ThemeToggleSwitch
+                            checked={darkMode}
+                            onChange={toggleTheme}
+                            ariaLabel={darkMode ? t("theme_light") : t("theme_dark")}
+                            scale={0.75}
+                        />
+                        <HamburgerButton
+                            isOpen={mobileOpen}
+                            onClick={() => setMobileOpen(!mobileOpen)}
+                            ariaLabel="Menu Navigasi Mobile"
+                        />
                     </div>
                 </div>
 
-                {/* Mobile Drawer */}
-                {mobileOpen && (
-                    <div className="border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-5 py-5 shadow-lg lg:hidden">
-                        <nav className="flex flex-col gap-1.5">
-                            {NAV_ITEMS.map((item) => {
-                                const active = isActive(item.href);
-                                return (
-                                    <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
-                                        className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${active ? 'bg-[#EAF4FF] dark:bg-slate-800 text-[#0B4EA2] dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>
-                                        <span>{item.label}</span>
-                                        <ChevronRight size={16} className="text-slate-400" />
-                                    </Link>
-                                );
-                            })}
+                {/* Mobile Backdrop Overlay (Smooth fade) */}
+                <div
+                    className={`fixed inset-x-0 top-[72px] bottom-0 z-30 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden ${
+                        mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
+                    onClick={() => setMobileOpen(false)}
+                    aria-hidden="true"
+                />
 
-                            {/* Komunitas group */}
-                            <div className="mt-1 border-t border-slate-100 dark:border-slate-800 pt-2">
-                                <p className="px-4 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Komunitas</p>
-                                {KOMUNITAS_ITEMS.map(({ label, href, icon: Icon }) => (
-                                    <Link key={href} href={href} onClick={() => setMobileOpen(false)}
-                                        className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${url.startsWith(href) ? 'bg-[#EAF4FF] dark:bg-slate-800 text-[#0B4EA2] dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>
-                                        <Icon size={16} />
-                                        {label}
-                                    </Link>
-                                ))}
+                {/* Mobile menu drawer with smooth height expansion */}
+                <div
+                    className={`mobile-menu-drawer relative z-40 border-t border-gray-100 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-[#090d16]/95 lg:hidden ${
+                        mobileOpen ? "is-open border-b shadow-xl" : ""
+                    }`}
+                >
+                    <div className="overflow-hidden">
+                        <div className="px-5 py-4 max-h-[calc(100vh-76px)] overflow-y-auto space-y-4">
+                            {/* Language switcher with stagger */}
+                            <div
+                                style={{
+                                    transitionDelay: mobileOpen ? "25ms" : "0ms",
+                                }}
+                                className={`flex items-center justify-between rounded-xl bg-gray-50 p-2.5 dark:bg-slate-800/80 transition-all duration-300 ease-out transform ${
+                                    mobileOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+                                }`}
+                            >
+                                <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500 dark:text-slate-300">
+                                    <Globe size={14} /> Bahasa:
+                                </span>
+                                <div className="flex gap-1">
+                                    {(["id", "en", "de"] as Language[]).map((l) => (
+                                        <button
+                                            key={l}
+                                            type="button"
+                                            onClick={() => setLanguage(l)}
+                                            className={`rounded-lg px-2.5 py-1 text-xs font-bold transition-all ${
+                                                lang === l
+                                                    ? "bg-[#2699fb] text-white shadow-xs"
+                                                    : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+                                            }`}
+                                        >
+                                            {langFlags[l].flag} {l.toUpperCase()}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
 
-                            <div className="mt-2 border-t border-slate-100 dark:border-slate-800 pt-3">
+                            {/* Navigation Links with Icons & Staggered Slide-In */}
+                            <div className="space-y-1">
+                                <p
+                                    style={{
+                                        transitionDelay: mobileOpen ? "40ms" : "0ms",
+                                    }}
+                                    className={`px-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 transition-all duration-300 ease-out transform ${
+                                        mobileOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"
+                                    }`}
+                                >
+                                    Menu Utama & Eksplorasi
+                                </p>
+                                <nav className="grid gap-1">
+                                    {mobileNavItems.map((item, idx) => {
+                                        const active = isActive(item.href);
+                                        const IconComponent = item.icon;
+                                        return (
+                                            <Link
+                                                key={item.href}
+                                                href={item.href}
+                                                onClick={() => setMobileOpen(false)}
+                                                style={{
+                                                    transitionDelay: mobileOpen ? `${(idx + 2) * 35}ms` : "0ms",
+                                                }}
+                                                className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] transform ${
+                                                    mobileOpen
+                                                        ? "opacity-100 translate-x-0"
+                                                        : "opacity-0 -translate-x-5 pointer-events-none"
+                                                } ${
+                                                    active
+                                                        ? "bg-blue-50/80 text-[#2699fb] font-bold dark:bg-blue-950/60 dark:text-[#38bdf8]"
+                                                        : "text-[#475569] hover:bg-gray-50 hover:text-[#152238] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+                                                }`}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <span
+                                                        className={`grid size-8 place-items-center rounded-lg transition-colors ${
+                                                            active
+                                                                ? "bg-[#2699fb] text-white shadow-xs"
+                                                                : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                                                        }`}
+                                                    >
+                                                        <IconComponent size={16} />
+                                                    </span>
+                                                    <span>{item.label}</span>
+                                                </div>
+                                                <ChevronRight
+                                                    size={15}
+                                                    className={`transition-transform duration-200 ${
+                                                        active
+                                                            ? "text-[#2699fb] translate-x-0.5"
+                                                            : "text-gray-300 opacity-60 dark:text-slate-600"
+                                                    }`}
+                                                />
+                                            </Link>
+                                        );
+                                    })}
+                                </nav>
+                            </div>
+
+                            {/* Mobile Account Section with Stagger */}
+                            <div
+                                style={{
+                                    transitionDelay: mobileOpen ? `${(mobileNavItems.length + 2) * 35}ms` : "0ms",
+                                }}
+                                className={`border-t border-gray-100 pt-3 dark:border-slate-800 transition-all duration-300 ease-out transform ${
+                                    mobileOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"
+                                }`}
+                            >
                                 {auth?.user ? (
-                                    <div className="space-y-2">
-                                        <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-xl bg-slate-100 dark:bg-slate-800 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-slate-200">
-                                            <User size={16} /><span>Dashboard ({auth.user.name})</span>
-                                        </Link>
-                                        <Link href="/logout" method="post" as="button" onClick={() => setMobileOpen(false)} className="flex w-full items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30">
-                                            <LogOut size={16} /><span>Keluar Akun</span>
-                                        </Link>
+                                    <div className="space-y-3">
+                                        {/* User Banner */}
+                                        <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3 dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800">
+                                            <div className="grid size-10 place-items-center rounded-xl bg-[#152238] text-sm font-bold text-white dark:bg-[#2699fb]">
+                                                {auth.user.name.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="truncate text-xs font-bold text-[#152238] dark:text-white">
+                                                    {auth.user.name}
+                                                </p>
+                                                <p className="truncate text-[10px] text-gray-500 dark:text-slate-400">
+                                                    {auth.user.email}
+                                                </p>
+                                                <span className={`inline-block mt-1 rounded px-1.5 py-0.2 text-[9px] font-extrabold uppercase ${getRoleBadge(auth.user.role).color}`}>
+                                                    {getRoleBadge(auth.user.role).label}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Action Grid */}
+                                        <div className="grid grid-cols-1 gap-2">
+                                            <Link
+                                                href="/dashboard"
+                                                onClick={() => setMobileOpen(false)}
+                                                className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-xs font-bold text-[#152238] shadow-xs hover:border-[#2699fb] dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            >
+                                                <BookOpen size={16} className="text-[#2699fb]" />
+                                                <span>Ruang Saya (Dashboard)</span>
+                                            </Link>
+
+                                            {isAdminOrLibrarian && (
+                                                <Link
+                                                    href="/admin-panel"
+                                                    onClick={() => setMobileOpen(false)}
+                                                    className="flex items-center gap-2.5 rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-2.5 text-xs font-bold text-[#2699fb] shadow-xs hover:bg-blue-100/60 dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-300"
+                                                >
+                                                    <Shield size={16} />
+                                                    <span>Admin Panel Perpustakaan</span>
+                                                </Link>
+                                            )}
+
+                                            <Link
+                                                href="/profile"
+                                                onClick={() => setMobileOpen(false)}
+                                                className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-xs font-bold text-[#152238] shadow-xs hover:border-[#2699fb] dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            >
+                                                <UserCog size={16} className="text-slate-500 dark:text-slate-400" />
+                                                <span>Pengaturan Profil</span>
+                                            </Link>
+
+                                            <Link
+                                                method="post"
+                                                as="button"
+                                                href="/logout"
+                                                onClick={() => setMobileOpen(false)}
+                                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-rose-50 px-3.5 py-2.5 text-xs font-bold text-rose-700 border border-rose-200 hover:bg-rose-100/70 dark:bg-rose-950/50 dark:border-rose-900/60 dark:text-rose-300 transition"
+                                            >
+                                                <LogOut size={16} />
+                                                <span>Keluar (Log Out)</span>
+                                            </Link>
+                                        </div>
                                     </div>
                                 ) : (
-                                    <Link href="/login" onClick={() => setMobileOpen(false)} className="flex items-center justify-center gap-2 rounded-xl bg-[#0B4EA2] py-3 text-sm font-bold text-white shadow-sm">
-                                        <LogIn size={16} /><span>Masuk Anggota</span>
+                                    <Link
+                                        href="/login"
+                                        onClick={() => setMobileOpen(false)}
+                                        className="flex items-center justify-center gap-2 w-full rounded-full bg-[#2699fb] px-4 py-2.5 text-center text-sm font-bold text-white shadow-sm transition hover:bg-[#1783df] active:scale-98"
+                                    >
+                                        <User size={16} />
+                                        <span>{t("nav_login")}</span>
                                     </Link>
                                 )}
                             </div>
-                        </nav>
+                        </div>
                     </div>
-                )}
+                </div>
             </header>
 
-            {/* Main Content */}
-            <main className="flex-1">{children}</main>
+            {/* ── MAIN CONTENT (with page transition) ── */}
+            <main
+                className={`flex-1 transition-all ${
+                    pageTransition === "enter"
+                        ? "page-transition-active"
+                        : "page-transition-exit"
+                }`}
+            >
+                {children}
+            </main>
 
-            {/* Footer */}
-            <footer className="border-t border-slate-200/80 dark:border-slate-800 bg-[#0F172A] text-white">
-                <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 sm:px-8 md:grid-cols-[1.3fr_0.8fr_0.9fr] lg:px-10">
-                    <div>
-                        <div className="flex items-center gap-3">
-                            <span className="grid size-10 place-items-center rounded-xl bg-[#0B4EA2] text-white">
-                                <BookOpen size={20} />
-                            </span>
-                            <div>
-                                <h2 className="font-display text-lg font-bold text-white">Perpustakaan SMAN 1</h2>
-                                <p className="font-mono-display text-[10px] uppercase tracking-widest text-[#FACC15]">Bukittinggi • Sumatera Barat</p>
+            {/* ── REDESIGNED RICH FOOTER ── */}
+            <footer className="relative bg-[#152238] text-white dark:bg-[#05070c] border-t border-slate-800/80">
+                <div className="mx-auto max-w-7xl px-5 pt-14 pb-10 sm:px-8 lg:px-10">
+                    {/* Top Stats Banner */}
+                    <div className="mb-12 rounded-2xl border border-slate-700/60 bg-slate-900/50 p-6 backdrop-blur-xs">
+                        <div className="grid grid-cols-1 divide-y divide-slate-800 sm:grid-cols-3 sm:divide-y-0 sm:divide-x sm:divide-slate-800 text-center gap-4 sm:gap-0">
+                            <div className="px-4 py-2">
+                                <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#2699fb]">1.200+</p>
+                                <p className="mt-1 text-xs text-slate-400 font-medium">{t("footer_stat_books")}</p>
+                            </div>
+                            <div className="px-4 py-2">
+                                <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#FFC533]">40+</p>
+                                <p className="mt-1 text-xs text-slate-400 font-medium">{t("footer_stat_cats")}</p>
+                            </div>
+                            <div className="px-4 py-2">
+                                <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#FF8E4F]">950+</p>
+                                <p className="mt-1 text-xs text-slate-400 font-medium">{t("footer_stat_members")}</p>
                             </div>
                         </div>
-                        <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
-                            Pusat eksplorasi literasi, referensi akademik, dan terbitan digital untuk menunjang prestasi serta wawasan seluruh insan Smansa.
-                        </p>
-                        <div className="mt-4 flex items-center gap-2 text-xs text-slate-400">
-                            <MapPin size={14} className="text-[#FACC15] shrink-0" />
-                            <span>Jl. Syekh M. Jamil Jambek No. 36, Bukittinggi</span>
+                    </div>
+
+                    {/* Columns Grid */}
+                    <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1.2fr]">
+                        {/* Brand & Address */}
+                        <div>
+                            <div className="flex items-center gap-2.5">
+                                <span className="grid size-9 place-items-center rounded-xl bg-[#2699fb] text-white shadow-sm">
+                                    <BookOpen size={18} strokeWidth={2} />
+                                </span>
+                                <div>
+                                    <span className="block font-display text-sm font-extrabold tracking-tight">Perpustakaan</span>
+                                    <span className="block text-[9px] font-semibold uppercase tracking-[0.14em] text-blue-300">SMAN 1 Bukittinggi</span>
+                                </div>
+                            </div>
+                            <p className="mt-4 max-w-sm text-xs leading-relaxed text-slate-400">
+                                {t('footer_brand_desc')}
+                            </p>
+                            <div className="mt-4 flex items-start gap-2 text-xs text-slate-400">
+                                <MapPin size={15} className="text-[#2699fb] shrink-0 mt-0.5" />
+                                <span>{t('footer_address_val')}</span>
+                            </div>
+                            <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
+                                <Phone size={14} className="text-[#2699fb] shrink-0" />
+                                <span>(0752) 21107 · 0812-6789-0123</span>
+                            </div>
+                            <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
+                                <Mail size={14} className="text-[#2699fb] shrink-0" />
+                                <span>perpustakaan@sman1bukittinggi.sch.id</span>
+                            </div>
+                        </div>
+
+                        {/* Links 1: Koleksi */}
+                        <div>
+                            <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">{t('footer_col_reading')}</h4>
+                            <ul className="mt-4 space-y-2.5 text-xs text-slate-400">
+                                <li><Link href="/catalog" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_catalog')}</Link></li>
+                                <li><Link href="/magazines" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_genta')}</Link></li>
+                                <li><Link href="/magazines?type=bulletin" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_kurtaw')}</Link></li>
+                                <li><Link href="/karya-smansa" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_works')}</Link></li>
+                            </ul>
+                        </div>
+
+                        {/* Links 2: Layanan */}
+                        <div>
+                            <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">{t('footer_col_services')}</h4>
+                            <ul className="mt-4 space-y-2.5 text-xs text-slate-400">
+                                <li><Link href="/events" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_events')}</Link></li>
+                                <li><Link href="/ranking" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_ranking')}</Link></li>
+                                <li><Link href="/information" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_info')}</Link></li>
+                                <li><Link href="/contact" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_contact')}</Link></li>
+                            </ul>
+                        </div>
+
+                        {/* Operasional & Fast Back to top */}
+                        <div className="flex flex-col justify-between">
+                            <div>
+                                <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">{t('footer_col_hours')}</h4>
+                                <div className="mt-4 space-y-2 text-xs text-slate-400">
+                                    <p>{t('footer_hours_mon_thu')}</p>
+                                    <p>{t('footer_hours_fri')}</p>
+                                    <p>{t('footer_hours_sat')}</p>
+                                    <p className="pt-2 text-[11px] text-amber-300 font-medium">{t('footer_hours_online')}</p>
+                                </div>
+                            </div>
+
+                            {/* Back to top button */}
+                            <div className="mt-6">
+                                <button
+                                    type="button"
+                                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                                    className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/80 px-4 py-2 text-xs font-bold text-slate-300 transition hover:border-[#2699fb] hover:bg-[#2699fb] hover:text-white"
+                                >
+                                    <ArrowUp size={14} />
+                                    <span>{t("footer_back_to_top")}</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <h3 className="font-mono-display text-[11px] font-bold uppercase tracking-[0.18em] text-[#FACC15]">Jelajah Koleksi</h3>
-                        <div className="mt-4 flex flex-col items-start gap-2.5 text-sm text-slate-400">
-                            <Link href="/catalog" className="hover:text-white transition-colors">Katalog Buku (OPAC)</Link>
-                            <Link href="/magazines" className="hover:text-white transition-colors">E-Magazine Genta Smansa</Link>
-                            <Link href="/ranking" className="hover:text-white transition-colors">Ranking Peminjam</Link>
-                            <Link href="/translations" className="hover:text-white transition-colors">Koleksi Multibahasa</Link>
-                            <Link href="/karya-smansa" className="hover:text-white transition-colors">Karya Smansa</Link>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 className="font-mono-display text-[11px] font-bold uppercase tracking-[0.18em] text-[#FACC15]">Layanan Pustakawan</h3>
-                        <p className="mt-4 text-xs leading-relaxed text-slate-400">
-                            Butuh bantuan pencarian literatur? Hubungi tim pustakawan kami.
+                    {/* Bottom Copyright */}
+                    <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 sm:flex-row text-xs text-slate-400">
+                        <p>© {new Date().getFullYear()} Perpustakaan Sunaryaman Musthofa SMA Negeri 1 Bukittinggi. {t('footer_copyright')}</p>
+                        <p className="font-mono text-[10px] text-slate-500">
+                            NPSN 10303496 · {t('footer_system_label')}
                         </p>
-                        <div className="mt-4 space-y-1 text-xs font-medium text-slate-300">
-                            <p>Senin - Jumat: 07.30 - 16.00 WIB</p>
-                            <p className="text-[#FACC15] font-semibold">perpustakaan@sman1bukittinggi.sch.id</p>
-                        </div>
                     </div>
                 </div>
-
-                <div className="border-t border-slate-800 bg-[#0A0F1D] py-6">
-                    <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 text-xs text-slate-400 sm:flex-row sm:px-8">
-                        <span>© {new Date().getFullYear()} Perpustakaan SMAN 1 Bukittinggi. All rights reserved.</span>
-                        <div className="flex items-center gap-4">
-                            <span className="flex items-center gap-1"><span className="font-bold text-[#FACC15]">IG:</span> @perpus_smansabkt</span>
-                            <span>•</span>
-                            <span className="font-medium text-slate-400">SLAVUSworks Production</span>
-                        </div>
-                    </div>
-                </div>
+                {/* Solid bottom accent strip */}
+                <div className="h-9 w-full bg-[#080d17] border-t border-slate-900/90" />
             </footer>
         </div>
+        </ScrollRevealProvider>
+        </ToastProvider>
     );
 }
+
+export default SiteShell;

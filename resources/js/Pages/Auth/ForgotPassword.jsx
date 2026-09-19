@@ -48,7 +48,7 @@ export default function ForgotPassword({ status }) {
                             autoFocus
                             onChange={(e) => setData('email', e.target.value)}
                             placeholder="nama@email.com"
-                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#0B4EA2] focus:ring-2 focus:ring-[#0B4EA2]/20"
+                            className="block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-sm text-[#0F172A] dark:text-slate-100 placeholder-slate-400 outline-none transition focus:border-[#152238] focus:ring-2 focus:ring-[#152238]/20"
                         />
                     </div>
                     <InputError message={errors.email} className="mt-1.5" />
@@ -57,7 +57,7 @@ export default function ForgotPassword({ status }) {
                 <button
                     type="submit"
                     disabled={processing}
-                    className="flex w-full items-center justify-center rounded-xl bg-[#0B4EA2] px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#083c7d] disabled:opacity-60"
+                    className="flex w-full items-center justify-center rounded-xl bg-[#152238] px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#0f172a] disabled:opacity-60"
                 >
                     {processing ? 'Mengirim...' : 'Kirim Tautan Reset'}
                 </button>
@@ -65,7 +65,7 @@ export default function ForgotPassword({ status }) {
 
             <p className="mt-8 text-center text-sm text-slate-500 dark:text-slate-400">
                 Ingat kata sandinya?{' '}
-                <Link href={route('login')} className="font-semibold text-[#0B4EA2] dark:text-blue-400 hover:underline">
+                <Link href={route('login')} className="font-semibold text-[#152238] dark:text-blue-400 hover:underline">
                     Masuk sekarang
                 </Link>
             </p>

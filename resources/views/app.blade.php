@@ -3,21 +3,36 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="theme-color" content="#0B3866">
+        <link rel="manifest" href="/manifest.json">
 
-        <title inertia>{{ config('app.name', 'Perpustakaan SMAN 1 Bukittinggi') }}</title>
+        <title inertia>{{ config('app.name') === 'Laravel' ? 'Perpustakaan SMAN 1 Bukittinggi' : config('app.name', 'Perpustakaan SMAN 1 Bukittinggi') }}</title>
 
-        <!-- Typography: Inter, Space Grotesk, JetBrains Mono -->
+        <!-- Typography: Inter, Plus Jakarta Sans, JetBrains Mono -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+        <script>
+            (function() {
+                try {
+                    var theme = localStorage.getItem('smansa-theme');
+                    if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                } catch (e) {}
+            })();
+        </script>
         <!-- Scripts -->
         @routes
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx'])
         @inertiaHead
     </head>
-    <body class="min-h-full bg-[#F8FAFC] text-[#0F172A] font-sans antialiased selection:bg-[#0B4EA2] selection:text-white">
+    <body class="min-h-full bg-white text-[#152238] dark:bg-[#090d16] dark:text-[#f8fafc] font-sans antialiased selection:bg-[#2699fb] selection:text-white">
         @inertia
     </body>
 </html>

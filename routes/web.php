@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\EbookReaderController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InfoController;
@@ -18,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/books/{slug}', [CatalogController::class, 'show'])->name('catalog.show');
+Route::get('/books/{slug}/read', [EbookReaderController::class, 'read'])->name('books.read');
+Route::get('/books/{slug}/stream', [EbookReaderController::class, 'streamPdf'])->name('books.stream')->middleware(['auth']);
+Route::post('/books/{id}/renew-online', [EbookReaderController::class, 'renewOnlineLoan'])->name('books.renew_online');
+Route::post('/books/{id}/save-progress', [EbookReaderController::class, 'saveProgress'])->name('books.save_progress');
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
 Route::get('/magazines', [MagazineController::class, 'index'])->name('magazines.index');
 Route::get('/magazines/{id}', [MagazineController::class, 'show'])->name('magazines.show');
@@ -38,6 +43,21 @@ Route::get('/admin-panel', [AdminController::class, 'panel'])->name('admin.panel
 
 // Authenticated Member Area
 Route::middleware(['auth'])->group(function () {
+    Route::post('/admin-panel/books', [AdminController::class, 'storeBook'])->name('admin.books.store');
+    Route::delete('/admin-panel/books/{id}', [AdminController::class, 'deleteBook'])->name('admin.books.destroy');
+    Route::post('/admin-panel/magazines', [AdminController::class, 'storeMagazineEdition'])->name('admin.magazines.store');
+    Route::delete('/admin-panel/magazines/{id}', [AdminController::class, 'deleteMagazineEdition'])->name('admin.magazines.destroy');
+    Route::post('/admin-panel/events', [AdminController::class, 'storeEvent'])->name('admin.events.store');
+    Route::delete('/admin-panel/events/{id}', [AdminController::class, 'deleteEvent'])->name('admin.events.destroy');
+    Route::post('/admin-panel/settings', [AdminController::class, 'updateSettings'])->name('admin.settings.update');
+    // Sirkulasi Meja & Scan Kartu Pelajar
+    Route::get('/admin-panel/lookup-member', [AdminController::class, 'quickLookupMember'])->name('admin.lookup_member');
+    Route::post('/admin-panel/quick-loan', [AdminController::class, 'quickStoreLoan'])->name('admin.quick_loan');
+    Route::post('/admin-panel/quick-return/{id}', [AdminController::class, 'quickReturnLoan'])->name('admin.quick_return');
+    Route::post('/admin-panel/sync-overdue', [AdminController::class, 'syncOverdueLoans'])->name('admin.sync_overdue');
+    Route::get('/admin-panel/export-report', [AdminController::class, 'exportCirculationReport'])->name('admin.export_report');
+
+
     Route::get('/dashboard', [AccountController::class, 'dashboard'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

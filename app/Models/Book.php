@@ -25,12 +25,15 @@ class Book extends Model
         'synopsis',
         'shelf_location',
         'cover_image',
+        'ebook_file_path',
+        'is_ebook',
         'popularity',
     ];
 
     protected $casts = [
         'publication_year' => 'integer',
         'popularity' => 'integer',
+        'is_ebook' => 'boolean',
     ];
 
     protected $appends = [

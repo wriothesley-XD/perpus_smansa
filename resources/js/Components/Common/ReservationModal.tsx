@@ -12,7 +12,8 @@ interface ReservationModalProps {
 export function ReservationModal({ book, isOpen, onClose }: ReservationModalProps) {
     const page = usePage();
     const authUser = page.props.auth?.user;
-    const flash = page.props.flash;
+    const flash = page.props.flash as { success?: string; reservation_code?: string };
+    const isAvailable = (book.available_copies_count ?? 0) > 0;
 
     const { data, setData, post, processing, errors, reset, wasSuccessful } = useForm({
         book_id: book.id,
@@ -65,24 +66,24 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 p-0 backdrop-blur-sm transition-all sm:items-center sm:p-4"
+            className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/60 p-0 backdrop-blur-sm transition-all sm:items-center sm:p-4"
             role="dialog"
             aria-modal="true"
         >
-            <div className="w-full max-w-lg rounded-t-3xl border border-slate-200 bg-white p-6 shadow-2xl transition-all sm:rounded-3xl sm:p-8">
-                <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+            <div className="w-full max-w-lg rounded-t-3xl border border-slate-200 bg-white p-6 shadow-2xl transition-all sm:rounded-3xl sm:p-8 dark:border-slate-800 dark:bg-[#0f172a]">
+                <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4 dark:border-slate-800">
                     <div>
-                        <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.16em] text-[#0B4EA2]">
-                            Reservasi Koleksi
+                        <span className="font-mono-display text-[10px] font-bold uppercase tracking-[0.16em] text-[#2699fb] dark:text-[#38bdf8]">
+                            {isAvailable ? 'Reservasi Koleksi' : 'Daftar Tunggu'}
                         </span>
-                        <h2 className="mt-1 font-display text-xl font-bold text-[#0F172A]">
+                        <h2 className="mt-1 font-display text-xl font-bold text-[#0F172A] dark:text-white">
                             {book.title}
                         </h2>
                     </div>
                     <button
                         type="button"
                         onClick={handleClose}
-                        className="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200 hover:text-[#0F172A] transition-colors"
+                        className="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200 hover:text-[#0F172A] dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white transition-colors"
                         aria-label="Tutup form"
                     >
                         <X size={18} />
@@ -91,23 +92,29 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
 
                 {isSubmitted ? (
                     <div className="py-8 text-center">
-                        <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-emerald-50 text-emerald-600">
+                        <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300">
                             <CheckCircle2 size={32} />
                         </div>
-                        <h3 className="mt-5 font-display text-2xl font-bold text-[#0F172A]">
-                            Reservasi Berhasil Diajukan!
+                        <h3 className="mt-5 font-display text-2xl font-bold text-[#0F172A] dark:text-white">
+                            {isAvailable ? 'Reservasi Berhasil Diajukan!' : 'Kamu masuk daftar tunggu!'}
                         </h3>
-                        <p className="mx-auto mt-2.5 max-w-sm text-sm leading-relaxed text-[#64748B]">
+                        <p className="mx-auto mt-2.5 max-w-sm text-sm leading-relaxed text-[#64748B] dark:text-slate-300">
                             {flash?.success ||
                                 'Permintaan reservasi Anda telah tercatat. Silakan tunjukkan kartu identitas/NIS ke pustakawan saat pengambilan buku.'}
                         </p>
-                        <div className="mt-6 rounded-xl border border-emerald-100 bg-emerald-50/50 p-3 text-xs text-emerald-800 text-left">
-                            <strong>Masa berlaku reservasi:</strong> 2 hari kerja sejak pengajuan. Buku akan otomatis kembali tersedia untuk umum bila tidak diambil.
+                        <div className="mt-6 rounded-xl border border-emerald-100 bg-emerald-50/50 p-3 text-xs text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-300 text-left">
+                            {flash?.reservation_code && (
+                                <>
+                                    <strong className="block uppercase tracking-wider text-[10px]">Kode pengambilan / antrean</strong>
+                                    <span className="mt-2 block font-mono text-xl font-bold tracking-[0.18em] text-[#0F172A] dark:text-white">{flash.reservation_code}</span>
+                                </>
+                            )}
+                            <strong className="mt-3 block">{isAvailable ? 'Masa berlaku reservasi:' : 'Status:'}</strong> {isAvailable ? '2 hari kerja sejak pengajuan. Buku akan otomatis kembali tersedia untuk umum bila tidak diambil.' : 'Kami akan mengingatkan saat eksemplar tersedia.'}
                         </div>
                         <button
                             type="button"
                             onClick={handleClose}
-                            className="mt-6 w-full rounded-xl bg-[#0B4EA2] py-3 text-sm font-bold text-white shadow-md hover:bg-[#083c7d] transition-all"
+                            className="mt-6 w-full rounded-xl bg-[#2699fb] py-3 text-sm font-bold text-white shadow-md hover:bg-[#1783df] transition-all"
                         >
                             Selesai
                         </button>
@@ -115,13 +122,13 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                 ) : (
                     <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                         {((errors as Record<string, string>).reservation) && (
-                            <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-700">
+                            <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300">
                                 {((errors as Record<string, string>).reservation)}
                             </div>
                         )}
 
                         <div>
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                                 Nama Lengkap
                             </label>
                             <input
@@ -130,14 +137,14 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                                 value={data.name}
                                 onChange={(e) => setData('name', e.target.value)}
                                 placeholder="Masukkan nama sesuai kartu identitas"
-                                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#0B4EA2] focus:bg-white focus:ring-2 focus:ring-[#0B4EA2]/15"
+                                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] dark:border-slate-700 dark:bg-slate-800/80 dark:text-white outline-none transition focus:border-[#2699fb] focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-[#2699fb]/15"
                             />
                             {errors.name && <p className="mt-1 text-xs text-rose-600">{errors.name}</p>}
                         </div>
 
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                             <div>
-                                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                                     NIS / NIP
                                 </label>
                                 <input
@@ -146,13 +153,13 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                                     value={data.nis}
                                     onChange={(e) => setData('nis', e.target.value)}
                                     placeholder="Contoh: 23101"
-                                    className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#0B4EA2] focus:bg-white focus:ring-2 focus:ring-[#0B4EA2]/15"
+                                    className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] dark:border-slate-700 dark:bg-slate-800/80 dark:text-white outline-none transition focus:border-[#2699fb] focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-[#2699fb]/15"
                                 />
                                 {errors.nis && <p className="mt-1 text-xs text-rose-600">{errors.nis}</p>}
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                                     Kelas / Unit
                                 </label>
                                 <input
@@ -161,7 +168,7 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                                     value={data.class_name}
                                     onChange={(e) => setData('class_name', e.target.value)}
                                     placeholder="Contoh: XI MIPA 1"
-                                    className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#0B4EA2] focus:bg-white focus:ring-2 focus:ring-[#0B4EA2]/15"
+                                    className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] dark:border-slate-700 dark:bg-slate-800/80 dark:text-white outline-none transition focus:border-[#2699fb] focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-[#2699fb]/15"
                                 />
                                 {errors.class_name && (
                                     <p className="mt-1 text-xs text-rose-600">{errors.class_name}</p>
@@ -170,7 +177,7 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                         </div>
 
                         <div>
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                                 Nomor WhatsApp / HP (Opsional)
                             </label>
                             <input
@@ -178,15 +185,15 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                                 value={data.phone_number}
                                 onChange={(e) => setData('phone_number', e.target.value)}
                                 placeholder="Untuk notifikasi konfirmasi status buku"
-                                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] outline-none transition focus:border-[#0B4EA2] focus:bg-white focus:ring-2 focus:ring-[#0B4EA2]/15"
+                                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-[#0F172A] dark:border-slate-700 dark:bg-slate-800/80 dark:text-white outline-none transition focus:border-[#2699fb] focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-[#2699fb]/15"
                             />
                             {errors.phone_number && (
                                 <p className="mt-1 text-xs text-rose-600">{errors.phone_number}</p>
                             )}
                         </div>
 
-                        <div className="flex items-center gap-2 pt-2 text-[11px] text-slate-500">
-                            <ShieldCheck size={14} className="text-[#0B4EA2] shrink-0" />
+                        <div className="flex items-center gap-2 pt-2 text-[11px] text-slate-500 dark:text-slate-400">
+                            <ShieldCheck size={14} className="text-[#2699fb] shrink-0" />
                             <span>Data disimpan secara aman sesuai ketentuan sirkulasi SMAN 1 Bukittinggi.</span>
                         </div>
 
@@ -194,16 +201,16 @@ export function ReservationModal({ book, isOpen, onClose }: ReservationModalProp
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                className="flex-1 rounded-xl border border-slate-200 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
+                                className="flex-1 rounded-xl border border-slate-200 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
                             >
                                 Batal
                             </button>
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="flex-1 rounded-xl bg-[#0B4EA2] py-3 text-sm font-bold text-white shadow-md hover:bg-[#083c7d] transition-all disabled:opacity-50"
+                                className="flex-1 rounded-xl bg-[#2699fb] py-3 text-sm font-bold text-white shadow-md hover:bg-[#1783df] transition-all disabled:opacity-50"
                             >
-                                {processing ? 'Memproses…' : 'Konfirmasi Reservasi'}
+                                {processing ? 'Memproses...' : isAvailable ? 'Konfirmasi Reservasi' : 'Daftar & Ingatkan Saya'}
                             </button>
                         </div>
                     </form>

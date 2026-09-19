@@ -22,12 +22,6 @@ class ReservationController extends Controller
 
         $book = Book::with('copies')->findOrFail($validated['book_id']);
 
-        if (!$book->is_available) {
-            return back()->withErrors([
-                'reservation' => 'Saat ini seluruh eksemplar buku sedang dipinjam.',
-            ]);
-        }
-
         // Duplicate prevention: check for active/pending reservation for this NIS or user
         $existing = Reservation::where('book_id', $book->id)
             ->where('status', 'pending')
@@ -57,9 +51,15 @@ class ReservationController extends Controller
             'guest_phone' => $validated['phone_number'] ?? null,
             'status' => 'pending',
             'expires_at' => now()->addDays(2),
-            'notes' => 'Reservasi diajukan melalui portal web perpustakaan.',
+            'notes' => $book->is_available
+                ? 'Reservasi diajukan melalui portal web perpustakaan.'
+                : 'Masuk daftar tunggu; kirim pengingat saat eksemplar tersedia.',
         ]);
 
-        return back()->with('success', "Reservasi berhasil dikonfirmasi dengan kode: {$code}. Silakan ambil buku di perpustakaan dalam 2 hari kerja.");
+        return back()
+            ->with('reservation_code', $code)
+            ->with('success', $book->is_available
+                ? "Reservasi berhasil dikonfirmasi. Silakan ambil buku dalam 2 hari kerja."
+                : "Anda masuk daftar tunggu. Kami akan mengingatkan saat buku tersedia.");
     }
 }
