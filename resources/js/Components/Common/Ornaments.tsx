@@ -117,3 +117,116 @@ export function ReadMoreStamp({ className = "" }: { className?: string }) {
     </div>
   );
 }
+
+/** Hand-drawn curved brush underline stroke (Orange #FF8E4F) */
+export function BrushUnderline({ className = "", color = "#FF8E4F" }: { className?: string; color?: string }) {
+  return (
+    <svg
+      viewBox="0 0 170 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`pointer-events-none absolute -bottom-1.5 left-0 w-full overflow-visible ${className}`}
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M2.5 8.5C32 3.5 90 2 167.5 7.5C125 4.5 45 4 10 10.5"
+        stroke={color}
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** 4-point Crisp Sparkle */
+export function SparkleFourPoint({ size = 16, color = "#FFC533", className = "" }: { size?: number; color?: string; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M12 2 Q12 12 22 12 Q12 12 12 22 Q12 12 2 12 Q12 12 12 2 Z"
+        fill={color}
+      />
+    </svg>
+  );
+}
+
+/** Dot Cluster decoration */
+export function DotCluster({ className = "", color = "#FFC533" }: { className?: string; color?: string }) {
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
+      <circle cx="8" cy="8" r="2.5" fill={color} />
+      <circle cx="24" cy="8" r="2.5" fill={color} />
+      <circle cx="40" cy="8" r="2.5" fill={color} />
+      <circle cx="8" cy="24" r="2.5" fill={color} />
+      <circle cx="24" cy="24" r="2.5" fill={color} />
+      <circle cx="40" cy="24" r="2.5" fill={color} />
+      <circle cx="8" cy="40" r="2.5" fill={color} />
+      <circle cx="24" cy="40" r="2.5" fill={color} />
+      <circle cx="40" cy="40" r="2.5" fill={color} />
+    </svg>
+  );
+}
+
+/** Doodle Outline Icons for CTA section */
+export function DoodleBook({ size = 28, color = "#FFC533", className = "" }: { size?: number; color?: string; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M4 7 C10 6 13 8 16 10 C19 8 22 6 28 7 V25 C22 24 19 26 16 28 C13 26 10 24 4 25 Z" />
+      <path d="M16 10 V28" />
+    </svg>
+  );
+}
+
+export function DoodleGlasses({ size = 28, color = "#FFC533", className = "" }: { size?: number; color?: string; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <circle cx="9" cy="18" r="5" />
+      <circle cx="23" cy="18" r="5" />
+      <path d="M14 18 C16 16 16 16 18 18" />
+      <path d="M4 18 C3 12 7 8 10 7" />
+      <path d="M28 18 C29 12 25 8 22 7" />
+    </svg>
+  );
+}
+
+export function DoodleGraduationCap({ size = 28, color = "#FFC533", className = "" }: { size?: number; color?: string; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M16 6 L29 13 L16 20 L3 13 Z" />
+      <path d="M7 15.5 V22 C7 25 11 27 16 27 C21 27 25 25 25 22 V15.5" />
+      <path d="M29 13 V23" />
+    </svg>
+  );
+}
+
+export function DoodleBulb({ size = 28, color = "#FFC533", className = "" }: { size?: number; color?: string; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M16 4 C11 4 8 8 8 13 C8 17 11 19 12 22 H20 C21 19 24 17 24 13 C24 8 21 4 16 4 Z" />
+      <path d="M12 25 H20" />
+      <path d="M13 28 H19" />
+    </svg>
+  );
+}
+
+export function DoodleTote({ size = 28, color = "#FFC533", className = "" }: { size?: number; color?: string; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <rect x="6" y="11" width="20" height="17" rx="3" />
+      <path d="M11 11 V8 C11 5.5 13 4 16 4 C19 4 21 5.5 21 8 V11" />
+    </svg>
+  );
+}
+
+export function DoodleChat({ size = 28, color = "#FFC533", className = "" }: { size?: number; color?: string; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M6 8 C6 5.8 8 4 11 4 H21 C24 4 26 5.8 26 8 V18 C26 20.2 24 22 21 22 H12 L6 27 Z" />
+      <circle cx="11" cy="13" r="1" fill={color} />
+      <circle cx="16" cy="13" r="1" fill={color} />
+      <circle cx="21" cy="13" r="1" fill={color} />
+    </svg>
+  );
+}

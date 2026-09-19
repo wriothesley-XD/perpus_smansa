@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import { BookCard } from "../../Components/Common/BookCard";
+import { Pagination } from "../../Components/Common/Pagination";
+import { CardSkeleton } from "../../Components/Common/Skeleton";
 import SiteShell from "../../Components/Common/SiteShell";
 import { Book, Category, MagazineEdition } from "../../types/library";
 import { useI18n } from "../../utils/i18n";
@@ -81,140 +83,221 @@ export default function Index({
         { id: "fiksi", label: t("filter_fiksi"), Icon: Sparkles },
     ];
 
+    const recentScrollRef = React.useRef<HTMLDivElement>(null);
+
+    const scrollRecent = (direction: "left" | "right") => {
+        if (recentScrollRef.current) {
+            recentScrollRef.current.scrollBy({
+                left: direction === "left" ? -300 : 300,
+                behavior: "smooth",
+            });
+        }
+    };
+
     return (
         <SiteShell>
-            <Head title={`${t("catalog_title")} — Perpustakaan Sunaryaman Musthofa SMAN 1 Bukittinggi`} />
+            <Head title={`E-Katalog — Temukan Buku Favoritmu | Perpustakaan Sunaryaman Musthofa`} />
 
-            {/* HERO / SEARCH BAR SECTION */}
-            <section className="bg-white px-5 pb-12 pt-10 sm:px-8 lg:px-12 lg:pb-16 lg:pt-14">
+            {/* ── 1. HERO SEARCH SECTION (Identical to Right Artboard) ── */}
+            <section className="bg-white px-5 pt-10 pb-12 sm:px-8 lg:px-14 lg:pt-16 lg:pb-16 dark:bg-[#090d16]">
                 <div className="mx-auto max-w-7xl">
-                    <div className="grid items-center gap-8 lg:grid-cols-[1.4fr_1fr]">
+                    <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
+                        
+                        {/* Left: Heading + Subtitle + Search Input */}
                         <div>
-                            <span className="text-[10px] font-bold uppercase tracking-[.2em] text-[#2699fb]">
-                                {t("nav_catalog")}
-                            </span>
-                            <h1 className="mt-1 font-display text-3xl font-black tracking-tight text-[#152238] sm:text-4xl">
-                                {t("catalog_title")}
+                            <h1 className="font-display text-[clamp(2.4rem,4.5vw,4.2rem)] font-extrabold leading-[1.08] tracking-tight text-[#152238] dark:text-white">
+                                Temukan buku
+                                <br />
+                                favoritmu hari ini
                             </h1>
-                            <p className="mt-2 text-sm text-[#64748b]">
-                                {t("catalog_subtitle")}
+                            <p className="mt-4 max-w-lg text-sm sm:text-base leading-relaxed text-[#64748b] dark:text-slate-300">
+                                Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque tempor.
                             </p>
 
-                            {/* Search bar */}
+                            {/* Pill Search bar */}
                             <form
                                 onSubmit={handleSearchSubmit}
-                                className="mt-6 flex max-w-xl items-center gap-2 rounded-2xl border border-gray-200 bg-white p-1.5 shadow-[0_8px_30px_-15px_rgba(21,34,56,.15)] focus-within:border-[#2699fb] focus-within:ring-4 focus-within:ring-[#2699fb]/10"
+                                className="mt-8 flex max-w-lg items-center gap-2 rounded-full border border-gray-200 bg-white p-1.5 shadow-sm transition-all focus-within:border-[#2699fb] focus-within:ring-4 focus-within:ring-[#2699fb]/10 dark:border-slate-700 dark:bg-slate-900"
                             >
-                                <Search size={16} className="ml-3 shrink-0 text-gray-400" />
+                                <Search size={17} className="ml-3.5 shrink-0 text-gray-400" />
                                 <input
                                     type="text"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    placeholder={t("catalog_search_placeholder")}
-                                    className="w-full bg-transparent px-2 py-2.5 text-sm text-[#152238] outline-none placeholder:text-gray-400"
+                                    placeholder="Cari judul, penulis, atau kategori..."
+                                    className="w-full bg-transparent px-2 py-2 text-xs sm:text-sm text-[#152238] outline-none placeholder:text-gray-400 dark:text-white"
                                 />
                                 <button
                                     type="submit"
-                                    className="rounded-xl bg-[#2699fb] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1783df]"
+                                    className="rounded-full bg-[#2699fb] px-6 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#1783df] active:scale-95"
                                 >
-                                    {t("hero_search_btn")}
+                                    Cari
                                 </button>
                             </form>
+                        </div>
 
-                            {/* Kurikulum Merdeka Quick Filter Badges (Clean Lucide Icons, No Emojis) */}
-                            <div className="mt-4 flex flex-wrap items-center gap-1.5">
-                                {curriculumTabs.map((tab) => {
-                                    const isCurrent = (filters.curriculum || "") === tab.id;
-                                    const IconComponent = tab.Icon;
-                                    return (
-                                        <button
-                                            key={tab.id}
-                                            type="button"
-                                            onClick={() => applyFilters({ curriculum: tab.id || undefined })}
-                                            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition ${
-                                                isCurrent
-                                                    ? "bg-[#152238] text-white shadow-xs dark:bg-[#2699fb]"
-                                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                                            }`}
-                                        >
-                                            <IconComponent size={13} className={isCurrent ? "text-[#FFC533]" : "text-gray-500 dark:text-slate-400"} />
-                                            <span>{tab.label}</span>
-                                        </button>
-                                    );
-                                })}
+                        {/* Right: Dual Rectangular Showcase Photos */}
+                        <div className="relative mx-auto flex h-72 w-full max-w-md items-center justify-center gap-4 sm:h-80">
+                            <div className="h-full w-1/2 overflow-hidden rounded-2xl sm:rounded-3xl shadow-lg ring-2 ring-gray-100 dark:ring-slate-800">
+                                <img
+                                    src="/images/catalog_shelf.jpg"
+                                    alt="Rak buku perpustakaan"
+                                    className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                                    onError={(e) => { (e.target as HTMLImageElement).src = "/images/hero_library.jpg"; }}
+                                />
                             </div>
-
-                            {/* Filter dropdowns */}
-                            <div className="mt-3 flex flex-wrap items-center gap-2">
-                                <span className="flex items-center gap-1 text-xs font-semibold text-gray-400">
-                                    <SlidersHorizontal size={12} /> Filter:
-                                </span>
-
-                                <select
-                                    value={category}
-                                    onChange={(e) => { setCategory(e.target.value); applyFilters({ category: e.target.value }); }}
-                                    className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#152238] shadow-xs focus:border-[#2699fb] focus:outline-none focus:ring-2 focus:ring-[#2699fb]/10"
-                                >
-                                    <option value="">{t("catalog_all_categories")}</option>
-                                    {categories.map((cat) => (
-                                        <option key={cat.id} value={cat.slug}>{cat.name}</option>
-                                    ))}
-                                </select>
-
-                                <select
-                                    value={status}
-                                    onChange={(e) => { setStatus(e.target.value); applyFilters({ status: e.target.value }); }}
-                                    className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#152238] shadow-xs focus:border-[#2699fb] focus:outline-none focus:ring-2 focus:ring-[#2699fb]/10"
-                                >
-                                    <option value="all">{t("catalog_filter_category")}</option>
-                                    <option value="available">{t("status_available")}</option>
-                                    <option value="borrowed">{t("status_borrowed")}</option>
-                                </select>
-
-                                <select
-                                    value={author}
-                                    onChange={(e) => { setAuthor(e.target.value); applyFilters({ author: e.target.value }); }}
-                                    className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#152238] shadow-xs focus:border-[#2699fb] focus:outline-none focus:ring-2 focus:ring-[#2699fb]/10"
-                                >
-                                    <option value="">{t("book_author")}</option>
-                                    {authors.map((name) => (
-                                        <option key={name} value={name}>{name}</option>
-                                    ))}
-                                </select>
-
-                                <select
-                                    value={sort}
-                                    onChange={(e) => { setSort(e.target.value); applyFilters({ sort: e.target.value }); }}
-                                    className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#152238] shadow-xs focus:border-[#2699fb] focus:outline-none focus:ring-2 focus:ring-[#2699fb]/10"
-                                >
-                                    <option value="latest">{t("catalog_sort_latest")}</option>
-                                    <option value="popular">{t("catalog_sort_popular")}</option>
-                                    <option value="title_asc">{t("catalog_sort_title_asc")}</option>
-                                    <option value="title_desc">{t("catalog_sort_title_desc")}</option>
-                                </select>
+                            <div className="h-[88%] w-1/2 overflow-hidden rounded-2xl sm:rounded-3xl shadow-lg ring-2 ring-gray-100 dark:ring-slate-800">
+                                <img
+                                    src="/images/catalog_stack.jpg"
+                                    alt="Koleksi buku"
+                                    className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                                    onError={(e) => { (e.target as HTMLImageElement).src = "/images/about_building.jpg"; }}
+                                />
                             </div>
                         </div>
 
-                        {/* RIGHT: dual rectangular photo showcase */}
-                        <div className="relative mx-auto flex h-64 w-full max-w-sm items-center justify-center gap-4 lg:h-80">
-                            <div className="h-full w-1/2 overflow-hidden rounded-2xl shadow-[0_15px_35px_-15px_rgba(21,34,56,.3)]">
-                                <img src="/images/hero_library.jpg" alt="Koleksi buku" className="h-full w-full object-cover" />
-                            </div>
-                            <div className="h-[85%] w-1/2 overflow-hidden rounded-2xl shadow-[0_15px_35px_-15px_rgba(21,34,56,.3)]">
-                                <img src="/images/about_building.jpg" alt="Perpustakaan" className="h-full w-full object-cover" />
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* SECTION 1 – Buku (Grid) */}
-            <section className="border-t border-gray-100 px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
+            {/* ── 2. BUKU TERBARU SECTION (Identical to Right Artboard) ── */}
+            <section className="border-t border-gray-100 bg-[#f8fafc] px-5 py-12 sm:px-8 lg:px-14 lg:py-16 dark:border-slate-800/80 dark:bg-[#0c121e]">
                 <div className="mx-auto max-w-7xl">
-                    <div className="flex items-end justify-between">
+                    <div className="flex items-center justify-between gap-4">
                         <div>
-                            <h2 className="font-display text-2xl font-black text-[#152238]">{t("sec_books_latest")}</h2>
-                            <p className="mt-1 text-xs text-gray-500">
+                            <h2 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-[#152238] dark:text-white">
+                                Buku terbaru
+                            </h2>
+                            <p className="mt-1 text-xs text-[#64748b] dark:text-slate-400">
+                                Koleksi buku cetak dan e-book rilis terbaru yang siap dibaca
+                            </p>
+                        </div>
+                        <a
+                            href="#katalog-lengkap"
+                            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#2699fb] hover:underline"
+                        >
+                            Lihat semua <ArrowRight size={14} />
+                        </a>
+                    </div>
+
+                    {/* Horizontal Scroll / Carousel */}
+                    <div
+                        ref={recentScrollRef}
+                        className="mt-6 flex gap-4 overflow-x-auto pb-4 scroll-smooth scrollbar-none"
+                    >
+                        {books.data.slice(0, 8).map((book) => (
+                            <div key={book.id} className="w-44 sm:w-48 shrink-0">
+                                <BookCard book={book} />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Navigation Arrows at bottom right */}
+                    <div className="mt-4 flex justify-end gap-2">
+                        <button
+                            type="button"
+                            onClick={() => scrollRecent("left")}
+                            aria-label="Sebelumnya"
+                            className="grid size-8 place-items-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-xs transition hover:border-[#2699fb] hover:text-[#2699fb] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                        >
+                            <span className="text-xs">‹</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => scrollRecent("right")}
+                            aria-label="Berikutnya"
+                            className="grid size-8 place-items-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-xs transition hover:border-[#2699fb] hover:text-[#2699fb] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                        >
+                            <span className="text-xs">›</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            {/* ── 3. FULL CATALOG & FILTERS SECTION ── */}
+            <section id="katalog-lengkap" className="border-t border-gray-100 bg-white px-5 py-12 sm:px-8 lg:px-14 lg:py-16 dark:border-slate-800/80 dark:bg-[#090d16]">
+                <div className="mx-auto max-w-7xl">
+                    
+                    {/* Kurikulum Merdeka Quick Filter Badges */}
+                    <div className="flex flex-wrap items-center gap-2">
+                        {curriculumTabs.map((tab) => {
+                            const isCurrent = (filters.curriculum || "") === tab.id;
+                            const IconComponent = tab.Icon;
+                            return (
+                                <button
+                                    key={tab.id}
+                                    type="button"
+                                    onClick={() => applyFilters({ curriculum: tab.id || undefined })}
+                                    className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition ${
+                                        isCurrent
+                                            ? "bg-[#2699fb] text-white shadow-xs"
+                                            : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                                    }`}
+                                >
+                                    <IconComponent size={13} className={isCurrent ? "text-white" : "text-gray-400"} />
+                                    <span>{tab.label}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* Filter dropdowns row */}
+                    <div className="mt-4 flex flex-wrap items-center gap-2.5">
+                        <span className="flex items-center gap-1 text-xs font-bold text-gray-400">
+                            <SlidersHorizontal size={13} /> Filter:
+                        </span>
+
+                        <select
+                            value={category}
+                            onChange={(e) => { setCategory(e.target.value); applyFilters({ category: e.target.value }); }}
+                            className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#152238] shadow-xs focus:border-[#2699fb] focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                        >
+                            <option value="">{t("catalog_all_categories")}</option>
+                            {categories.map((cat) => (
+                                <option key={cat.id} value={cat.slug}>{cat.name}</option>
+                            ))}
+                        </select>
+
+                        <select
+                            value={status}
+                            onChange={(e) => { setStatus(e.target.value); applyFilters({ status: e.target.value }); }}
+                            className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#152238] shadow-xs focus:border-[#2699fb] focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                        >
+                            <option value="all">{t("catalog_filter_category")}</option>
+                            <option value="available">{t("status_available")}</option>
+                            <option value="borrowed">{t("status_borrowed")}</option>
+                        </select>
+
+                        <select
+                            value={author}
+                            onChange={(e) => { setAuthor(e.target.value); applyFilters({ author: e.target.value }); }}
+                            className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#152238] shadow-xs focus:border-[#2699fb] focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                        >
+                            <option value="">{t("book_author")}</option>
+                            {authors.map((name) => (
+                                <option key={name} value={name}>{name}</option>
+                            ))}
+                        </select>
+
+                        <select
+                            value={sort}
+                            onChange={(e) => { setSort(e.target.value); applyFilters({ sort: e.target.value }); }}
+                            className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#152238] shadow-xs focus:border-[#2699fb] focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                        >
+                            <option value="latest">{t("catalog_sort_latest")}</option>
+                            <option value="popular">{t("catalog_sort_popular")}</option>
+                            <option value="title_asc">{t("catalog_sort_title_asc")}</option>
+                            <option value="title_desc">{t("catalog_sort_title_desc")}</option>
+                        </select>
+                    </div>
+
+                    {/* Results count & reset */}
+                    <div className="mt-8 flex items-end justify-between border-t border-gray-100 pt-6 dark:border-slate-800">
+                        <div>
+                            <h2 className="font-display text-xl sm:text-2xl font-bold text-[#152238] dark:text-white">
+                                Koleksi Lengkap
+                            </h2>
+                            <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
                                 {t("catalog_showing_results")} {books.data.length} {t("catalog_of_results")} {books.total} {t("catalog_books_count")}
                             </p>
                         </div>
@@ -245,25 +328,19 @@ export default function Index({
                         </div>
                     )}
 
-                    {/* Pagination */}
+                    {/* Advanced Pagination */}
                     {books.last_page > 1 && (
-                        <div className="mt-8 flex items-center justify-center gap-2">
-                            {books.links.map((link, i) => (
-                                <button
-                                    key={i}
-                                    disabled={!link.url}
-                                    onClick={() => link.url && router.get(link.url, {}, { preserveScroll: true })}
-                                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                                        link.active
-                                            ? "bg-[#2699fb] text-white shadow-sm"
-                                            : link.url
-                                            ? "border border-gray-200 text-[#152238] hover:bg-gray-50"
-                                            : "cursor-not-allowed border border-gray-100 text-gray-300"
-                                    }`}
-                                    dangerouslySetInnerHTML={{ __html: link.label }}
-                                />
-                            ))}
-                        </div>
+                        <Pagination
+                            currentPage={books.current_page}
+                            lastPage={books.last_page}
+                            from={(books.current_page - 1) * books.data.length + 1}
+                            to={(books.current_page - 1) * books.data.length + books.data.length}
+                            total={books.total}
+                            label="buku"
+                            onPageChange={(page) => {
+                                applyFilters({ page: String(page) });
+                            }}
+                        />
                     )}
                 </div>
             </section>

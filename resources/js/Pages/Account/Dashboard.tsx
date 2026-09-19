@@ -75,7 +75,7 @@ export default function Dashboard({
             <Head title="Dashboard Anggota — Perpustakaan SMAN 1 Bukittinggi" />
 
             {/* User Header Profile */}
-            <div className="paper-grain border-b border-slate-200/80 bg-white py-10 dark:border-slate-800 dark:bg-[#0c121e]">
+            <div className="border-b border-slate-200/80 bg-white py-10 dark:border-slate-800 dark:bg-[#0c121e]">
                 <div className="mx-auto max-w-7xl px-6 sm:px-8">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex items-center gap-4">

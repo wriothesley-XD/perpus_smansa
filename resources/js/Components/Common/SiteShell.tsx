@@ -1,21 +1,37 @@
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import {
+    ArrowUp,
     BookOpen,
+    Calendar,
     ChevronDown,
+    ChevronRight,
     Globe,
+    Home,
+    Info,
+    LayoutDashboard,
     LogOut,
-    Menu,
+    Mail,
+    MapPin,
     Moon,
+    Newspaper,
+    PenTool,
+    Phone,
     Search,
     Shield,
     Sliders,
     Sun,
+    Trophy,
     User,
     UserCog,
-    X,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useI18n, Language } from "../../utils/i18n";
+import { ScrollRevealProvider } from "./ScrollRevealProvider";
+import { HamburgerButton } from "./HamburgerButton";
+import { MegaMenu } from "./MegaMenu";
+import { SearchBar } from "./SearchBar";
+import { Tooltip } from "./Tooltip";
+import { ToastProvider } from "./ToastProvider";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
     const { url, props } = usePage();
@@ -35,9 +51,24 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     const [langOpen, setLangOpen] = useState(false);
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const [darkMode, setDarkMode] = useState(false);
+    const [pageTransition, setPageTransition] = useState<"enter" | "exit">("enter");
     const { lang, setLanguage, t } = useI18n();
     const userDropdownRef = useRef<HTMLDivElement>(null);
     const langDropdownRef = useRef<HTMLDivElement>(null);
+
+    // Inertia Page Transition handling
+    useEffect(() => {
+        const removeStart = router.on("start", () => {
+            setPageTransition("exit");
+        });
+        const removeFinish = router.on("finish", () => {
+            setPageTransition("enter");
+        });
+        return () => {
+            removeStart();
+            removeFinish();
+        };
+    }, []);
 
     // Dark mode sync
     useEffect(() => {
@@ -85,14 +116,15 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     const isActive = (path: string) => path === "/" ? url === "/" : url.startsWith(path);
     const isAdminOrLibrarian = auth?.user && ["admin", "librarian", "teacher"].includes(auth.user.role);
 
-    const navItems = [
-        { label: t("nav_home"), href: "/" },
-        { label: t("nav_catalog"), href: "/catalog" },
-        { label: t("nav_magazine"), href: "/magazines" },
-        { label: t("nav_bulletin"), href: "/magazines?type=bulletin" },
-        { label: t("nav_events"), href: "/events" },
-        { label: t("nav_works"), href: "/karya-smansa" },
-        { label: t("nav_ranking"), href: "/ranking" },
+    const mobileNavItems = [
+        { label: t("nav_home"), href: "/", icon: Home },
+        { label: t("nav_catalog"), href: "/catalog", icon: BookOpen },
+        { label: t("nav_magazine"), href: "/magazines", icon: Newspaper },
+        { label: t("nav_events"), href: "/events", icon: Calendar },
+        { label: t("nav_works"), href: "/karya-smansa", icon: PenTool },
+        { label: t("nav_ranking"), href: "/ranking", icon: Trophy },
+        { label: t("nav_about"), href: "/information", icon: Info },
+        { label: t("nav_contact"), href: "/contact", icon: Phone },
     ];
 
     const langFlags: Record<Language, { label: string; flag: string }> = {
@@ -115,6 +147,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     };
 
     return (
+        <ToastProvider>
+        <ScrollRevealProvider>
         <div className="flex min-h-screen flex-col bg-white text-[#152238] transition-colors duration-200 dark:bg-[#090d16] dark:text-[#f8fafc]">
             {/* ── NAVBAR ── */}
             <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/95 shadow-xs backdrop-blur-md dark:border-slate-800/80 dark:bg-[#090d16]/95">
@@ -131,35 +165,68 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                     </Link>
 
                     {/* Desktop nav */}
-                    <nav className="hidden items-center gap-0.5 xl:gap-1 lg:flex">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all ${
-                                    isActive(item.href)
-                                        ? "bg-[#2699fb]/10 text-[#2699fb] font-bold dark:bg-[#2699fb]/20 dark:text-[#38bdf8]"
-                                        : "text-[#64748b] hover:bg-gray-50 hover:text-[#152238] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
-                                }`}
-                            >
-                                {item.label}
-                            </Link>
-                        ))}
+                    <nav className="hidden items-center gap-1 xl:gap-2 lg:flex">
+                        <Link
+                            href="/"
+                            className={`rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-all ${
+                                isActive("/")
+                                    ? "text-[#2699fb] font-bold"
+                                    : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
+                            }`}
+                        >
+                            {t("nav_home")}
+                        </Link>
+                        <Link
+                            href="/catalog"
+                            className={`rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-all ${
+                                isActive("/catalog")
+                                    ? "text-[#2699fb] font-bold"
+                                    : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
+                            }`}
+                        >
+                            {t("nav_catalog")}
+                        </Link>
+                        <Link
+                            href="/magazines"
+                            className={`rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-all ${
+                                isActive("/magazines")
+                                    ? "text-[#2699fb] font-bold"
+                                    : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
+                            }`}
+                        >
+                            {t("nav_magazine")}
+                        </Link>
+
+                        {/* Mega Menu Dropdown */}
+                        <MegaMenu currentUrl={url} label="Jelajahi" />
+
+                        <Link
+                            href="/contact"
+                            className={`rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-all ${
+                                isActive("/contact")
+                                    ? "text-[#2699fb] font-bold"
+                                    : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
+                            }`}
+                        >
+                            {t("nav_contact")}
+                        </Link>
                     </nav>
 
                     {/* Right actions */}
                     <div className="hidden items-center gap-2 sm:flex">
                         {/* Language Selector Dropdown */}
                         <div className="relative" ref={langDropdownRef}>
-                            <button
-                                type="button"
-                                onClick={() => setLangOpen(!langOpen)}
-                                aria-label="Ganti bahasa / Switch language"
-                                className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-2.5 py-1 text-xs font-semibold text-[#152238] hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-                            >
-                                <span className="text-sm">{langFlags[lang].flag}</span>
-                                <span>{langFlags[lang].label}</span>
-                            </button>
+                            <Tooltip content="Ganti Bahasa / Switch Language" position="bottom">
+                                <button
+                                    type="button"
+                                    onClick={() => setLangOpen(!langOpen)}
+                                    aria-label="Ganti bahasa / Switch language"
+                                    className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-2.5 py-1 text-xs font-semibold text-[#152238] hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+                                >
+                                    <span className="text-sm">{langFlags[lang].flag}</span>
+                                    <span>{langFlags[lang].label}</span>
+                                </button>
+                            </Tooltip>
                             {langOpen && (
                                 <div className="absolute right-0 mt-2 w-36 overflow-hidden rounded-2xl border border-gray-100 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-900 z-50">
                                     <button
@@ -188,19 +255,19 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                         </div>
 
                         {/* Dark/Light Mode Toggle */}
-                        <button
-                            type="button"
-                            onClick={toggleTheme}
-                            aria-label={darkMode ? t("theme_light") : t("theme_dark")}
-                            className="grid size-9 place-items-center rounded-full text-[#64748b] transition hover:bg-gray-100 hover:text-[#152238] dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
-                        >
-                            {darkMode ? <Sun size={17} className="text-amber-400" /> : <Moon size={17} />}
-                        </button>
+                        <Tooltip content={darkMode ? t("theme_light") : t("theme_dark")} position="bottom">
+                            <button
+                                type="button"
+                                onClick={toggleTheme}
+                                aria-label={darkMode ? t("theme_light") : t("theme_dark")}
+                                className="grid size-9 place-items-center rounded-full text-[#64748b] transition hover:bg-gray-100 hover:text-[#152238] dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+                            >
+                                {darkMode ? <Sun size={17} className="text-amber-400" /> : <Moon size={17} />}
+                            </button>
+                        </Tooltip>
 
-                        {/* Search Link */}
-                        <Link href="/catalog" aria-label={t("nav_search_aria")} className="grid size-9 place-items-center rounded-full text-[#64748b] transition hover:bg-gray-100 hover:text-[#152238] dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white">
-                            <Search size={17} />
-                        </Link>
+                        {/* Animated Search Bar */}
+                        <SearchBar placeholder={t("nav_search_placeholder")} />
 
                         {/* User Account State (Guest vs Logged In) */}
                         {auth?.user ? (
@@ -344,162 +411,244 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                         >
                             {darkMode ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} />}
                         </button>
-                        <button
-                            type="button"
+                        <HamburgerButton
+                            isOpen={mobileOpen}
                             onClick={() => setMobileOpen(!mobileOpen)}
-                            aria-label="Buka menu"
-                            className="grid size-10 place-items-center rounded-full border border-gray-200 text-[#152238] dark:border-slate-700 dark:text-white"
-                        >
-                            {mobileOpen ? <X size={19} /> : <Menu size={19} />}
-                        </button>
+                            ariaLabel="Menu Navigasi Mobile"
+                        />
                     </div>
                 </div>
 
-                {/* Mobile menu drawer */}
-                {mobileOpen && (
-                    <div className="border-t border-gray-100 bg-white px-5 py-4 dark:border-slate-800 dark:bg-[#090d16] lg:hidden max-h-[85vh] overflow-y-auto">
-                        {/* Language switcher inside mobile menu */}
-                        <div className="mb-3 flex items-center justify-between rounded-xl bg-gray-50 p-2.5 dark:bg-slate-800/80">
-                            <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500 dark:text-slate-300">
-                                <Globe size={14} /> Bahasa:
-                            </span>
-                            <div className="flex gap-1">
-                                {(["id", "en", "de"] as Language[]).map((l) => (
-                                    <button
-                                        key={l}
-                                        type="button"
-                                        onClick={() => setLanguage(l)}
-                                        className={`rounded-lg px-2.5 py-1 text-xs font-bold ${
-                                            lang === l
-                                                ? "bg-[#2699fb] text-white"
-                                                : "bg-white text-gray-700 dark:bg-slate-700 dark:text-slate-200"
-                                        }`}
-                                    >
-                                        {langFlags[l].flag} {l.toUpperCase()}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
+                {/* Mobile Backdrop Overlay (Smooth fade) */}
+                <div
+                    className={`fixed inset-x-0 top-[72px] bottom-0 z-30 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden ${
+                        mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
+                    onClick={() => setMobileOpen(false)}
+                    aria-hidden="true"
+                />
 
-                        {/* Navigation Links */}
-                        <nav className="grid gap-1">
-                            {navItems.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    onClick={() => setMobileOpen(false)}
-                                    className={`rounded-xl px-4 py-2.5 text-sm font-semibold ${
-                                        isActive(item.href)
-                                            ? "bg-[#f0f7ff] text-[#2699fb] dark:bg-blue-950/60 dark:text-[#38bdf8]"
-                                            : "text-[#64748b] hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-800"
+                {/* Mobile menu drawer with smooth height expansion */}
+                <div
+                    className={`mobile-menu-drawer relative z-40 border-t border-gray-100 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-[#090d16]/95 lg:hidden ${
+                        mobileOpen ? "is-open border-b shadow-xl" : ""
+                    }`}
+                >
+                    <div className="overflow-hidden">
+                        <div className="px-5 py-4 max-h-[calc(100vh-76px)] overflow-y-auto space-y-4">
+                            {/* Language switcher with stagger */}
+                            <div
+                                style={{
+                                    transitionDelay: mobileOpen ? "25ms" : "0ms",
+                                }}
+                                className={`flex items-center justify-between rounded-xl bg-gray-50 p-2.5 dark:bg-slate-800/80 transition-all duration-300 ease-out transform ${
+                                    mobileOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+                                }`}
+                            >
+                                <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500 dark:text-slate-300">
+                                    <Globe size={14} /> Bahasa:
+                                </span>
+                                <div className="flex gap-1">
+                                    {(["id", "en", "de"] as Language[]).map((l) => (
+                                        <button
+                                            key={l}
+                                            type="button"
+                                            onClick={() => setLanguage(l)}
+                                            className={`rounded-lg px-2.5 py-1 text-xs font-bold transition-all ${
+                                                lang === l
+                                                    ? "bg-[#2699fb] text-white shadow-xs"
+                                                    : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+                                            }`}
+                                        >
+                                            {langFlags[l].flag} {l.toUpperCase()}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Navigation Links with Icons & Staggered Slide-In */}
+                            <div className="space-y-1">
+                                <p
+                                    style={{
+                                        transitionDelay: mobileOpen ? "40ms" : "0ms",
+                                    }}
+                                    className={`px-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 transition-all duration-300 ease-out transform ${
+                                        mobileOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"
                                     }`}
                                 >
-                                    {item.label}
-                                </Link>
-                            ))}
-                            <Link
-                                href="/information"
-                                onClick={() => setMobileOpen(false)}
-                                className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#64748b] hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-800"
-                            >
-                                {t("nav_about")}
-                            </Link>
-                            <Link
-                                href="/contact"
-                                onClick={() => setMobileOpen(false)}
-                                className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#64748b] hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-800"
-                            >
-                                {t("nav_contact")}
-                            </Link>
-                        </nav>
-
-                        {/* Mobile Account Section */}
-                        <div className="mt-4 border-t border-gray-100 pt-4 dark:border-slate-800">
-                            {auth?.user ? (
-                                <div className="space-y-3">
-                                    {/* User Banner */}
-                                    <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3 dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800">
-                                        <div className="grid size-10 place-items-center rounded-xl bg-[#152238] text-sm font-bold text-white dark:bg-[#2699fb]">
-                                            {auth.user.name.charAt(0).toUpperCase()}
-                                        </div>
-                                        <div className="min-w-0 flex-1">
-                                            <p className="truncate text-xs font-bold text-[#152238] dark:text-white">
-                                                {auth.user.name}
-                                            </p>
-                                            <p className="truncate text-[10px] text-gray-500 dark:text-slate-400">
-                                                {auth.user.email}
-                                            </p>
-                                            <span className={`inline-block mt-1 rounded px-1.5 py-0.2 text-[9px] font-extrabold uppercase ${getRoleBadge(auth.user.role).color}`}>
-                                                {getRoleBadge(auth.user.role).label}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Action Grid */}
-                                    <div className="grid grid-cols-1 gap-2">
-                                        <Link
-                                            href="/dashboard"
-                                            onClick={() => setMobileOpen(false)}
-                                            className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-xs font-bold text-[#152238] shadow-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                                        >
-                                            <BookOpen size={16} className="text-[#2699fb]" />
-                                            <span>Ruang Saya (Dashboard)</span>
-                                        </Link>
-
-                                        {isAdminOrLibrarian && (
+                                    Menu Utama & Eksplorasi
+                                </p>
+                                <nav className="grid gap-1">
+                                    {mobileNavItems.map((item, idx) => {
+                                        const active = isActive(item.href);
+                                        const IconComponent = item.icon;
+                                        return (
                                             <Link
-                                                href="/admin-panel"
+                                                key={item.href}
+                                                href={item.href}
                                                 onClick={() => setMobileOpen(false)}
-                                                className="flex items-center gap-2.5 rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-2.5 text-xs font-bold text-[#2699fb] shadow-xs dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-300"
+                                                style={{
+                                                    transitionDelay: mobileOpen ? `${(idx + 2) * 35}ms` : "0ms",
+                                                }}
+                                                className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] transform ${
+                                                    mobileOpen
+                                                        ? "opacity-100 translate-x-0"
+                                                        : "opacity-0 -translate-x-5 pointer-events-none"
+                                                } ${
+                                                    active
+                                                        ? "bg-blue-50/80 text-[#2699fb] font-bold dark:bg-blue-950/60 dark:text-[#38bdf8]"
+                                                        : "text-[#475569] hover:bg-gray-50 hover:text-[#152238] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+                                                }`}
                                             >
-                                                <Shield size={16} />
-                                                <span>Admin Panel Perpustakaan</span>
+                                                <div className="flex items-center gap-3">
+                                                    <span
+                                                        className={`grid size-8 place-items-center rounded-lg transition-colors ${
+                                                            active
+                                                                ? "bg-[#2699fb] text-white shadow-xs"
+                                                                : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                                                        }`}
+                                                    >
+                                                        <IconComponent size={16} />
+                                                    </span>
+                                                    <span>{item.label}</span>
+                                                </div>
+                                                <ChevronRight
+                                                    size={15}
+                                                    className={`transition-transform duration-200 ${
+                                                        active
+                                                            ? "text-[#2699fb] translate-x-0.5"
+                                                            : "text-gray-300 opacity-60 dark:text-slate-600"
+                                                    }`}
+                                                />
                                             </Link>
-                                        )}
+                                        );
+                                    })}
+                                </nav>
+                            </div>
 
-                                        <Link
-                                            href="/profile"
-                                            onClick={() => setMobileOpen(false)}
-                                            className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-xs font-bold text-[#152238] shadow-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                                        >
-                                            <UserCog size={16} className="text-slate-500 dark:text-slate-400" />
-                                            <span>Pengaturan Profil</span>
-                                        </Link>
+                            {/* Mobile Account Section with Stagger */}
+                            <div
+                                style={{
+                                    transitionDelay: mobileOpen ? `${(mobileNavItems.length + 2) * 35}ms` : "0ms",
+                                }}
+                                className={`border-t border-gray-100 pt-3 dark:border-slate-800 transition-all duration-300 ease-out transform ${
+                                    mobileOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"
+                                }`}
+                            >
+                                {auth?.user ? (
+                                    <div className="space-y-3">
+                                        {/* User Banner */}
+                                        <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3 dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800">
+                                            <div className="grid size-10 place-items-center rounded-xl bg-[#152238] text-sm font-bold text-white dark:bg-[#2699fb]">
+                                                {auth.user.name.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="truncate text-xs font-bold text-[#152238] dark:text-white">
+                                                    {auth.user.name}
+                                                </p>
+                                                <p className="truncate text-[10px] text-gray-500 dark:text-slate-400">
+                                                    {auth.user.email}
+                                                </p>
+                                                <span className={`inline-block mt-1 rounded px-1.5 py-0.2 text-[9px] font-extrabold uppercase ${getRoleBadge(auth.user.role).color}`}>
+                                                    {getRoleBadge(auth.user.role).label}
+                                                </span>
+                                            </div>
+                                        </div>
 
-                                        <Link
-                                            method="post"
-                                            as="button"
-                                            href="/logout"
-                                            onClick={() => setMobileOpen(false)}
-                                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-rose-50 px-3.5 py-2.5 text-xs font-bold text-rose-700 border border-rose-200 dark:bg-rose-950/50 dark:border-rose-900/60 dark:text-rose-300 transition"
-                                        >
-                                            <LogOut size={16} />
-                                            <span>Keluar (Log Out)</span>
-                                        </Link>
+                                        {/* Action Grid */}
+                                        <div className="grid grid-cols-1 gap-2">
+                                            <Link
+                                                href="/dashboard"
+                                                onClick={() => setMobileOpen(false)}
+                                                className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-xs font-bold text-[#152238] shadow-xs hover:border-[#2699fb] dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            >
+                                                <BookOpen size={16} className="text-[#2699fb]" />
+                                                <span>Ruang Saya (Dashboard)</span>
+                                            </Link>
+
+                                            {isAdminOrLibrarian && (
+                                                <Link
+                                                    href="/admin-panel"
+                                                    onClick={() => setMobileOpen(false)}
+                                                    className="flex items-center gap-2.5 rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-2.5 text-xs font-bold text-[#2699fb] shadow-xs hover:bg-blue-100/60 dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-300"
+                                                >
+                                                    <Shield size={16} />
+                                                    <span>Admin Panel Perpustakaan</span>
+                                                </Link>
+                                            )}
+
+                                            <Link
+                                                href="/profile"
+                                                onClick={() => setMobileOpen(false)}
+                                                className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-xs font-bold text-[#152238] shadow-xs hover:border-[#2699fb] dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            >
+                                                <UserCog size={16} className="text-slate-500 dark:text-slate-400" />
+                                                <span>Pengaturan Profil</span>
+                                            </Link>
+
+                                            <Link
+                                                method="post"
+                                                as="button"
+                                                href="/logout"
+                                                onClick={() => setMobileOpen(false)}
+                                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-rose-50 px-3.5 py-2.5 text-xs font-bold text-rose-700 border border-rose-200 hover:bg-rose-100/70 dark:bg-rose-950/50 dark:border-rose-900/60 dark:text-rose-300 transition"
+                                            >
+                                                <LogOut size={16} />
+                                                <span>Keluar (Log Out)</span>
+                                            </Link>
+                                        </div>
                                     </div>
-                                </div>
-                            ) : (
-                                <Link
-                                    href="/login"
-                                    onClick={() => setMobileOpen(false)}
-                                    className="block w-full rounded-full bg-[#2699fb] px-4 py-2.5 text-center text-sm font-bold text-white shadow-sm hover:bg-[#1783df]"
-                                >
-                                    {t("nav_login")}
-                                </Link>
-                            )}
+                                ) : (
+                                    <Link
+                                        href="/login"
+                                        onClick={() => setMobileOpen(false)}
+                                        className="flex items-center justify-center gap-2 w-full rounded-full bg-[#2699fb] px-4 py-2.5 text-center text-sm font-bold text-white shadow-sm transition hover:bg-[#1783df] active:scale-98"
+                                    >
+                                        <User size={16} />
+                                        <span>{t("nav_login")}</span>
+                                    </Link>
+                                )}
+                            </div>
                         </div>
                     </div>
-                )}
+                </div>
             </header>
 
-            {/* ── MAIN CONTENT ── */}
-            <main className="flex-1">{children}</main>
+            {/* ── MAIN CONTENT (with page transition) ── */}
+            <main
+                className={`flex-1 transition-all ${
+                    pageTransition === "enter"
+                        ? "page-transition-active"
+                        : "page-transition-exit"
+                }`}
+            >
+                {children}
+            </main>
 
-            {/* ── FOOTER ── */}
-            <footer className="bg-[#152238] text-white dark:bg-[#05070c] border-t dark:border-slate-800">
-                <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-10">
-                    <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-                        {/* Brand */}
+            {/* ── REDESIGNED RICH FOOTER ── */}
+            <footer className="relative bg-[#152238] text-white dark:bg-[#05070c] border-t border-slate-800/80">
+                <div className="mx-auto max-w-7xl px-5 pt-14 pb-10 sm:px-8 lg:px-10">
+                    {/* Top Stats Banner */}
+                    <div className="mb-12 rounded-2xl border border-slate-700/60 bg-slate-900/50 p-6 backdrop-blur-xs">
+                        <div className="grid grid-cols-1 divide-y divide-slate-800 sm:grid-cols-3 sm:divide-y-0 sm:divide-x sm:divide-slate-800 text-center gap-4 sm:gap-0">
+                            <div className="px-4 py-2">
+                                <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#2699fb]">1.200+</p>
+                                <p className="mt-1 text-xs text-slate-400 font-medium">{t("footer_stat_books")}</p>
+                            </div>
+                            <div className="px-4 py-2">
+                                <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#FFC533]">40+</p>
+                                <p className="mt-1 text-xs text-slate-400 font-medium">{t("footer_stat_cats")}</p>
+                            </div>
+                            <div className="px-4 py-2">
+                                <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#FF8E4F]">950+</p>
+                                <p className="mt-1 text-xs text-slate-400 font-medium">{t("footer_stat_members")}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Columns Grid */}
+                    <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1.2fr]">
+                        {/* Brand & Address */}
                         <div>
                             <div className="flex items-center gap-2.5">
                                 <span className="grid size-9 place-items-center rounded-xl bg-[#2699fb] text-white shadow-sm">
@@ -510,57 +659,85 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                                     <span className="block text-[9px] font-semibold uppercase tracking-[0.14em] text-blue-300">SMAN 1 Bukittinggi</span>
                                 </div>
                             </div>
-                            <p className="mt-4 max-w-xs text-xs leading-relaxed text-slate-400">
+                            <p className="mt-4 max-w-sm text-xs leading-relaxed text-slate-400">
                                 {t('footer_brand_desc')}
                             </p>
-                            <p className="mt-2 text-[11px] text-slate-400 font-mono">
-                                {t('footer_address_label')} {t('footer_address_val')}
-                            </p>
+                            <div className="mt-4 flex items-start gap-2 text-xs text-slate-400">
+                                <MapPin size={15} className="text-[#2699fb] shrink-0 mt-0.5" />
+                                <span>{t('footer_address_val')}</span>
+                            </div>
+                            <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
+                                <Phone size={14} className="text-[#2699fb] shrink-0" />
+                                <span>(0752) 21107 · 0812-6789-0123</span>
+                            </div>
+                            <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
+                                <Mail size={14} className="text-[#2699fb] shrink-0" />
+                                <span>perpustakaan@sman1bukittinggi.sch.id</span>
+                            </div>
                         </div>
 
-                        {/* Links 1 */}
+                        {/* Links 1: Koleksi */}
                         <div>
                             <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">{t('footer_col_reading')}</h4>
                             <ul className="mt-4 space-y-2.5 text-xs text-slate-400">
-                                <li><Link href="/catalog" className="hover:text-white transition">{t('footer_link_catalog')}</Link></li>
-                                <li><Link href="/magazines" className="hover:text-white transition">{t('footer_link_genta')}</Link></li>
-                                <li><Link href="/magazines?type=bulletin" className="hover:text-white transition">{t('footer_link_kurtaw')}</Link></li>
-                                <li><Link href="/karya-smansa" className="hover:text-white transition">{t('footer_link_works')}</Link></li>
+                                <li><Link href="/catalog" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_catalog')}</Link></li>
+                                <li><Link href="/magazines" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_genta')}</Link></li>
+                                <li><Link href="/magazines?type=bulletin" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_kurtaw')}</Link></li>
+                                <li><Link href="/karya-smansa" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_works')}</Link></li>
                             </ul>
                         </div>
 
-                        {/* Links 2 */}
+                        {/* Links 2: Layanan */}
                         <div>
                             <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">{t('footer_col_services')}</h4>
                             <ul className="mt-4 space-y-2.5 text-xs text-slate-400">
-                                <li><Link href="/events" className="hover:text-white transition">{t('footer_link_events')}</Link></li>
-                                <li><Link href="/ranking" className="hover:text-white transition">{t('footer_link_ranking')}</Link></li>
-                                <li><Link href="/information" className="hover:text-white transition">{t('footer_link_info')}</Link></li>
-                                <li><Link href="/contact" className="hover:text-white transition">{t('footer_link_contact')}</Link></li>
+                                <li><Link href="/events" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_events')}</Link></li>
+                                <li><Link href="/ranking" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_ranking')}</Link></li>
+                                <li><Link href="/information" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_info')}</Link></li>
+                                <li><Link href="/contact" className="hover:text-white hover:translate-x-1 inline-block transition">{t('footer_link_contact')}</Link></li>
                             </ul>
                         </div>
 
-                        {/* Operasional */}
-                        <div>
-                            <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">{t('footer_col_hours')}</h4>
-                            <div className="mt-4 space-y-2 text-xs text-slate-400">
-                                <p>{t('footer_hours_mon_thu')}</p>
-                                <p>{t('footer_hours_fri')}</p>
-                                <p>{t('footer_hours_sat')}</p>
-                                <p className="pt-2 text-[11px] text-amber-300 font-medium">{t('footer_hours_online')}</p>
+                        {/* Operasional & Fast Back to top */}
+                        <div className="flex flex-col justify-between">
+                            <div>
+                                <h4 className="font-display text-xs font-bold uppercase tracking-wider text-blue-300">{t('footer_col_hours')}</h4>
+                                <div className="mt-4 space-y-2 text-xs text-slate-400">
+                                    <p>{t('footer_hours_mon_thu')}</p>
+                                    <p>{t('footer_hours_fri')}</p>
+                                    <p>{t('footer_hours_sat')}</p>
+                                    <p className="pt-2 text-[11px] text-amber-300 font-medium">{t('footer_hours_online')}</p>
+                                </div>
+                            </div>
+
+                            {/* Back to top button */}
+                            <div className="mt-6">
+                                <button
+                                    type="button"
+                                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                                    className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/80 px-4 py-2 text-xs font-bold text-slate-300 transition hover:border-[#2699fb] hover:bg-[#2699fb] hover:text-white"
+                                >
+                                    <ArrowUp size={14} />
+                                    <span>{t("footer_back_to_top")}</span>
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 sm:flex-row text-xs text-slate-500">
+                    {/* Bottom Copyright */}
+                    <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 sm:flex-row text-xs text-slate-400">
                         <p>© {new Date().getFullYear()} Perpustakaan Sunaryaman Musthofa SMA Negeri 1 Bukittinggi. {t('footer_copyright')}</p>
                         <p className="font-mono text-[10px] text-slate-500">
                             NPSN 10303496 · {t('footer_system_label')}
                         </p>
                     </div>
                 </div>
+                {/* Solid bottom accent strip */}
+                <div className="h-9 w-full bg-[#080d17] border-t border-slate-900/90" />
             </footer>
         </div>
+        </ScrollRevealProvider>
+        </ToastProvider>
     );
 }
 

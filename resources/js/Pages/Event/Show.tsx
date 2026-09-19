@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, Calendar, Headphones, MapPin, Mic2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Headphones, MapPin, Mic2, Sparkles } from 'lucide-react';
 import { SiteShell } from '../../Components/Common/SiteShell';
 import { Event } from '../../types/library';
 
@@ -12,75 +12,104 @@ export default function EventShow({ event }: EventShowProps) {
 
     return (
         <SiteShell>
-            <Head title={`${event.title} - Perpustakaan SMAN 1 Bukittinggi`} />
+            <Head title={`${event.title} - Agenda & Podcast SMANSA`} />
 
-            <div className="min-h-screen bg-white dark:bg-slate-900">
-                <div className="mx-auto max-w-4xl px-6 py-10 sm:px-8">
-                    <Link href="/events" className="inline-flex items-center gap-2 text-sm font-semibold text-[#152238] dark:text-blue-400 hover:gap-3 transition-all">
-                        <ArrowLeft size={16} /> Kembali ke Daftar
-                    </Link>
+            <div className="min-h-screen bg-white">
+                {/* Top Nav Bar */}
+                <div className="border-b border-slate-200/80 bg-slate-50/50">
+                    <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-3.5 sm:px-8">
+                        <Link
+                            href="/events"
+                            className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#152238] transition-colors"
+                        >
+                            <ArrowLeft size={16} />
+                            <span>Kembali ke Agenda & Podcast</span>
+                        </Link>
 
-                    <div className="mt-6">
-                        <span className={`inline-block rounded-lg px-3 py-1 text-xs font-bold uppercase tracking-wider ${
-                            event.type === 'event' ? 'bg-blue-100 text-blue-800' :
-                            event.type === 'duta'  ? 'bg-purple-100 text-purple-800' :
-                                                     'bg-amber-100 text-amber-800'
+                        <span className={`rounded-full px-3 py-1 text-xs font-bold ${
+                            event.type === 'event'
+                                ? 'bg-blue-50 text-[#2699fb]'
+                                : event.type === 'duta'
+                                ? 'bg-yellow-50 text-[#FFC533] text-slate-800'
+                                : 'bg-amber-50 text-[#FF8E4F]'
                         }`}>
-                            {event.type === 'event' ? 'Event' : event.type === 'duta' ? 'Duta Perpustakaan' : 'Podcast'}
+                            {event.type === 'event' ? 'Event Literasi' : event.type === 'duta' ? 'Duta Baca' : 'Podcast Perpustakaan'}
                         </span>
+                    </div>
+                </div>
 
-                        <h1 className="mt-4 font-display text-3xl font-extrabold leading-tight text-[#0F172A] dark:text-white sm:text-4xl">
+                <div className="mx-auto max-w-3xl px-6 py-12 sm:px-8">
+                    <div>
+                        <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-[1.2] text-[#0F172A]">
                             {event.title}
                         </h1>
 
-                        <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-500 dark:text-slate-400">
+                        <div className="mt-6 flex flex-wrap items-center gap-4 text-xs font-medium text-slate-500 border-b border-slate-100 pb-6">
                             {event.event_date && (
                                 <span className="flex items-center gap-1.5">
-                                    <Calendar size={14} />
-                                    {new Date(event.event_date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                                    {event.event_time && ` • ${event.event_time}`}
+                                    <Calendar size={14} className="text-[#2699fb]" />
+                                    <span>
+                                        {new Date(event.event_date).toLocaleDateString('id-ID', {
+                                            weekday: 'long',
+                                            day: 'numeric',
+                                            month: 'long',
+                                            year: 'numeric',
+                                        })}
+                                        {event.event_time && ` • ${event.event_time}`}
+                                    </span>
                                 </span>
                             )}
                             {event.location && (
                                 <span className="flex items-center gap-1.5">
-                                    <MapPin size={14} />
-                                    {event.location}
+                                    <MapPin size={14} className="text-[#2699fb]" />
+                                    <span>{event.location}</span>
                                 </span>
                             )}
                             {event.host_name && (
                                 <span className="flex items-center gap-1.5">
-                                    <Mic2 size={14} />
-                                    Host: {event.host_name}
+                                    <Mic2 size={14} className="text-[#FF8E4F]" />
+                                    <span>Host: {event.host_name}</span>
                                 </span>
                             )}
                         </div>
                     </div>
 
+                    {/* Cover Image */}
                     {event.cover_image && (
-                        <div className="mt-8 overflow-hidden rounded-2xl">
+                        <div className="mt-8 overflow-hidden rounded-3xl border border-slate-200/80 shadow-sm">
                             <img src={event.cover_image} alt={event.title} className="h-72 w-full object-cover sm:h-96" />
                         </div>
                     )}
 
                     {/* Podcast Player */}
                     {isPodcast && event.podcast_url && (
-                        <div className="mt-8 flex items-center gap-4 rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-5">
-                            <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-700">
+                        <div className="mt-8 flex items-center gap-5 rounded-2xl border border-amber-200/80 bg-amber-50/50 p-6 shadow-xs">
+                            <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-white text-[#FF8E4F] shadow-xs">
                                 <Headphones size={24} />
                             </span>
                             <div className="flex-1">
-                                <p className="font-semibold text-[#0F172A] dark:text-white">Dengarkan Episode Ini</p>
+                                <p className="font-display text-sm font-bold text-[#0F172A]">Dengarkan Episode Podcast Ini</p>
                                 <audio controls preload="metadata" className="mt-3 w-full" src={event.podcast_url}>
-                                    Browser kamu belum mendukung pemutar audio.
+                                    Browser Anda belum mendukung pemutar audio ini.
                                 </audio>
-                                <a href={event.podcast_url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-xs text-[#152238] dark:text-blue-400 hover:underline">Buka sumber audio ↗</a>
+                                <a
+                                    href={event.podcast_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-2 inline-block text-xs font-bold text-[#2699fb] hover:underline"
+                                >
+                                    Buka Sumber Audio Eksternal ↗
+                                </a>
                             </div>
                         </div>
                     )}
 
+                    {/* Description Content */}
                     {event.description && (
-                        <div className="prose prose-slate dark:prose-invert mt-8 max-w-none">
-                            <p className="text-base leading-relaxed text-slate-700 dark:text-slate-300 whitespace-pre-line">{event.description}</p>
+                        <div className="mt-8 leading-relaxed">
+                            <p className="text-base sm:text-lg leading-[1.9] text-slate-700 whitespace-pre-line">
+                                {event.description}
+                            </p>
                         </div>
                     )}
                 </div>

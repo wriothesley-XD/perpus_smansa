@@ -85,3 +85,154 @@ html.dark input, html.dark textarea, html.dark select {
   border-color: #243854 !important;
 }
 
+/* ── Scroll-triggered Reveal Animations ── */
+
+/*
+  Elemen dengan .reveal-item dimulai tak terlihat.
+  Ketika .is-visible ditambahkan via IntersectionObserver,
+  elemen fade-in + slide-up bersamaan.
+*/
+.reveal-item {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance, 28px));
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  /* duration & delay di-set via inline style dari komponen */
+  transition-duration: 600ms;
+}
+
+.reveal-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/*
+  Elemen inner (angka, ikon) yang scale-in setelah container visible.
+  Tambahkan class .reveal-scale pada elemen di dalam .reveal-item.
+*/
+.reveal-item .reveal-scale {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.4s ease 0.25s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+}
+
+.reveal-item.is-visible .reveal-scale {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Reduced-motion: tampilkan langsung tanpa animasi */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .reveal-item .reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── Mobile Hamburger & Menu Expansion ── */
+.mobile-menu-drawer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 360ms cubic-bezier(0.16, 1, 0.3, 1), opacity 260ms ease;
+  opacity: 0;
+}
+
+.mobile-menu-drawer.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-drawer,
+  .mobile-menu-drawer * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ── Transitions.dev — Number pop-in ── */
+:root {
+  --digit-dur: 480ms;
+  --digit-distance: 10px;
+  --digit-stagger: 65ms;
+  --digit-blur: 3px;
+  --digit-ease: cubic-bezier(0.34, 1.45, 0.64, 1);
+  --digit-dir-x: 0;
+  --digit-dir-y: 1;
+}
+
+@keyframes t-digit-pop-in {
+  0% {
+    transform: translate(
+      calc(var(--digit-distance) * var(--digit-dir-x)),
+      calc(var(--digit-distance) * var(--digit-dir-y))
+    );
+    opacity: 0;
+    filter: blur(var(--digit-blur));
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.t-digit-group {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.t-digit {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+
+.t-digit-group.is-animating .t-digit {
+  animation: t-digit-pop-in var(--digit-dur) var(--digit-ease) both;
+}
+
+.t-digit-group.is-animating .t-digit[data-stagger="1"] { animation-delay: calc(var(--digit-stagger) * 1); }
+.t-digit-group.is-animating .t-digit[data-stagger="2"] { animation-delay: calc(var(--digit-stagger) * 2); }
+.t-digit-group.is-animating .t-digit[data-stagger="3"] { animation-delay: calc(var(--digit-stagger) * 3); }
+.t-digit-group.is-animating .t-digit[data-stagger="4"] { animation-delay: calc(var(--digit-stagger) * 4); }
+.t-digit-group.is-animating .t-digit[data-stagger="5"] { animation-delay: calc(var(--digit-stagger) * 5); }
+.t-digit-group.is-animating .t-digit[data-stagger="6"] { animation-delay: calc(var(--digit-stagger) * 6); }
+.t-digit-group.is-animating .t-digit[data-stagger="7"] { animation-delay: calc(var(--digit-stagger) * 7); }
+
+@media (prefers-reduced-motion: reduce) {
+  .t-digit-group .t-digit { animation: none !important; }
+}
+
+/* ── Page Transitions ── */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-transition-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-transition-exit {
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 120ms ease-in, transform 120ms ease-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition-enter,
+  .page-transition-active,
+  .page-transition-exit {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

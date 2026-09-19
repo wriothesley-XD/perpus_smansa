@@ -23,6 +23,14 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
         nav_logout: 'Keluar',
         nav_search_aria: 'Cari koleksi buku...',
         nav_search_placeholder: 'Cari buku, penulis, topik...',
+        nav_explore: 'Jelajahi',
+        mega_cat_reading: 'KOLEKSI BACAAN',
+        mega_cat_community: 'KOMUNITAS & KARYA',
+        mega_cat_services: 'LAYANAN PUSTAKA',
+        mega_promo_badge: 'UNGGULAN',
+        mega_promo_title: 'E-Magazine SMAN 1 Bukittinggi',
+        mega_promo_desc: 'Edisi digital terlengkap dapat dibaca langsung dari peramban Anda.',
+        mega_promo_cta: 'Baca Sekarang',
 
         // Hero Section
         hero_tagline: 'Perpustakaan Sunaryaman Musthofa',
@@ -236,6 +244,10 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
         footer_hours_online: 'Layanan E-Book & Buletin Online: 24 Jam Nonstop',
         footer_copyright: 'Hak Cipta Dilindungi.',
         footer_system_label: 'Sistem Informasi Perpustakaan Terintegrasi',
+        footer_stat_books: 'Koleksi Judul Buku',
+        footer_stat_cats: 'Kategori Literasi',
+        footer_stat_members: 'Anggota Aktif Terdaftar',
+        footer_back_to_top: 'Kembali ke Atas',
 
         // Themes & Language switcher
         theme_light: 'Mode Terang',
@@ -264,6 +276,14 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
         nav_logout: 'Log Out',
         nav_search_aria: 'Search book collection...',
         nav_search_placeholder: 'Search books, authors, topics...',
+        nav_explore: 'Explore',
+        mega_cat_reading: 'READING COLLECTIONS',
+        mega_cat_community: 'COMMUNITY & WORKS',
+        mega_cat_services: 'LIBRARY SERVICES',
+        mega_promo_badge: 'FEATURED',
+        mega_promo_title: 'SMAN 1 Bukittinggi E-Magazine',
+        mega_promo_desc: 'Full digital editions available to read directly in your browser.',
+        mega_promo_cta: 'Read Now',
 
         // Hero Section
         hero_tagline: 'Sunaryaman Musthofa Library',
@@ -477,6 +497,10 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
         footer_hours_online: 'Online E-Books & Bulletins: 24/7 Access',
         footer_copyright: 'All Rights Reserved.',
         footer_system_label: 'Integrated Library Information System',
+        footer_stat_books: 'Book Title Collections',
+        footer_stat_cats: 'Literacy Categories',
+        footer_stat_members: 'Registered Active Members',
+        footer_back_to_top: 'Back to Top',
 
         // Themes & Language switcher
         theme_light: 'Light Mode',
@@ -505,6 +529,14 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
         nav_logout: 'Abmelden',
         nav_search_aria: 'Buchsammlung durchsuchen...',
         nav_search_placeholder: 'Bücher, Autoren, Themen suchen...',
+        nav_explore: 'Erkunden',
+        mega_cat_reading: 'LESEKOLLEKTION',
+        mega_cat_community: 'GEMEINSCHAFT & WERKE',
+        mega_cat_services: 'BIBLIOTHEKSDIENSTE',
+        mega_promo_badge: 'HIGHLIGHT',
+        mega_promo_title: 'SMAN 1 Bukittinggi E-Magazin',
+        mega_promo_desc: 'Vollständige digitale Ausgaben direkt im Browser lesbar.',
+        mega_promo_cta: 'Jetzt lesen',
 
         // Hero Section
         hero_tagline: 'Sunaryaman Musthofa Bibliothek',
@@ -718,6 +750,10 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
         footer_hours_online: 'Online-E-Books & Bulletins: 24/7 Zugriff',
         footer_copyright: 'Alle Rechte vorbehalten.',
         footer_system_label: 'Integriertes Bibliotheksinformationssystem',
+        footer_stat_books: 'Buchtitel-Sammlung',
+        footer_stat_cats: 'Literarische Kategorien',
+        footer_stat_members: 'Registrierte aktive Mitglieder',
+        footer_back_to_top: 'Nach oben',
 
         // Themes & Language switcher
         theme_light: 'Heller Modus',
