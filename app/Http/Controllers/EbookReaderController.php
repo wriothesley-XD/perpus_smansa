@@ -28,12 +28,16 @@ class EbookReaderController extends Controller
 
         $book = Book::with(['category', 'authors'])->where('slug', $slug)->orWhere('id', is_numeric($slug) ? $slug : 0)->firstOrFail();
 
-        // Check or fetch active online loan
+        // Check or fetch active online loan for THIS specific book.
+        // We look up ANY loan for this book (by book_copy barcode or notes flag),
+        // reusing the most-recent one to prevent creating duplicates on every page visit.
+        $copy = BookCopy::firstOrCreate(
+            ['book_id' => $book->id, 'barcode_identifier' => 'EBOOK-' . $book->id],
+            ['status' => 'available', 'condition_notes' => 'Salinan Digital E-Book']
+        );
+
         $activeLoan = Loan::where('user_id', $user->id)
-            ->where('is_online_loan', true)
-            ->whereHas('bookCopy', function ($q) use ($book) {
-                $q->where('book_id', $book->id);
-            })
+            ->where('book_copy_id', $copy->id)
             ->latest()
             ->first();
 
@@ -43,7 +47,7 @@ class EbookReaderController extends Controller
         $dueAtFormatted = null;
 
         if (!$activeLoan) {
-            // Not yet borrowed online - auto-borrow if under limit
+            // First time borrowing this e-book — check the per-user limit
             $maxOnlineLoans = (int) LibrarySetting::get('max_online_loans', 3);
             $currentOnlineLoansCount = Loan::where('user_id', $user->id)
                 ->where('is_online_loan', true)
@@ -54,12 +58,6 @@ class EbookReaderController extends Controller
             if ($currentOnlineLoansCount >= $maxOnlineLoans) {
                 return redirect()->route('catalog.show', $book->slug)->with('error', "Anda telah mencapai batas maksimal peminjaman e-book aktif ($maxOnlineLoans buku).");
             }
-
-            // Create online loan
-            $copy = BookCopy::firstOrCreate(
-                ['book_id' => $book->id, 'barcode_identifier' => 'EBOOK-' . $book->id],
-                ['status' => 'available', 'condition_notes' => 'Salinan Digital E-Book']
-            );
 
             $dueAt = now()->addDays($loanDurationDays);
             $activeLoan = Loan::create([
@@ -76,6 +74,11 @@ class EbookReaderController extends Controller
             $remainingHours = $loanDurationDays * 24;
             $dueAtFormatted = $dueAt->translatedFormat('d F Y, H:i');
         } else {
+            // Loan already exists — just reuse it; ensure flag is correct
+            if (!$activeLoan->is_online_loan) {
+                $activeLoan->update(['is_online_loan' => true]);
+            }
+
             $now = Carbon::now();
             $dueDate = Carbon::parse($activeLoan->due_at);
 
@@ -83,7 +86,7 @@ class EbookReaderController extends Controller
                 $isLocked = true;
                 $activeLoan->update(['status' => 'overdue']);
             } else {
-                $remainingHours = $now->diffInHours($dueDate, false);
+                $remainingHours = max(0, $now->diffInHours($dueDate, false));
                 $dueAtFormatted = $dueDate->translatedFormat('d F Y, H:i');
             }
         }
@@ -93,6 +96,13 @@ class EbookReaderController extends Controller
             ['user_id' => $user->id, 'book_id' => $book->id],
             ['last_page' => 1, 'total_pages' => 30, 'bookmarks' => []]
         );
+
+        // Determine if this book has a real PDF available
+        $hasPdf = !empty($book->ebook_file_path) && file_exists(storage_path('app/public/' . ltrim(str_replace('/storage/', '', $book->ebook_file_path), '/')));
+        if (!$hasPdf) {
+            $fallbackPdf = storage_path('app/public/ebooks/smansa-default-reader.pdf');
+            $hasPdf = file_exists($fallbackPdf);
+        }
 
         return Inertia::render('Catalog/EbookReader', [
             'book' => $book,
@@ -116,6 +126,7 @@ class EbookReaderController extends Controller
                 'identifier' => $user->identifier_number ?? 'Anggota SMANSA',
                 'class' => $user->class_name ?? 'SMAN 1 Bukittinggi',
             ],
+            'hasPdf' => $hasPdf,
         ]);
     }
 
@@ -137,16 +148,31 @@ class EbookReaderController extends Controller
             ['status' => 'available', 'condition_notes' => 'Salinan Digital E-Book']
         );
 
-        Loan::create([
-            'loan_code' => 'EB-' . strtoupper(substr(uniqid(), -8)),
-            'user_id' => $user->id,
-            'book_copy_id' => $copy->id,
-            'borrowed_at' => now(),
-            'due_at' => now()->addDays($loanDurationDays),
-            'status' => 'active',
-            'is_online_loan' => true,
-            'notes' => 'Perpanjangan peminjaman digital',
-        ]);
+        $existingLoan = Loan::where('user_id', $user->id)
+            ->where('book_copy_id', $copy->id)
+            ->latest()
+            ->first();
+
+        if ($existingLoan) {
+            $existingLoan->update([
+                'borrowed_at' => now(),
+                'due_at' => now()->addDays($loanDurationDays),
+                'status' => 'active',
+                'is_online_loan' => true,
+                'notes' => 'Perpanjangan peminjaman digital',
+            ]);
+        } else {
+            Loan::create([
+                'loan_code' => 'EB-' . strtoupper(substr(uniqid(), -8)),
+                'user_id' => $user->id,
+                'book_copy_id' => $copy->id,
+                'borrowed_at' => now(),
+                'due_at' => now()->addDays($loanDurationDays),
+                'status' => 'active',
+                'is_online_loan' => true,
+                'notes' => 'Perpanjangan peminjaman digital',
+            ]);
+        }
 
         return redirect()->route('books.read', $book->slug)->with('status', "Peminjaman e-book berhasil diperpanjang selama $loanDurationDays hari.");
     }
@@ -227,10 +253,18 @@ class EbookReaderController extends Controller
         }
 
         if (!$resolvedPath || !file_exists($resolvedPath)) {
-            // Check for sample magazine/bulletin PDF
-            $sample = public_path('storage/magazines/genta-sample.pdf');
+            // Fallback 1: try genta sample magazine PDF (legacy path)
+            $sample = storage_path('app/public/magazines/genta-sample.pdf');
             if (file_exists($sample)) {
                 $resolvedPath = $sample;
+            }
+        }
+
+        if (!$resolvedPath || !file_exists($resolvedPath)) {
+            // Fallback 2: generic SMANSA library reader PDF
+            $defaultPdf = storage_path('app/public/ebooks/smansa-default-reader.pdf');
+            if (file_exists($defaultPdf)) {
+                $resolvedPath = $defaultPdf;
             }
         }
 

@@ -20,6 +20,7 @@ class Loan extends Model
         'due_at',
         'returned_at',
         'status',
+        'is_online_loan',
         'notes',
     ];
 
@@ -27,6 +28,7 @@ class Loan extends Model
         'borrowed_at' => 'datetime',
         'due_at' => 'datetime',
         'returned_at' => 'datetime',
+        'is_online_loan' => 'boolean',
     ];
 
     public function user(): BelongsTo

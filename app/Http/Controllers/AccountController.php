@@ -16,16 +16,23 @@ class AccountController extends Controller
     {
         $user = $request->user();
 
-        $activeLoans = Loan::with(['bookCopy.book'])
+        // Get active loans, deduped: keep only the most-recent loan per book copy
+        // to avoid showing multiple cards when user clicks a book multiple times
+        $allActiveLoans = Loan::with(['bookCopy.book'])
             ->where('user_id', $user->id)
             ->where('status', 'active')
             ->orderBy('due_at')
             ->get();
 
+        // Group by book_copy_id, keep latest per book
+        $activeLoans = $allActiveLoans->groupBy('book_copy_id')
+            ->map(fn ($group) => $group->sortByDesc('created_at')->first())
+            ->values();
+
         $loanHistory = Loan::with(['bookCopy.book'])
             ->where('user_id', $user->id)
             ->where('status', '!=', 'active')
-            ->orderByDesc('returned_at')
+            ->orderByDesc('updated_at')
             ->limit(10)
             ->get();
 

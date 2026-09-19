@@ -667,3 +667,66 @@ html.dark input, html.dark textarea, html.dark select {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
+/* ── 3D REALISTIC FLIPBOOK ANIMATIONS ── */
+.perspective-book {
+  perspective: 2600px;
+  transform-style: preserve-3d;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@keyframes flipRightToLeft {
+  0% {
+    transform: rotateY(0deg);
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.08);
+  }
+  40% {
+    box-shadow: -30px 0 45px rgba(0, 0, 0, 0.35);
+  }
+  70% {
+    box-shadow: 30px 0 45px rgba(0, 0, 0, 0.35);
+  }
+  100% {
+    transform: rotateY(-180deg);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.08);
+  }
+}
+
+@keyframes flipLeftToRight {
+  0% {
+    transform: rotateY(0deg);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.08);
+  }
+  40% {
+    box-shadow: 30px 0 45px rgba(0, 0, 0, 0.35);
+  }
+  70% {
+    box-shadow: -30px 0 45px rgba(0, 0, 0, 0.35);
+  }
+  100% {
+    transform: rotateY(180deg);
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.animate-flip-next {
+  transform-origin: left center;
+  animation: flipRightToLeft 500ms cubic-bezier(0.35, 0.05, 0.2, 1) forwards;
+}
+
+.animate-flip-prev {
+  transform-origin: right center;
+  animation: flipLeftToRight 500ms cubic-bezier(0.35, 0.05, 0.2, 1) forwards;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}

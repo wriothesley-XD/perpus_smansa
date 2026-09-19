@@ -152,6 +152,8 @@ class DatabaseSeeder extends Seeder
                 'synopsis' => 'Kisah perjuangan sepuluh anak di Gantong, Pulau Belitong, dalam menempuh pendidikan dengan keterbatasan fasilitas di bawah bimbingan guru yang penuh dedikasi.',
                 'copies_count' => 4,
                 'available_count' => 3,
+                'ebook_file_path' => '/storage/ebooks/laskar-pelangi.pdf',
+                'is_ebook' => true,
             ],
             [
                 'title' => 'Tenggelamnya Kapal Van der Wijck',
@@ -167,6 +169,8 @@ class DatabaseSeeder extends Seeder
                 'synopsis' => 'Mahakarya Buya Hamka yang mengisahkan cinta sejati antara Zainuddin dan Hayati yang terhalang oleh adat istiadat dan strata sosial di tanah Minangkabau.',
                 'copies_count' => 3,
                 'available_count' => 2,
+                'ebook_file_path' => null,
+                'is_ebook' => false,
             ],
             [
                 'title' => 'Bumi Manusia',
@@ -182,6 +186,8 @@ class DatabaseSeeder extends Seeder
                 'synopsis' => 'Buku pertama dari Tetralogi Buru. Menampilkan perjuangan Minke, seorang pribumi cerdas di era Hindia Belanda yang memperjuangkan martabat bangsanya.',
                 'copies_count' => 3,
                 'available_count' => 1,
+                'ebook_file_path' => null,
+                'is_ebook' => false,
             ],
             [
                 'title' => 'Negeri 5 Menara',
@@ -197,6 +203,8 @@ class DatabaseSeeder extends Seeder
                 'synopsis' => 'Enam santri dari berbagai pelosok Nusantara yang disatukan di Pondok Madani dengan mantra penggerak impian hidup: Man Jadda Wajada.',
                 'copies_count' => 3,
                 'available_count' => 2,
+                'ebook_file_path' => null,
+                'is_ebook' => false,
             ],
             [
                 'title' => 'Atomic Habits',
@@ -212,6 +220,8 @@ class DatabaseSeeder extends Seeder
                 'synopsis' => 'Panduan praktis teruji untuk membentuk kebiasaan baik, memutus kebiasaan buruk, dan menguasai perilaku kecil yang menghasilkan lonjakan prestasi.',
                 'copies_count' => 4,
                 'available_count' => 3,
+                'ebook_file_path' => '/storage/ebooks/atomic-habits.pdf',
+                'is_ebook' => true,
             ],
             [
                 'title' => 'Bumi',
@@ -227,6 +237,8 @@ class DatabaseSeeder extends Seeder
                 'synopsis' => 'Awal mula perjalanan luar biasa Raib, Seli, dan Ali menembus klan Bulan serta mengungkap rahasia peradaban paralel yang tersembunyi di alam semesta.',
                 'copies_count' => 3,
                 'available_count' => 2,
+                'ebook_file_path' => null,
+                'is_ebook' => false,
             ],
             [
                 'title' => 'Fisika untuk SMA/MA Kelas XI (Kurikulum Merdeka)',
@@ -242,6 +254,8 @@ class DatabaseSeeder extends Seeder
                 'synopsis' => 'Materi ajar fisika komprehensif berlandaskan saintifik, dilengkapi eksperimen laboratorium, fenomena mekanika, termodinamika, dan gelombang elektromagnetik.',
                 'copies_count' => 5,
                 'available_count' => 4,
+                'ebook_file_path' => '/storage/ebooks/fisika-kelas-xi.pdf',
+                'is_ebook' => true,
             ],
             [
                 'title' => 'Sejarah Minangkabau: Jejak Adat & Keislaman',
@@ -257,6 +271,8 @@ class DatabaseSeeder extends Seeder
                 'synopsis' => 'Analisis mendalam mengenai falsafah Adat Basandi Syarak, Syarak Basandi Kitabullah serta dinamika sosial nagari di dataran tinggi Minangkabau.',
                 'copies_count' => 3,
                 'available_count' => 2,
+                'ebook_file_path' => '/storage/ebooks/sejarah-minangkabau.pdf',
+                'is_ebook' => true,
             ],
         ];
 
@@ -276,6 +292,8 @@ class DatabaseSeeder extends Seeder
                     'shelf_location' => $b['shelf'],
                     'cover_image' => $b['cover_image'],
                     'popularity' => $b['popularity'],
+                    'ebook_file_path' => $b['ebook_file_path'],
+                    'is_ebook' => $b['is_ebook'],
                 ]
             );
 
