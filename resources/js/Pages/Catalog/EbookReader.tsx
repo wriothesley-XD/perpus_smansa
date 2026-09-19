@@ -1001,8 +1001,8 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
                 </div>
             </header>
 
-            {/* ── TOAST NOTIFICATION ── */}
-            {toastMessage && (
+            {/* ── TOAST NOTIFICATION (Only shown after loader finishes) ── */}
+            {toastMessage && !isBookLoading && (
                 <div className="absolute top-16 left-1/2 z-50 -translate-x-1/2 rounded-full border border-slate-200 bg-white/95 px-4 py-1.5 text-xs font-semibold text-slate-800 shadow-xl backdrop-blur-md animate-fade-in">
                     {toastMessage}
                 </div>
@@ -1068,7 +1068,7 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
 
             {/* ── BOOKMARK LIST DRAWER ── */}
             {showBookmarksList && (
-                <div className="absolute top-16 right-4 sm:right-24 z-40 w-84 max-h-[calc(100vh-140px)] flex flex-col rounded-2xl border bg-white/95 p-4 shadow-2xl backdrop-blur-md dark:bg-slate-900/95 dark:border-slate-800">
+                <div className="absolute top-16 right-2 sm:right-24 z-40 w-[calc(100vw-16px)] sm:w-84 max-w-sm flex flex-col rounded-2xl border bg-white/95 p-4 shadow-2xl backdrop-blur-md dark:bg-slate-900/95 dark:border-slate-800">
                     <div className="flex items-center justify-between border-b pb-3 mb-2 dark:border-slate-800">
                         <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
                             <Bookmark size={15} className="text-rose-500 fill-rose-500" /> Bookmark & Catatan ({bookmarks.length})
@@ -1150,7 +1150,7 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
 
             {/* ── TABLE OF CONTENTS DRAWER ── */}
             {showToc && (
-                <div className="absolute top-16 left-4 z-40 w-80 max-h-[calc(100vh-140px)] flex flex-col rounded-2xl border bg-white/95 p-4 shadow-2xl backdrop-blur-md">
+                <div className="absolute top-16 left-2 sm:left-4 z-40 w-[calc(100vw-16px)] sm:w-80 max-w-sm max-h-[calc(100vh-140px)] flex flex-col rounded-2xl border bg-white/95 p-4 shadow-2xl backdrop-blur-md">
                     <div className="flex items-center justify-between border-b pb-3 mb-2">
                         <span className="text-xs font-bold text-slate-900 flex items-center gap-2">
                             <ListTree size={15} className="text-[#2699fb]" /> Daftar Isi Buku
