@@ -161,9 +161,9 @@ export function MegaMenu({ currentUrl, label }: MegaMenuProps) {
                 type="button"
                 onClick={() => setIsOpen((prev) => !prev)}
                 aria-expanded={isOpen}
-                className={`group inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-all ${
+                className={`nav-underline-link group inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-semibold ${
                     isOpen || isAnyChildActive
-                        ? "text-[#2699fb] font-bold"
+                        ? "is-active text-[#2699fb] font-bold"
                         : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
                 }`}
             >

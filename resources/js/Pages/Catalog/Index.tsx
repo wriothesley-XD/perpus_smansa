@@ -111,7 +111,7 @@ export default function Index({
                                 favoritmu hari ini
                             </h1>
                             <p className="mt-4 max-w-lg text-sm sm:text-base leading-relaxed text-[#64748b] dark:text-slate-300">
-                                Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque tempor.
+                                Jelajahi ribuan koleksi buku teks Kurikulum Merdeka, karya sastra, buku referensi SNBT/OSN, serta terbitan digital resmi SMAN 1 Bukittinggi.
                             </p>
 
                             {/* Pill Search bar */}

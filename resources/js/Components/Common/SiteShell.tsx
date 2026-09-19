@@ -32,6 +32,7 @@ import { MegaMenu } from "./MegaMenu";
 import { SearchBar } from "./SearchBar";
 import { Tooltip } from "./Tooltip";
 import { ToastProvider } from "./ToastProvider";
+import { ThemeToggleSwitch } from "./ThemeToggleSwitch";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
     const { url, props } = usePage();
@@ -168,9 +169,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                     <nav className="hidden items-center gap-1 xl:gap-2 lg:flex">
                         <Link
                             href="/"
-                            className={`rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-all ${
+                            className={`nav-underline-link rounded-full px-3.5 py-1.5 text-[13px] font-semibold ${
                                 isActive("/")
-                                    ? "text-[#2699fb] font-bold"
+                                    ? "is-active text-[#2699fb] font-bold"
                                     : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
                             }`}
                         >
@@ -178,9 +179,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                         </Link>
                         <Link
                             href="/catalog"
-                            className={`rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-all ${
+                            className={`nav-underline-link rounded-full px-3.5 py-1.5 text-[13px] font-semibold ${
                                 isActive("/catalog")
-                                    ? "text-[#2699fb] font-bold"
+                                    ? "is-active text-[#2699fb] font-bold"
                                     : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
                             }`}
                         >
@@ -188,9 +189,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                         </Link>
                         <Link
                             href="/magazines"
-                            className={`rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-all ${
+                            className={`nav-underline-link rounded-full px-3.5 py-1.5 text-[13px] font-semibold ${
                                 isActive("/magazines")
-                                    ? "text-[#2699fb] font-bold"
+                                    ? "is-active text-[#2699fb] font-bold"
                                     : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
                             }`}
                         >
@@ -202,9 +203,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
                         <Link
                             href="/contact"
-                            className={`rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-all ${
+                            className={`nav-underline-link rounded-full px-3.5 py-1.5 text-[13px] font-semibold ${
                                 isActive("/contact")
-                                    ? "text-[#2699fb] font-bold"
+                                    ? "is-active text-[#2699fb] font-bold"
                                     : "text-[#64748b] hover:text-[#152238] dark:text-slate-300 dark:hover:text-white"
                             }`}
                         >
@@ -254,16 +255,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                             )}
                         </div>
 
-                        {/* Dark/Light Mode Toggle */}
+                        {/* Celestial Day/Night Theme Toggle Switch */}
                         <Tooltip content={darkMode ? t("theme_light") : t("theme_dark")} position="bottom">
-                            <button
-                                type="button"
-                                onClick={toggleTheme}
-                                aria-label={darkMode ? t("theme_light") : t("theme_dark")}
-                                className="grid size-9 place-items-center rounded-full text-[#64748b] transition hover:bg-gray-100 hover:text-[#152238] dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
-                            >
-                                {darkMode ? <Sun size={17} className="text-amber-400" /> : <Moon size={17} />}
-                            </button>
+                            <ThemeToggleSwitch
+                                checked={darkMode}
+                                onChange={toggleTheme}
+                                ariaLabel={darkMode ? t("theme_light") : t("theme_dark")}
+                                scale={0.82}
+                            />
                         </Tooltip>
 
                         {/* Animated Search Bar */}
@@ -401,16 +400,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                         )}
                     </div>
 
-                    {/* Mobile hamburger */}
-                    <div className="flex items-center gap-2 lg:hidden">
-                        <button
-                            type="button"
-                            onClick={toggleTheme}
-                            aria-label={darkMode ? t("theme_light") : t("theme_dark")}
-                            className="grid size-9 place-items-center rounded-full border border-gray-200 text-[#152238] dark:border-slate-700 dark:text-white"
-                        >
-                            {darkMode ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} />}
-                        </button>
+                    {/* Mobile hamburger & theme switch */}
+                    <div className="flex items-center gap-2.5 lg:hidden">
+                        <ThemeToggleSwitch
+                            checked={darkMode}
+                            onChange={toggleTheme}
+                            ariaLabel={darkMode ? t("theme_light") : t("theme_dark")}
+                            scale={0.75}
+                        />
                         <HamburgerButton
                             isOpen={mobileOpen}
                             onClick={() => setMobileOpen(!mobileOpen)}

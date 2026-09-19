@@ -86,7 +86,7 @@ export default function Home({
                             </h1>
 
                             <p className="mt-6 max-w-lg text-sm sm:text-base leading-relaxed text-[#64748b] dark:text-slate-300">
-                                Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque tempor. Perpustakaan digital SMA Negeri 1 Bukittinggi terpadu dan modern.
+                                Portal literasi digital terpadu SMA Negeri 1 Bukittinggi. Menghadirkan ribuan koleksi buku teks ajar, fiksi, karya riset siswa, hingga e-magazine sekolah.
                             </p>
 
                             {/* Action Row: Blue Pill Button + Secondary Note */}
@@ -98,7 +98,7 @@ export default function Home({
                                     Cari Buku
                                 </Link>
                                 <p className="max-w-[220px] text-xs leading-relaxed text-gray-400 dark:text-slate-400">
-                                    Lorem ipsum dolor sit amet consectetur adipiscing elit.
+                                    Reservasi online mudah & sirkulasi mandiri tanpa antre.
                                 </p>
                             </div>
                         </ScrollReveal>
@@ -166,15 +166,15 @@ export default function Home({
                             <ul className="mt-6 space-y-3 text-sm text-[#475569] dark:text-slate-300">
                                 <li className="flex items-center gap-3">
                                     <span className="font-bold text-[#152238] dark:text-sky-400">✓</span>
-                                    <span>Lorem ipsum dolor sit amet</span>
+                                    <span>Koleksi buku Kurikulum Merdeka & referensi olimpiade lengkap</span>
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <span className="font-bold text-[#152238] dark:text-sky-400">✓</span>
-                                    <span>Lorem ipsum dolor sit amet</span>
+                                    <span>Publikasi Majalah Genta & Buletin Kurtaw versi digital</span>
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <span className="font-bold text-[#152238] dark:text-sky-400">✓</span>
-                                    <span>Lorem ipsum dolor sit amet</span>
+                                    <span>Sistem peminjaman daring praktis langsung ambil di meja sirkulasi</span>
                                 </li>
                             </ul>
 
@@ -212,7 +212,7 @@ export default function Home({
                                                     Cari koleksi buku
                                                 </h3>
                                                 <p className="mt-1 text-xs text-gray-400 dark:text-slate-400 leading-relaxed">
-                                                    Lorem ipsum dolor sit amet
+                                                    Temukan buku referensi mata pelajaran & karya fiksi
                                                 </p>
                                             </div>
                                         </div>
@@ -240,50 +240,50 @@ export default function Home({
                                                 />
                                             </div>
                                             <div className="mt-3">
-                                                <span className="reveal-scale inline-block rounded-full bg-amber-50 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-600 dark:bg-amber-950/60 dark:text-amber-300">
-                                                    E-Magazine
-                                                </span>
-                                                <h3 className="mt-1.5 font-display text-sm font-bold text-[#152238] dark:text-white">
-                                                    Baca digital
-                                                </h3>
-                                                <p className="mt-1 text-xs text-gray-400 dark:text-slate-400 leading-relaxed">
-                                                    Lorem ipsum dolor sit amet
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="mt-4 pt-2">
-                                            <Link
-                                                href="/magazines"
-                                                className="block w-full rounded-full border border-[#2699fb] py-1.5 text-center text-xs font-bold text-[#2699fb] transition hover:bg-[#2699fb] hover:text-white dark:border-[#38bdf8] dark:text-[#38bdf8]"
-                                            >
-                                                Buka
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </ScrollReveal>
+                                                 <span className="reveal-scale inline-block rounded-full bg-amber-50 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-600 dark:bg-amber-950/60 dark:text-amber-300">
+                                                     E-Magazine
+                                                 </span>
+                                                 <h3 className="mt-1.5 font-display text-sm font-bold text-[#152238] dark:text-white">
+                                                     Baca digital
+                                                 </h3>
+                                                 <p className="mt-1 text-xs text-gray-400 dark:text-slate-400 leading-relaxed">
+                                                     Majalah Genta & Buletin Kurtaw edisi terbaru
+                                                 </p>
+                                             </div>
+                                         </div>
+                                         <div className="mt-4 pt-2">
+                                             <Link
+                                                 href="/magazines"
+                                                 className="block w-full rounded-full border border-[#2699fb] py-1.5 text-center text-xs font-bold text-[#2699fb] transition hover:bg-[#2699fb] hover:text-white dark:border-[#38bdf8] dark:text-[#38bdf8]"
+                                             >
+                                                 Buka
+                                             </Link>
+                                         </div>
+                                     </div>
+                                 </ScrollReveal>
 
-                                {/* Card 3: Kontak */}
-                                <ScrollReveal delay={240} className="h-full">
-                                    <div className="flex h-full flex-col justify-between rounded-2xl border border-gray-100 bg-white p-3 shadow-md hover:shadow-xl transition duration-300 dark:border-slate-800 dark:bg-[#121826]">
-                                        <div>
-                                            <div className="h-32 w-full overflow-hidden rounded-xl bg-gray-100 dark:bg-slate-800">
-                                                <img
-                                                    src="/images/feature_reading.jpg"
-                                                    alt="Kontak"
-                                                    className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-                                                    onError={(e) => { (e.target as HTMLImageElement).src = "/images/school_building.jpg"; }}
-                                                />
-                                            </div>
-                                            <div className="mt-3">
-                                                <span className="reveal-scale inline-block rounded-full bg-emerald-50 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300">
-                                                    Kontak
-                                                </span>
-                                                <h3 className="mt-1.5 font-display text-sm font-bold text-[#152238] dark:text-white">
-                                                    Hubungi pustaka
-                                                </h3>
-                                                <p className="mt-1 text-xs text-gray-400 dark:text-slate-400 leading-relaxed">
-                                                    Lorem ipsum dolor sit amet
-                                                </p>
+                                 {/* Card 3: Kontak */}
+                                 <ScrollReveal delay={240} className="h-full">
+                                     <div className="flex h-full flex-col justify-between rounded-2xl border border-gray-100 bg-white p-3 shadow-md hover:shadow-xl transition duration-300 dark:border-slate-800 dark:bg-[#121826]">
+                                         <div>
+                                             <div className="h-32 w-full overflow-hidden rounded-xl bg-gray-100 dark:bg-slate-800">
+                                                 <img
+                                                     src="/images/feature_reading.jpg"
+                                                     alt="Kontak"
+                                                     className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                                                     onError={(e) => { (e.target as HTMLImageElement).src = "/images/school_building.jpg"; }}
+                                                 />
+                                             </div>
+                                             <div className="mt-3">
+                                                 <span className="reveal-scale inline-block rounded-full bg-emerald-50 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300">
+                                                     Kontak
+                                                 </span>
+                                                 <h3 className="mt-1.5 font-display text-sm font-bold text-[#152238] dark:text-white">
+                                                     Hubungi pustaka
+                                                 </h3>
+                                                 <p className="mt-1 text-xs text-gray-400 dark:text-slate-400 leading-relaxed">
+                                                     Layanan konsultasi, sirkulasi, & bantuan pustakawan
+                                                 </p>
                                             </div>
                                         </div>
                                         <div className="mt-4 pt-2">
@@ -317,13 +317,13 @@ export default function Home({
                                 </span>
                             </h2>
                             <p className="mt-5 max-w-md text-sm leading-relaxed text-[#64748b] dark:text-slate-300">
-                                Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque tempor. Layanan peminjaman dan reservasi buku terpadu SMAN 1 Bukittinggi.
+                                Kemudahan meminjam dan mereservasi buku fisik dari mana saja. Pantau masa pinjam dan perpanjangan koleksi langsung melalui akun perpustakaan Anda.
                             </p>
                             <Link
                                 href="/catalog"
                                 className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-[#2699fb] hover:underline"
                             >
-                                Lihat semua fitur <ArrowRight size={15} />
+                                Lihat semua koleksi <ArrowRight size={15} />
                             </Link>
                         </ScrollReveal>
 
@@ -353,7 +353,7 @@ export default function Home({
                                     Pinjam buku dari manapun
                                 </h3>
                                 <p className="mt-1 text-xs text-gray-400 dark:text-slate-400 leading-relaxed">
-                                    Lorem ipsum dolor sit amet
+                                    Layanan sirkulasi online terintegrasi
                                 </p>
                                 <div className="mt-4">
                                     <Link
@@ -483,7 +483,7 @@ export default function Home({
                         </h2>
 
                         <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-[#64748b] dark:text-slate-300">
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque tempor.
+                            Tingkatkan wawasan, perluas literasi, dan raih prestasi akademik terbaik bersama ribuan koleksi terkurasi Perpustakaan SMAN 1 Bukittinggi.
                         </p>
 
                         <div className="mt-8 flex justify-center">
