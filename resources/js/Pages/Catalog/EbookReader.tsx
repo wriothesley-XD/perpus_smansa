@@ -1,4 +1,4 @@
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import {
     ArrowLeft,
     Bookmark,
@@ -9,8 +9,10 @@ import {
     ChevronRight,
     Clock,
     Columns2,
+    Edit3,
     ListTree,
     Lock,
+    LogOut,
     Maximize2,
     Minimize2,
     Moon,
@@ -18,6 +20,7 @@ import {
     ShieldAlert,
     Square,
     Sun,
+    Trash2,
     Type,
     Volume2,
     VolumeX,
@@ -27,6 +30,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Book } from "../../types/library";
 import { useI18n } from "../../utils/i18n";
 import { BookPageContent, getBookPages } from "./bookContentData";
+import { CelestialBookLoader, TimePhase } from "./CelestialBookLoader";
 
 interface EbookReaderProps {
     book: Book;
@@ -35,6 +39,7 @@ interface EbookReaderProps {
         loan_code: string;
         borrowed_at: string;
         due_at: string;
+        due_at_iso?: string;
         is_locked: boolean;
         remaining_hours: number;
         loan_duration_days: number;
@@ -42,7 +47,7 @@ interface EbookReaderProps {
     progress: {
         last_page: number;
         total_pages: number;
-        bookmarks: number[];
+        bookmarks: ({ page: number; note: string } | number)[];
         notes: Record<string, string>;
     };
     readerInfo: {
@@ -51,6 +56,12 @@ interface EbookReaderProps {
         class: string;
     };
     hasPdf: boolean;
+}
+
+// Bookmark with optional note
+interface BookmarkItem {
+    page: number;
+    note: string;
 }
 
 type PaperMood = "sepia" | "white" | "night";
@@ -95,7 +106,15 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
     const { t } = useI18n();
     const totalPages = Math.max(24, progress.total_pages || 24);
     const [currentPage, setCurrentPage] = useState<number>(progress.last_page || 1);
-    const [bookmarks, setBookmarks] = useState<number[]>(progress.bookmarks || []);
+
+    // Normalize bookmarks to BookmarkItem[] (support both legacy number[] and new {page, note}[])
+    const normalizeBookmarks = (raw: ({ page: number; note: string } | number)[]): BookmarkItem[] =>
+        (raw || []).map((b) => typeof b === "number" ? { page: b, note: "" } : b);
+
+    const [bookmarks, setBookmarks] = useState<BookmarkItem[]>(normalizeBookmarks(progress.bookmarks));
+    const [editingBookmarkPage, setEditingBookmarkPage] = useState<number | null>(null); // which page's note is being edited
+    const [bookmarkNoteInput, setBookmarkNoteInput] = useState<string>(""); // draft note text
+
     const [fontSize, setFontSize] = useState<"sm" | "base" | "lg">("base");
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [showBookmarksList, setShowBookmarksList] = useState(false);
@@ -121,8 +140,79 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
     const [toastMessage, setToastMessage] = useState<string | null>(
         progress.last_page > 1 ? `Melanjutkan dari halaman ${progress.last_page}` : null
     );
+    const [isBookLoading, setIsBookLoading] = useState<boolean>(true);
+    const [loaderOpacity, setLoaderOpacity] = useState<number>(1);
+
+    // 4 Real-time Local Time Phases
+    // dawn: 05.00 - 06.59 (Fajar Pagi & Siluet Gunung Hijau Singgalang/Marapi)
+    // day: 07.00 - 13.59 (Siang Cerah & Matahari Terik)
+    // sunset: 14.00 - 18.29 (Sore & Sunset Jingga Khas Ranah Minang)
+    // night: 18.30 - 04.59 (Malam Syahdu, Bulan & Bintang Berkelap-kelip)
+    const detectTimePhase = (): TimePhase => {
+        const now = new Date();
+        const hour = now.getHours() + now.getMinutes() / 60;
+        if (hour >= 5.0 && hour < 7.0) return "dawn";
+        if (hour >= 7.0 && hour < 14.0) return "day";
+        if (hour >= 14.0 && hour < 18.5) return "sunset";
+        return "night";
+    };
+
+    const [currentTimePhase, setCurrentTimePhase] = useState<TimePhase>(detectTimePhase);
+
+    useEffect(() => {
+        // Show flipbook loader for 1.8s, fade out smoothly, then unmount
+        const fadeTimer = setTimeout(() => {
+            setLoaderOpacity(0);
+        }, 1800);
+        const unmountTimer = setTimeout(() => {
+            setIsBookLoading(false);
+        }, 2500);
+        return () => {
+            clearTimeout(fadeTimer);
+            clearTimeout(unmountTimer);
+        };
+    }, []);
 
     const saveTimerRef = useRef<any>(null);
+    // Capture CSRF token at mount so it's available during unload events when DOM may be unavailable
+    const csrfRef = useRef<string>("");
+    useEffect(() => {
+        csrfRef.current = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || "";
+    }, []);
+
+    // Real-time live countdown timer
+    const calculateTimeRemaining = () => {
+        let targetTime = loan.due_at_iso ? new Date(loan.due_at_iso).getTime() : 0;
+        if (!targetTime || isNaN(targetTime)) {
+            targetTime = Date.now() + (loan.remaining_hours || 0) * 3600 * 1000;
+        }
+
+        const diff = targetTime - Date.now();
+        if (diff <= 0) {
+            return "Habis";
+        }
+
+        const totalHours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (totalHours >= 24) {
+            const days = Math.floor(totalHours / 24);
+            const remHours = totalHours % 24;
+            return `${days}h ${remHours}j ${minutes}m ${seconds}s`;
+        }
+
+        return `${totalHours}j ${minutes}m ${seconds}s`;
+    };
+
+    const [countdownText, setCountdownText] = useState<string>(calculateTimeRemaining);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCountdownText(calculateTimeRemaining());
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [loan.due_at_iso, loan.remaining_hours]);
 
     // Generate full page content dataset
     const pages = useMemo(() => getBookPages(book, totalPages), [book, totalPages]);
@@ -181,25 +271,76 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
         };
     }, [currentPage, spreadMode, totalPages, soundEnabled]);
 
-    // Auto-save reading progress to server
-    const saveProgressToServer = (page: number, updatedBookmarks: number[], updatedNote?: string) => {
-        if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-        saveTimerRef.current = setTimeout(() => {
+    // Build payload for saving progress (bookmarks as BookmarkItem[])
+    const buildProgressPayload = (page: number, bmarks: BookmarkItem[], note?: string) => JSON.stringify({
+        last_page: page,
+        total_pages: totalPages,
+        bookmarks: bmarks,
+        notes: { reflection: note ?? studentNote },
+    });
+
+    // Instant save using fetch keepalive — guaranteed to fire even during page unload
+    const flushProgressNow = (page: number, bmarks: BookmarkItem[], note?: string) => {
+        // Use pre-captured CSRF token (DOM may be gone during unload events)
+        const csrf = csrfRef.current || (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || "";
+        try {
             fetch(`/books/${book.id}/save-progress`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || "",
+                    "X-CSRF-TOKEN": csrf,
                 },
-                body: JSON.stringify({
-                    last_page: page,
-                    total_pages: totalPages,
-                    bookmarks: updatedBookmarks,
-                    notes: { reflection: updatedNote ?? studentNote },
-                }),
+                body: buildProgressPayload(page, bmarks, note),
+                keepalive: true,
             }).catch(() => {});
-        }, 600);
+        } catch (_) {}
     };
+
+    // Debounced save (150ms — safe for rapid page turning)
+    const saveProgressToServer = (page: number, bmarks: BookmarkItem[], note?: string) => {
+        if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = setTimeout(() => {
+            flushProgressNow(page, bmarks, note);
+        }, 150);
+    };
+
+    // Track latest values in refs so beforeunload handlers can access them
+    const latestPageRef = useRef<number>(currentPage);
+    const latestBookmarksRef = useRef<BookmarkItem[]>(bookmarks);
+    const latestNoteRef = useRef<string>(studentNote);
+
+    useEffect(() => { latestPageRef.current = currentPage; }, [currentPage]);
+    useEffect(() => { latestBookmarksRef.current = bookmarks; }, [bookmarks]);
+    useEffect(() => { latestNoteRef.current = studentNote; }, [studentNote]);
+
+    // End session: save immediately then go to dashboard
+    const handleEndSession = () => {
+        if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+        // Await flush then navigate (gives keepalive fetch time to start)
+        flushProgressNow(latestPageRef.current, latestBookmarksRef.current, latestNoteRef.current);
+        setTimeout(() => router.visit("/dashboard"), 200);
+    };
+
+    // Emergency save on tab close / visibility hidden / browser back
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+            flushProgressNow(latestPageRef.current, latestBookmarksRef.current, latestNoteRef.current);
+        };
+
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "hidden") {
+                handleBeforeUnload();
+            }
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const navigatePage = (direction: "next" | "prev") => {
         let step = spreadMode === "double" && currentPage > 1 ? 2 : 1;
@@ -270,18 +411,43 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
         saveProgressToServer(clamped, bookmarks);
     };
 
-    const toggleBookmark = () => {
-        let updated: number[];
-        const pageToBookmark = currentPage;
-        if (bookmarks.includes(pageToBookmark)) {
-            updated = bookmarks.filter((p) => p !== pageToBookmark);
-            setToastMessage(`Bookmark halaman ${pageToBookmark} dihapus`);
+    const toggleBookmark = (pageToBookmark: number = currentPage) => {
+        const existing = bookmarks.find((b) => b.page === pageToBookmark);
+        if (existing) {
+            // Already bookmarked -> open note editor modal to view or edit or remove
+            setEditingBookmarkPage(pageToBookmark);
+            setBookmarkNoteInput(existing.note || "");
         } else {
-            updated = [...bookmarks, pageToBookmark].sort((a, b) => a - b);
+            // Add new bookmark and open modal so user can write a note
+            const updated: BookmarkItem[] = [...bookmarks, { page: pageToBookmark, note: "" }].sort((a, b) => a.page - b.page);
+            setBookmarks(updated);
+            saveProgressToServer(currentPage, updated);
+            setEditingBookmarkPage(pageToBookmark);
+            setBookmarkNoteInput("");
             setToastMessage(`Halaman ${pageToBookmark} ditandai sebagai bookmark`);
         }
+    };
+
+    const handleSaveBookmarkNote = () => {
+        if (editingBookmarkPage === null) return;
+        const noteText = bookmarkNoteInput.trim();
+        const updated = bookmarks.map((b) =>
+            b.page === editingBookmarkPage ? { ...b, note: noteText } : b
+        );
         setBookmarks(updated);
-        saveProgressToServer(pageToBookmark, updated);
+        saveProgressToServer(currentPage, updated);
+        setEditingBookmarkPage(null);
+        setToastMessage(`Catatan bookmark halaman ${editingBookmarkPage} disimpan`);
+    };
+
+    const handleRemoveBookmark = (pageToRemove: number) => {
+        const updated = bookmarks.filter((b) => b.page !== pageToRemove);
+        setBookmarks(updated);
+        saveProgressToServer(currentPage, updated);
+        if (editingBookmarkPage === pageToRemove) {
+            setEditingBookmarkPage(null);
+        }
+        setToastMessage(`Bookmark halaman ${pageToRemove} dihapus`);
     };
 
     const toggleFullscreen = () => {
@@ -304,8 +470,10 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
     const leftPageData = pages.find((p) => p.pageNumber === leftPageNum);
     const rightPageData = rightPageNum ? pages.find((p) => p.pageNumber === rightPageNum) : null;
 
-    const isLeftBookmarked = bookmarks.includes(leftPageNum);
-    const isRightBookmarked = rightPageNum ? bookmarks.includes(rightPageNum) : false;
+    const leftBookmark = bookmarks.find((b) => b.page === leftPageNum);
+    const rightBookmark = rightPageNum ? bookmarks.find((b) => b.page === rightPageNum) : undefined;
+    const isLeftBookmarked = !!leftBookmark;
+    const isRightBookmarked = !!rightBookmark;
     const isCurrentSpreadBookmarked = isLeftBookmarked || isRightBookmarked;
 
     // Mood Theme Colors
@@ -381,12 +549,13 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
                         >
                             <RotateCcw size={15} /> Pinjam Kembali E-Book ({loan.loan_duration_days} Hari)
                         </button>
-                        <Link
-                            href={`/books/${book.slug}`}
+                        <button
+                            type="button"
+                            onClick={() => router.visit(`/books/${book.slug}`)}
                             className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 text-xs font-bold text-slate-700 transition hover:bg-slate-100"
                         >
                             Kembali ke Detail Buku
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -613,17 +782,38 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
         <div className={`relative flex h-screen w-screen flex-col overflow-hidden select-none transition-colors duration-300 ${moodClasses.desk}`}>
             <Head title={`Membaca: ${book.title} - E-Reader SMANSA`} />
 
+            {/* ── CELESTIAL BOOK LOADING SCREEN (4-Phase Real-Time Dinamis: Fajar, Siang, Senja, Malam) ── */}
+            {isBookLoading && (
+                <CelestialBookLoader
+                    bookTitle={book.title}
+                    opacity={loaderOpacity}
+                    currentTimePhase={currentTimePhase}
+                    onChangeTimePhase={(phase) => setCurrentTimePhase(phase)}
+                    onDismiss={() => {
+                        setLoaderOpacity(0);
+                        setTimeout(() => setIsBookLoading(false), 250);
+                    }}
+                />
+            )}
+
             {/* ── TOP NAV BAR ── */}
             <header className={`z-30 flex h-14 shrink-0 items-center justify-between border-b px-4 shadow-sm backdrop-blur-md transition-colors ${moodClasses.topNav}`}>
                 {/* Left: Book Meta */}
                 <div className="flex items-center gap-3 min-w-0">
-                    <Link
-                        href={`/books/${book.slug}`}
+                    <button
+                        type="button"
                         aria-label="Kembali ke detail buku"
                         className="grid size-8 place-items-center rounded-full opacity-70 transition hover:bg-black/10 hover:opacity-100"
+                        onClick={() => {
+                            // Immediately flush progress before navigating away
+                            if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+                            flushProgressNow(latestPageRef.current, latestBookmarksRef.current, latestNoteRef.current);
+                            // Small delay so fetch(keepalive) can start before navigation
+                            setTimeout(() => router.visit(`/books/${book.slug}`), 80);
+                        }}
                     >
                         <ArrowLeft size={17} />
-                    </Link>
+                    </button>
                     <div className="min-w-0">
                         <h1 className="truncate text-xs font-bold sm:text-sm">{book.title}</h1>
                         <p className="truncate text-[10px] opacity-70">
@@ -634,16 +824,19 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
 
                 {/* Right Controls */}
                 <div className="flex items-center gap-1 sm:gap-2">
-                    {/* Loan Timer Badge */}
-                    <div className="hidden items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[10px] font-semibold text-blue-700 md:flex">
-                        <Clock size={12} />
-                        <span>Sisa: {loan.remaining_hours} jam</span>
+                    {/* Loan Timer Badge (Real-time Live Countdown) */}
+                    <div className="hidden items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50/90 px-3 py-1 text-[11px] font-mono font-bold text-blue-700 md:flex shadow-xs">
+                        <Clock size={12} className="text-blue-500 animate-pulse" />
+                        <span>Sisa: {countdownText}</span>
                     </div>
 
                     {/* Table of Contents Drawer Button */}
                     <button
                         type="button"
-                        onClick={() => setShowToc(!showToc)}
+                        onClick={() => {
+                            setShowToc(!showToc);
+                            setShowBookmarksList(false);
+                        }}
                         title="Daftar Isi Buku"
                         className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-bold transition ${
                             showToc ? "bg-[#2699fb] text-white border-[#2699fb]" : "border-inherit/30 hover:bg-black/5"
@@ -651,6 +844,22 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
                     >
                         <ListTree size={13} />
                         <span className="hidden sm:inline">Daftar Isi</span>
+                    </button>
+
+                    {/* Bookmarks List Drawer Button */}
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setShowBookmarksList(!showBookmarksList);
+                            setShowToc(false);
+                        }}
+                        title="Daftar Bookmark & Catatan"
+                        className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-bold transition ${
+                            showBookmarksList ? "bg-rose-600 text-white border-rose-600" : "border-inherit/30 hover:bg-black/5"
+                        }`}
+                    >
+                        <Bookmark size={13} className={bookmarks.length > 0 ? "fill-current" : ""} />
+                        <span className="hidden sm:inline">Bookmark ({bookmarks.length})</span>
                     </button>
 
                     {/* Paper Mood Switcher */}
@@ -729,8 +938,9 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
                     {/* Bookmark Ribbon Button */}
                     <button
                         type="button"
-                        onClick={toggleBookmark}
-                        aria-label={isCurrentSpreadBookmarked ? "Hapus bookmark" : "Tandai bookmark"}
+                        onClick={() => toggleBookmark(currentPage)}
+                        aria-label={isCurrentSpreadBookmarked ? "Ubah/hapus bookmark" : "Tandai bookmark"}
+                        title={isCurrentSpreadBookmarked ? "Halaman ini dibookmark (Klik untuk ubah/tambah catatan)" : "Tandai bookmark halaman ini"}
                         className={`grid size-8 place-items-center rounded-full transition ${
                             isCurrentSpreadBookmarked
                                 ? "bg-rose-500/15 text-rose-600 font-bold"
@@ -776,6 +986,18 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
                     >
                         {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
                     </button>
+
+                    {/* Tombol Akhiri Sesi Ini */}
+                    <button
+                        type="button"
+                        onClick={handleEndSession}
+                        title="Simpan sesi membaca dan kembali ke Profil / Dashboard"
+                        className="ml-1 inline-flex items-center gap-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 text-xs font-bold shadow-sm transition active:scale-95 shrink-0"
+                    >
+                        <LogOut size={13} />
+                        <span className="hidden sm:inline">Akhiri Sesi Ini</span>
+                        <span className="sm:hidden">Keluar</span>
+                    </button>
                 </div>
             </header>
 
@@ -783,6 +1005,146 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
             {toastMessage && (
                 <div className="absolute top-16 left-1/2 z-50 -translate-x-1/2 rounded-full border border-slate-200 bg-white/95 px-4 py-1.5 text-xs font-semibold text-slate-800 shadow-xl backdrop-blur-md animate-fade-in">
                     {toastMessage}
+                </div>
+            )}
+
+            {/* ── MODAL CATATAN BOOKMARK ── */}
+            {editingBookmarkPage !== null && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
+                    <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-scale-up dark:bg-slate-900 dark:border-slate-800">
+                        <div className="flex items-center justify-between">
+                            <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <Bookmark className="text-rose-500 fill-rose-500" size={16} />
+                                Bookmark Halaman {editingBookmarkPage}
+                            </h3>
+                            <button
+                                type="button"
+                                onClick={() => setEditingBookmarkPage(null)}
+                                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                            >
+                                <X size={16} />
+                            </button>
+                        </div>
+                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                            Tulis catatan kecil untuk penanda halaman ini (misal: "kalimat terindah", "rumus penting", dll.):
+                        </p>
+                        <textarea
+                            value={bookmarkNoteInput}
+                            onChange={(e) => setBookmarkNoteInput(e.target.value)}
+                            placeholder="Tulis catatan kecil di sini (misal: kalimat terindah)..."
+                            rows={3}
+                            className="mt-3 w-full rounded-xl border border-slate-300 p-3 text-xs focus:border-[#2699fb] focus:outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-white font-sans"
+                            autoFocus
+                        />
+                        <div className="mt-4 flex items-center justify-between gap-2">
+                            <button
+                                type="button"
+                                onClick={() => handleRemoveBookmark(editingBookmarkPage)}
+                                className="inline-flex items-center gap-1 text-xs text-rose-600 hover:underline font-medium"
+                            >
+                                <Trash2 size={13} />
+                                <span>Hapus Bookmark</span>
+                            </button>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setEditingBookmarkPage(null)}
+                                    className="rounded-full border border-slate-300 px-4 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleSaveBookmarkNote}
+                                    className="rounded-full bg-[#2699fb] px-4 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-[#1a83e0]"
+                                >
+                                    Simpan Catatan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ── BOOKMARK LIST DRAWER ── */}
+            {showBookmarksList && (
+                <div className="absolute top-16 right-4 sm:right-24 z-40 w-84 max-h-[calc(100vh-140px)] flex flex-col rounded-2xl border bg-white/95 p-4 shadow-2xl backdrop-blur-md dark:bg-slate-900/95 dark:border-slate-800">
+                    <div className="flex items-center justify-between border-b pb-3 mb-2 dark:border-slate-800">
+                        <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <Bookmark size={15} className="text-rose-500 fill-rose-500" /> Bookmark & Catatan ({bookmarks.length})
+                        </span>
+                        <button type="button" onClick={() => setShowBookmarksList(false)} className="text-slate-400 hover:text-slate-900">
+                            <X size={15} />
+                        </button>
+                    </div>
+                    {bookmarks.length === 0 ? (
+                        <div className="py-8 text-center text-xs text-slate-400">
+                            Belum ada bookmark yang ditandai.
+                            <br />
+                            <span className="text-[10px] mt-1 block">Klik tombol bookmark atau pita di atas buku untuk menandai halaman.</span>
+                        </div>
+                    ) : (
+                        <div className="space-y-2 overflow-y-auto pr-1 text-xs">
+                            {bookmarks.map((bm) => (
+                                <div
+                                    key={bm.page}
+                                    className={`rounded-xl border p-2.5 transition flex flex-col gap-1 ${
+                                        currentPage === bm.page
+                                            ? "border-[#2699fb] bg-blue-50/70 dark:bg-blue-950/40"
+                                            : "border-slate-200 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50"
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <button
+                                            type="button"
+                                            onClick={() => jumpToPage(bm.page)}
+                                            className="font-bold text-slate-900 hover:text-[#2699fb] dark:text-white flex items-center gap-1.5"
+                                        >
+                                            <Bookmark size={13} className="text-rose-500 fill-rose-500" />
+                                            <span>Halaman {bm.page}</span>
+                                        </button>
+                                        <div className="flex items-center gap-1">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setEditingBookmarkPage(bm.page);
+                                                    setBookmarkNoteInput(bm.note || "");
+                                                }}
+                                                title="Tulis/Ubah Catatan"
+                                                className="grid size-6 place-items-center rounded-md hover:bg-black/10 text-slate-500"
+                                            >
+                                                <Edit3 size={12} />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveBookmark(bm.page)}
+                                                title="Hapus Bookmark"
+                                                className="grid size-6 place-items-center rounded-md hover:bg-rose-100 text-rose-500"
+                                            >
+                                                <Trash2 size={12} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {bm.note ? (
+                                        <p className="rounded-lg bg-amber-50 p-2 font-serif text-[11px] italic text-amber-900 border border-amber-200/60 dark:bg-amber-950/40 dark:text-amber-200 dark:border-amber-800/40">
+                                            "{bm.note}"
+                                        </p>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setEditingBookmarkPage(bm.page);
+                                                setBookmarkNoteInput("");
+                                            }}
+                                            className="text-left text-[10px] text-slate-400 hover:text-[#2699fb] hover:underline italic"
+                                        >
+                                            + Tambah catatan kecil
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -852,9 +1214,13 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
                         {/* Physical Ribbon Bookmark Hanging from Top */}
                         {isCurrentSpreadBookmarked && (
                             <div
-                                onClick={toggleBookmark}
-                                title="Klik untuk menghapus bookmark halaman ini"
-                                className="absolute -top-3 right-16 sm:right-28 z-30 cursor-pointer transition-transform hover:translate-y-1"
+                                onClick={() => toggleBookmark(rightBookmark ? rightBookmark.page : leftBookmark?.page || currentPage)}
+                                title={
+                                    (rightBookmark?.note || leftBookmark?.note)
+                                        ? `Bookmark: "${rightBookmark?.note || leftBookmark?.note}" (Klik untuk ubah/hapus)`
+                                        : "Bookmark halaman aktif (Klik untuk menambah catatan)"
+                                }
+                                className="group absolute -top-3 right-16 sm:right-28 z-30 cursor-pointer transition-transform hover:translate-y-1"
                                 style={{
                                     width: "24px",
                                     height: "56px",
@@ -862,7 +1228,13 @@ export default function EbookReader({ book, loan, progress, readerInfo, hasPdf }
                                     clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%)",
                                     filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.35))",
                                 }}
-                            />
+                            >
+                                {(rightBookmark?.note || leftBookmark?.note) && (
+                                    <span className="absolute -bottom-6 right-0 whitespace-nowrap rounded-md bg-slate-900/90 px-2 py-0.5 text-[10px] font-sans font-medium text-amber-200 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md">
+                                        📌 "{rightBookmark?.note || leftBookmark?.note}"
+                                    </span>
+                                )}
+                            </div>
                         )}
 
                         {/* Navigation Margin Click Zones (Left / Prev) */}

@@ -86,7 +86,7 @@ class EbookReaderController extends Controller
                 $isLocked = true;
                 $activeLoan->update(['status' => 'overdue']);
             } else {
-                $remainingHours = max(0, $now->diffInHours($dueDate, false));
+                $remainingHours = (int) floor(max(0, $now->diffInRealHours($dueDate, false)));
                 $dueAtFormatted = $dueDate->translatedFormat('d F Y, H:i');
             }
         }
@@ -111,8 +111,9 @@ class EbookReaderController extends Controller
                 'loan_code' => $activeLoan->loan_code,
                 'borrowed_at' => $activeLoan->borrowed_at,
                 'due_at' => $dueAtFormatted,
+                'due_at_iso' => $activeLoan->due_at ? Carbon::parse($activeLoan->due_at)->toIso8601String() : null,
                 'is_locked' => $isLocked,
-                'remaining_hours' => max(0, $remainingHours),
+                'remaining_hours' => (int) floor(max(0, $remainingHours)),
                 'loan_duration_days' => $loanDurationDays,
             ],
             'progress' => [
